@@ -4,54 +4,51 @@
 
 @layer base {
   :root {
-    /* Paleta extraída de la imagen: Teal Médico y Cyan de Lujo */
-    --background: 180 40% 98.5%;
+    /* MODO CLARO: Salubre, Elegante y Exclusivo (Teal & Cyan) */
+    --background: 180 40% 99%;
     --foreground: 180 80% 5%;
     --card: 0 0% 100%;
     --card-foreground: 180 80% 5%;
     --popover: 0 0% 100%;
     --popover-foreground: 180 80% 5%;
-    --primary: 174 100% 29%; /* El teal profundo de la barra de contacto */
+    --primary: 174 100% 29%; 
     --primary-foreground: 0 0% 100%;
-    --secondary: 180 50% 94%;
+    --secondary: 180 50% 96%;
     --secondary-foreground: 174 100% 20%;
     --muted: 180 20% 96%;
     --muted-foreground: 180 40% 35%;
-    --accent: 180 70% 45%; /* El cyan brillante de las ondas decorativas */
+    --accent: 180 70% 45%; 
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 180 30% 90%;
-    --input: 180 30% 90%;
+    --border: 180 30% 92%;
+    --input: 180 30% 92%;
     --ring: 174 100% 29%;
-    --radius: 0.5rem; /* Bordes más rectos y elegantes estilo revista */
+    --radius: 0.2rem;
     --chart-1: 174 100% 29%;
     --chart-2: 180 70% 45%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
   }
   .dark {
-    /* Modo Oscuro: Deep Midnight Teal / Obsidian */
-    --background: 185 60% 3%;
-    --foreground: 180 10% 98%;
-    --card: 185 60% 6%;
-    --card-foreground: 180 10% 98%;
-    --popover: 185 60% 5%;
-    --popover-foreground: 180 10% 98%;
-    --primary: 174 90% 45%;
-    --primary-foreground: 185 60% 3%;
-    --secondary: 185 40% 12%;
-    --secondary-foreground: 180 10% 98%;
-    --muted: 185 40% 10%;
-    --muted-foreground: 180 20% 65%;
-    --accent: 174 100% 35%;
-    --accent-foreground: 180 10% 98%;
+    /* MODO OSCURO: Soho Magazine (Deep Plum & Rose) */
+    --background: 340 60% 2%;
+    --foreground: 340 20% 98%;
+    --card: 340 60% 4%;
+    --card-foreground: 340 20% 98%;
+    --popover: 340 60% 3%;
+    --popover-foreground: 340 20% 98%;
+    --primary: 340 70% 55%; /* Rose/Burgundy Soho */
+    --primary-foreground: 340 60% 2%;
+    --secondary: 340 40% 10%;
+    --secondary-foreground: 340 20% 98%;
+    --muted: 340 40% 8%;
+    --muted-foreground: 340 20% 65%;
+    --accent: 340 85% 65%; /* Magenta Brillante */
+    --accent-foreground: 340 20% 98%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 180 10% 98%;
-    --border: 185 40% 15%;
-    --input: 185 40% 15%;
-    --ring: 174 90% 45%;
+    --destructive-foreground: 340 20% 98%;
+    --border: 340 40% 12%;
+    --input: 340 40% 12%;
+    --ring: 340 70% 55%;
   }
 }
 
@@ -69,7 +66,6 @@
   }
 }
 
-/* Efecto de revista: Títulos con tracking ajustado */
 .magazine-title {
   @apply font-headline font-bold uppercase tracking-tighter leading-none;
 }
@@ -86,10 +82,10 @@
 
 .bg-mesh-gradient {
   background-color: hsl(var(--background));
-  background-image: radial-gradient(at 0% 0%, hsla(174,100%,29%,0.05) 0px, transparent 50%),
-                    radial-gradient(at 100% 0%, hsla(180,70%,45%,0.05) 0px, transparent 50%);
+  background-image: radial-gradient(at 0% 0%, hsla(var(--primary), 0.05) 0px, transparent 50%),
+                    radial-gradient(at 100% 0%, hsla(var(--accent), 0.05) 0px, transparent 50%);
 }
 
 .glass-card {
-  @apply bg-background/40 backdrop-blur-xl border border-white/20 shadow-xl;
+  @apply bg-background/40 backdrop-blur-xl border border-white/10 shadow-xl;
 }
