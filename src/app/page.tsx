@@ -15,70 +15,80 @@ export default function Home() {
     <div className="min-h-screen selection:bg-primary selection:text-white">
       <Navigation />
       
-      {/* Hero Section - Magazine Style */}
-      <section className="relative h-[90vh] flex items-center overflow-hidden bg-white">
-        <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 items-center h-full gap-8">
-          <div className="lg:col-span-7 z-10 space-y-8">
-            <div className="inline-flex items-center space-x-3 text-primary border-b border-primary/20 pb-2">
+      {/* Hero Section - Magazine Style Cover */}
+      <section className="relative h-screen flex items-center overflow-hidden bg-background">
+        <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 items-center h-full gap-12">
+          <div className="lg:col-span-7 z-20 space-y-10">
+            <div className="inline-flex items-center space-x-3 text-primary border-b border-primary/20 pb-4">
               <Trophy className="h-5 w-5" />
-              <span className="text-xs font-bold tracking-[0.3em] uppercase">Excelencia Quirúrgica 2024</span>
+              <span className="text-xs font-bold tracking-[0.4em] uppercase">Excelencia Quirúrgica 2026</span>
             </div>
-            <h1 className="text-7xl md:text-[9rem] magazine-title text-primary leading-[0.85] animate-in fade-in slide-in-from-left duration-1000">
+            
+            <h1 className="text-7xl md:text-[10rem] magazine-title text-primary leading-[0.80] animate-in fade-in slide-in-from-left duration-1000 tracking-tighter">
               Belleza <br />
-              <span className="text-accent italic font-normal normal-case ml-8">Atemporal</span>
+              <span className="text-accent font-serif italic font-light normal-case ml-12 md:ml-24">Atemporal</span>
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-xl font-light leading-relaxed border-l-4 border-accent pl-8 py-2">
+            
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl font-light leading-relaxed border-l-2 border-accent pl-8 py-4">
               Cirugía plástica y medicina estética de élite. Transformamos vidas a través de la armonía y la seguridad médica absoluta.
             </p>
-            <div className="flex flex-col sm:flex-row gap-8 pt-8">
-              <Button size="lg" className="rounded-none h-16 px-12 text-sm font-bold tracking-widest uppercase bg-primary hover:bg-primary/90 transition-all shadow-xl" asChild>
+            
+            <div className="flex flex-col sm:flex-row gap-6 pt-10">
+              <Button size="lg" className="rounded-none h-16 px-12 text-xs font-bold tracking-[0.2em] uppercase bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-xl" asChild>
                 <Link href="#treatments">Explorar 26 Servicios</Link>
               </Button>
-              <Button size="lg" variant="outline" className="rounded-none h-16 px-12 text-sm font-bold tracking-widest uppercase border-primary text-primary hover:bg-primary/5" asChild>
+              <Button size="lg" variant="outline" className="glass-card rounded-none h-16 px-12 text-xs font-bold tracking-[0.2em] uppercase text-primary hover:bg-primary/5 transition-all" asChild>
                 <Link href="#contact">Consulta VIP</Link>
               </Button>
             </div>
           </div>
           
-          <div className="lg:col-span-5 relative h-full hidden lg:block">
-            <div className="absolute inset-0 bg-accent/10 -rotate-3 translate-x-4 translate-y-4" />
-            <div className="relative h-[80%] w-full border border-primary/10 overflow-hidden shadow-2xl mt-12">
+          <div className="lg:col-span-5 relative h-full hidden lg:flex items-center justify-center">
+            {/* Fondo abstracto editorial */}
+            <div className="absolute inset-0 bg-accent/5 -rotate-6 scale-110 transition-transform duration-1000" />
+            
+            {/* Contenedor de la imagen principal */}
+            <div className="relative h-[85%] w-full max-w-md overflow-hidden shadow-2xl z-10 border border-border/50">
               <Image
-                src="https://picsum.photos/seed/lux-medical/1000/1200"
+                src="https://picsum.photos/seed/lux-medical/1000/1400"
                 alt="N-VITALITY Clinic Architecture"
                 fill
-                className="object-cover scale-105 hover:scale-100 transition-transform duration-1000"
+                className="object-cover scale-105 hover:scale-100 transition-transform duration-[2000ms]"
                 priority
-                data-ai-hint="luxury architecture"
               />
             </div>
-            <div className="absolute -bottom-4 -left-12 bg-white p-8 border shadow-xl max-w-[200px] magazine-title text-xs tracking-widest text-primary">
+            
+            {/* Tarjeta Glassmorphism (Cyan en claro, Rosado en oscuro) */}
+            <div className="glass-card absolute bottom-20 -left-16 p-8 max-w-[240px] z-30">
               <Sparkles className="h-6 w-6 mb-4 text-accent" />
-              Sede Principal: Quito, Ecuador
+              <p className="magazine-title text-xs tracking-[0.2em] text-primary uppercase leading-relaxed">
+                Sede Principal <br/>
+                <span className="text-muted-foreground font-sans tracking-normal capitalize mt-1 inline-block">Quito, Ecuador</span>
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Trust Badges - Salubridad y Prestigio */}
-      <section className="py-20 border-y bg-primary text-primary-foreground">
+      {/* Trust Badges - Salubridad y Prestigio - Espaciado de Lujo */}
+      <section className="py-32 border-y bg-primary text-primary-foreground transition-colors duration-500">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center items-center">
-            <div className="space-y-2">
-              <div className="text-5xl font-headline font-bold text-accent">15k</div>
-              <div className="text-[10px] opacity-70 uppercase tracking-[0.2em] font-bold">Casos de Éxito</div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-16 text-center items-center">
+            <div className="space-y-4">
+              <div className="text-6xl font-headline font-bold text-accent">15k</div>
+              <div className="text-[11px] opacity-80 uppercase tracking-[0.3em] font-bold">Casos de Éxito</div>
             </div>
-            <div className="space-y-2">
-              <div className="text-5xl font-headline font-bold text-accent">25+</div>
-              <div className="text-[10px] opacity-70 uppercase tracking-[0.2em] font-bold">Años de Maestría</div>
+            <div className="space-y-4">
+              <div className="text-6xl font-headline font-bold text-accent">25+</div>
+              <div className="text-[11px] opacity-80 uppercase tracking-[0.3em] font-bold">Años de Maestría</div>
             </div>
-            <div className="space-y-2">
-              <div className="text-5xl font-headline font-bold text-accent">ISO</div>
-              <div className="text-[10px] opacity-70 uppercase tracking-[0.2em] font-bold">Certificación Médica</div>
+            <div className="space-y-4">
+              <div className="text-6xl font-headline font-bold text-accent">ISO</div>
+              <div className="text-[11px] opacity-80 uppercase tracking-[0.3em] font-bold">Certificación Médica</div>
             </div>
-            <div className="space-y-2">
-              <div className="text-5xl font-headline font-bold text-accent">3D</div>
-              <div className="text-[10px] opacity-70 uppercase tracking-[0.2em] font-bold">Simulación Virtual</div>
+            <div className="space-y-4">
+              <div className="text-6xl font-headline font-bold text-accent">3D</div>
+              <div className="text-[11px] opacity-80 uppercase tracking-[0.3em] font-bold">Simulación Virtual</div>
             </div>
           </div>
         </div>
@@ -92,7 +102,7 @@ export default function Home() {
       
       <ContactForm />
 
-      <footer className="py-32 bg-background border-t">
+      <footer className="py-32 bg-background border-t transition-colors duration-500">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-20 mb-24">
             <div className="col-span-1 md:col-span-2 space-y-8">
@@ -127,7 +137,7 @@ export default function Home() {
             </div>
           </div>
           <div className="pt-12 border-t text-center text-[10px] uppercase tracking-[0.3em] font-bold text-muted-foreground/50">
-            © {new Date().getFullYear()} N-VITALITY AESTHETICS & PLASTIC SURGERY. ARCHITECTURE OF BEAUTY.
+            © 2026 N-VITALITY AESTHETICS & PLASTIC SURGERY. ARCHITECTURE OF BEAUTY.
           </div>
         </div>
       </footer>
