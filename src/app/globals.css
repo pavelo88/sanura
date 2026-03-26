@@ -1,56 +1,57 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 175 52% 94%;
-    --foreground: 175 80% 10%;
+    /* Paleta inspirada en la imagen: Turquesa Médico / Aqua Luxury */
+    --background: 180 40% 98%;
+    --foreground: 180 80% 5%;
     --card: 0 0% 100%;
-    --card-foreground: 175 80% 10%;
+    --card-foreground: 180 80% 5%;
     --popover: 0 0% 100%;
-    --popover-foreground: 175 80% 10%;
-    --primary: 175 84% 31%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 340 43% 71%;
-    --secondary-foreground: 175 80% 10%;
-    --muted: 175 20% 90%;
-    --muted-foreground: 175 40% 40%;
-    --accent: 340 43% 71%;
-    --accent-foreground: 0 0% 98%;
+    --popover-foreground: 180 80% 5%;
+    --primary: 174 100% 29%; /* El teal oscuro del botón de contacto */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 180 50% 92%;
+    --secondary-foreground: 174 100% 20%;
+    --muted: 180 20% 94%;
+    --muted-foreground: 180 40% 35%;
+    --accent: 180 70% 45%; /* El cyan de las ondas decorativas */
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 175 30% 85%;
-    --input: 175 30% 85%;
-    --ring: 175 84% 31%;
-    --radius: 1rem;
-    --chart-1: 175 84% 31%;
-    --chart-2: 340 43% 71%;
+    --border: 180 30% 88%;
+    --input: 180 30% 88%;
+    --ring: 174 100% 29%;
+    --radius: 1.25rem;
+    --chart-1: 174 100% 29%;
+    --chart-2: 180 70% 45%;
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
   }
   .dark {
-    --background: 312 43% 7%;
-    --foreground: 312 10% 95%;
-    --card: 312 43% 10%;
-    --card-foreground: 312 10% 95%;
-    --popover: 312 43% 10%;
-    --popover-foreground: 312 10% 95%;
-    --primary: 324 91% 47%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 340 43% 71%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 312 20% 15%;
-    --muted-foreground: 312 10% 65%;
-    --accent: 340 43% 71%;
-    --accent-foreground: 0 0% 98%;
+    /* Modo Oscuro: Deep Midnight Teal / Obsidian Aqua */
+    --background: 185 60% 3%;
+    --foreground: 180 10% 98%;
+    --card: 185 60% 6%;
+    --card-foreground: 180 10% 98%;
+    --popover: 185 60% 5%;
+    --popover-foreground: 180 10% 98%;
+    --primary: 174 90% 45%;
+    --primary-foreground: 180 80% 5%;
+    --secondary: 185 40% 12%;
+    --secondary-foreground: 180 10% 98%;
+    --muted: 185 40% 10%;
+    --muted-foreground: 180 20% 65%;
+    --accent: 174 100% 35%;
+    --accent-foreground: 180 10% 98%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 312 20% 20%;
-    --input: 312 20% 20%;
-    --ring: 324 91% 47%;
+    --destructive-foreground: 180 10% 98%;
+    --border: 185 40% 15%;
+    --input: 185 40% 15%;
+    --ring: 174 90% 45%;
   }
 }
 
@@ -59,7 +60,10 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground transition-colors duration-300;
+    @apply bg-background text-foreground transition-colors duration-500 font-body antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-headline;
   }
 }
 
@@ -71,4 +75,9 @@
 
 .animate-whatsapp {
   animation: pulse-whatsapp 2s infinite;
+}
+
+/* Efecto de degradado suave para secciones premium */
+.bg-premium-gradient {
+  background: radial-gradient(circle at top left, hsl(var(--primary) / 0.1), transparent);
 }
