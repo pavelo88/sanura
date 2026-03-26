@@ -2,15 +2,16 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, HeartPulse, ShieldCheck, Sparkles } from "lucide-react";
+import { Menu, HeartPulse, ShieldCheck, Sparkles, ChevronDown } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const navItems = [
-  { name: "Servicios", href: "#treatments" },
-  { name: "Pacientes", href: "#testimonials" },
-  { name: "IA Guía", href: "#ai-guide" },
+  { name: "Inicio", href: "/" },
+  { name: "Procedimientos", href: "#treatments", hasDropdown: true },
+  { name: "Nuestros Doctores", href: "#doctors" },
+  { name: "Blog", href: "#blog" },
   { name: "Contacto", href: "#contact" },
 ];
 
@@ -31,44 +32,54 @@ export function Navigation() {
   if (!mounted) return null;
 
   return (
-    <header className={`fixed top-0 z-50 w-full transition-all duration-700 ${scrolled ? 'bg-background/90 backdrop-blur-xl border-b' : 'bg-transparent border-transparent'}`}>
-      <div className="container mx-auto flex h-20 items-center justify-between px-6 md:px-12">
+    <header className={`fixed top-0 z-50 w-full transition-all duration-700 ${scrolled ? 'bg-white/95 dark:bg-black/95 backdrop-blur-xl border-b' : 'bg-white dark:bg-transparent'}`}>
+      <div className="container mx-auto flex h-24 items-center justify-between px-6">
         
-        <Link href="/" className="flex items-center space-x-3 group">
+        {/* Logo & Subtitle */}
+        <Link href="/" className="flex items-center space-x-4 group">
           <div className="relative">
-            <HeartPulse className="h-6 w-6 text-primary" />
+            <HeartPulse className="h-8 w-8 text-[#49A9B4]" />
             <div className="absolute -top-1 -right-1">
-              <div className="dark:hidden"><ShieldCheck className="h-3 w-3 text-accent" /></div>
-              <div className="hidden dark:block"><Sparkles className="h-3 w-3 text-accent animate-pulse" /></div>
+              <ShieldCheck className="h-4 w-4 text-[#003B49] dark:hidden" />
+              <Sparkles className="h-4 w-4 text-accent hidden dark:block animate-pulse" />
             </div>
           </div>
-          <span className="text-2xl font-black uppercase tracking-tighter text-primary dark:font-headline dark:italic dark:lowercase dark:text-3xl">
-            N-VITALITY
-          </span>
+          <div className="flex flex-col">
+            <span className="text-2xl font-black uppercase tracking-tighter text-[#333333] dark:text-white dark:font-headline dark:italic dark:lowercase dark:text-3xl">
+              N-VITALITY
+            </span>
+            <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-[#49A9B4] leading-tight">
+              Cirugía Plástica y Reconstructiva
+            </span>
+          </div>
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center space-x-10">
+        <nav className="hidden lg:flex items-center space-x-8">
           {navItems.map((item) => (
             <Link
               key={item.name}
               href={item.href}
-              className="text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/70 hover:text-primary transition-all relative group/nav"
+              className="insurance-nav-link flex items-center dark:text-white/70 dark:hover:text-primary dark:tracking-[0.4em]"
             >
               {item.name}
-              <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-primary group-hover/nav:w-full transition-all" />
+              {item.hasDropdown && <ChevronDown className="ml-1 h-3 w-3" />}
             </Link>
           ))}
           <div className="flex items-center space-x-6 pl-6 border-l">
             <ThemeToggle />
-            <Button asChild className="rounded-none bg-primary text-white px-8 font-bold text-[10px] uppercase tracking-widest h-12 hover:bg-primary/90 shadow-xl transition-all">
-              <Link href="#contact">Consulta VIP</Link>
+            <div className="flex flex-col items-end mr-2 hidden xl:flex">
+              <span className="text-[10px] font-bold text-[#333333] dark:text-white/40">VIP Line</span>
+              <span className="text-xs font-black text-[#003B49] dark:text-accent">098 424 6986</span>
+            </div>
+            <Button asChild className="rounded-none bg-[#49A9B4] text-white px-8 font-bold text-[11px] uppercase tracking-widest h-12 hover:bg-[#3a8992] shadow-xl transition-all border-none">
+              <Link href="#contact">Agendar Cita</Link>
             </Button>
           </div>
         </nav>
 
         {/* Mobile Nav */}
-        <div className="flex md:hidden items-center space-x-4">
+        <div className="flex lg:hidden items-center space-x-4">
           <ThemeToggle />
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
@@ -87,8 +98,11 @@ export function Navigation() {
                   {item.name}
                 </Link>
               ))}
-              <div className="mt-auto pb-10">
-                <Button className="w-full rounded-none py-8 text-xs font-bold uppercase tracking-widest bg-primary text-white" asChild>
+              <div className="mt-auto pb-10 space-y-4">
+                <div className="text-center">
+                  <span className="text-xs font-bold text-muted-foreground block">Call us: 098 424 6986</span>
+                </div>
+                <Button className="w-full rounded-none py-8 text-xs font-bold uppercase tracking-widest bg-accent text-white" asChild>
                   <Link href="#contact" onClick={() => setIsOpen(false)}>Agendar Ahora</Link>
                 </Button>
               </div>

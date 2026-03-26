@@ -65,7 +65,7 @@ export function TreatmentCatalog() {
         {/* Encabezado dual */}
         <div className="mb-16 md:mb-32 flex flex-col items-center text-center">
           <div className="dark:hidden contents">
-            <Badge variant="outline" className="mb-8 px-6 py-2 border-primary text-primary text-[10px] uppercase font-bold tracking-[0.4em]">
+            <Badge variant="outline" className="mb-8 px-6 py-2 border-accent text-accent text-[10px] uppercase font-bold tracking-[0.4em]">
               Protocolos Quirúrgicos Certificados
             </Badge>
             <h2 className="text-5xl md:text-[10rem] font-black uppercase tracking-tighter text-primary leading-[0.85]">
@@ -148,10 +148,10 @@ function TreatmentCard({ item, idx }: { item: any; idx: number }) {
         />
         <div className="absolute inset-0 bg-primary/5 group-hover:bg-transparent transition-colors" />
         
-        {/* Icono dinámico en esquina superior izquierda */}
+        {/* Icono dinámico */}
         <div className="absolute top-0 left-0 h-12 w-12 md:h-16 md:w-16 bg-white dark:bg-black flex items-center justify-center transition-all group-hover:bg-primary group-hover:dark:bg-accent">
-          <div className="dark:hidden"><ShieldCheck className="h-5 w-5 md:h-6 md:w-6 text-primary group-hover:text-white" /></div>
-          <div className="hidden dark:block"><Sparkles className="h-5 w-5 md:h-6 md:w-6 text-accent group-hover:text-black" /></div>
+          <ShieldCheck className="h-5 w-5 md:h-6 md:w-6 text-primary group-hover:text-white dark:hidden" />
+          <Sparkles className="h-5 w-5 md:h-6 md:w-6 text-accent group-hover:text-black hidden dark:block" />
         </div>
 
         {item.badge && (
@@ -159,10 +159,6 @@ function TreatmentCard({ item, idx }: { item: any; idx: number }) {
             {item.badge}
           </div>
         )}
-        
-        <div className="absolute bottom-0 right-0 p-3 md:p-4 text-[8px] md:text-[10px] font-bold text-white/50 uppercase tracking-widest bg-black/20 backdrop-blur">
-          Case: #0{idx + 1}
-        </div>
       </div>
       
       <CardHeader className="p-0 space-y-4 md:space-y-6">
