@@ -1,28 +1,53 @@
+
 {
   "placeholderImages": [
     {
-      "id": "hero-clinic-ext",
-      "description": "Fachada de clínica estética de lujo moderna",
-      "imageUrl": "https://picsum.photos/seed/lux-building/1920/1080",
+      "id": "hero-bg",
+      "description": "Fondo arquitectónico de lujo para el hero",
+      "imageUrl": "https://picsum.photos/seed/lux-arch/1920/1080",
       "imageHint": "luxury architecture"
     },
     {
-      "id": "cat-facial",
-      "description": "Resultado de rejuvenecimiento facial",
-      "imageUrl": "https://picsum.photos/seed/face-res/800/600",
-      "imageHint": "facial aesthetics"
+      "id": "face-1",
+      "description": "Resultado de rinoplastia",
+      "imageUrl": "https://picsum.photos/seed/face1/800/1000",
+      "imageHint": "facial profile"
     },
     {
-      "id": "cat-body",
-      "description": "Resultado de contorno corporal",
-      "imageUrl": "https://picsum.photos/seed/body-res/800/600",
+      "id": "face-2",
+      "description": "Resultado de rejuvenecimiento facial",
+      "imageUrl": "https://picsum.photos/seed/face2/800/1000",
+      "imageHint": "smooth skin"
+    },
+    {
+      "id": "face-3",
+      "description": "Perfilado de mandíbula",
+      "imageUrl": "https://picsum.photos/seed/face3/800/1000",
+      "imageHint": "jawline contour"
+    },
+    {
+      "id": "body-1",
+      "description": "Resultado de lipoescultura",
+      "imageUrl": "https://picsum.photos/seed/body1/800/1000",
       "imageHint": "body sculpting"
     },
     {
-      "id": "cat-injectables",
-      "description": "Detalle de tratamiento de labios y piel",
-      "imageUrl": "https://picsum.photos/seed/skin-res/800/600",
-      "imageHint": "skincare beauty"
+      "id": "body-2",
+      "description": "Abdomen plano",
+      "imageUrl": "https://picsum.photos/seed/body2/800/1000",
+      "imageHint": "toned stomach"
+    },
+    {
+      "id": "skin-1",
+      "description": "Tratamiento de labios",
+      "imageUrl": "https://picsum.photos/seed/skin1/800/1000",
+      "imageHint": "lip filler"
+    },
+    {
+      "id": "skin-2",
+      "description": "Cuidado de la piel avanzado",
+      "imageUrl": "https://picsum.photos/seed/skin2/800/1000",
+      "imageHint": "radiant skin"
     },
     {
       "id": "testimonial-1",

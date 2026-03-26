@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,7 +6,8 @@
 @layer base {
   :root {
     /* MODO CLARO: "THE INSURANCE LOOK" - Corporativo, Seguro, Médico */
-    --background: 180 40% 98%;
+    /* Paleta: Teal Médico y Cyan de Respaldo */
+    --background: 180 40% 99%;
     --foreground: 180 80% 5%;
     --card: 0 0% 100%;
     --card-foreground: 180 80% 5%;
@@ -17,12 +19,12 @@
     --secondary-foreground: 174 100% 20%;
     --muted: 180 20% 94%;
     --muted-foreground: 180 40% 35%;
-    --accent: 180 80% 40%; 
+    --accent: 180 80% 45%; 
     --accent-foreground: 0 0% 100%;
     --border: 180 20% 88%;
     --input: 180 20% 88%;
     --ring: 174 100% 29%;
-    --radius: 0.1rem; /* Bordes rectos corporativos */
+    --radius: 0rem; /* Bordes totalmente rectos corporativos */
     
     --font-main: 'Inter', sans-serif;
     --font-display: 'Inter', sans-serif;
@@ -30,24 +32,25 @@
   
   .dark {
     /* MODO OSCURO: "THE FASHION LOOK" - Editorial, Soho, Lujo */
-    --background: 340 60% 3%;
+    /* Paleta: Deep Plum y Rose Soho */
+    --background: 340 60% 2%;
     --foreground: 340 20% 98%;
-    --card: 340 60% 5%;
+    --card: 340 60% 4%;
     --card-foreground: 340 20% 98%;
-    --popover: 340 60% 4%;
+    --popover: 340 60% 3%;
     --popover-foreground: 340 20% 98%;
     --primary: 340 75% 55%; 
     --primary-foreground: 340 60% 2%;
-    --secondary: 340 40% 12%;
+    --secondary: 340 40% 10%;
     --secondary-foreground: 340 20% 98%;
-    --muted: 340 40% 10%;
+    --muted: 340 40% 8%;
     --muted-foreground: 340 20% 70%; 
-    --accent: 340 90% 65%; 
+    --accent: 340 95% 65%; 
     --accent-foreground: 340 20% 98%;
-    --border: 340 40% 15%;
-    --input: 340 40% 15%;
+    --border: 340 40% 12%;
+    --input: 340 40% 12%;
     --ring: 340 75% 55%;
-    --radius: 0rem; /* Editorial puro */
+    --radius: 0rem; /* Editorial sin bordes redondeados */
 
     --font-main: 'Inter', sans-serif;
     --font-display: 'Alegreya', serif;
@@ -61,44 +64,59 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-main);
-    transition: background-color 1.2s ease, color 1.2s ease;
+    transition: background-color 1.5s ease, color 1.5s ease;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    @apply font-bold tracking-tight;
+    @apply font-bold tracking-tighter;
   }
 }
 
 /* Estilos Específicos por Modo */
 .insurance-header {
-  @apply uppercase tracking-[0.2em] text-[11px] font-bold text-primary border-l-4 border-primary pl-4;
+  @apply uppercase tracking-[0.5em] text-[12px] font-black text-primary border-l-8 border-accent pl-6 py-1 mb-8;
 }
 
 .fashion-header {
-  @apply italic font-light text-accent lowercase tracking-normal;
+  @apply italic font-light text-accent lowercase tracking-[0.2em] mb-4 text-3xl;
 }
 
 .dark .magazine-title {
-  @apply font-headline font-bold uppercase tracking-tighter text-7xl md:text-9xl leading-[0.8];
+  @apply font-headline font-bold uppercase tracking-tighter leading-[0.75] italic;
 }
 
 .dark .glass-card {
-  background: hsla(340, 70%, 55%, 0.05);
-  border: 1px solid hsla(340, 70%, 55%, 0.15);
-  backdrop-filter: blur(12px);
+  background: hsla(340, 70%, 55%, 0.03);
+  border: 1px solid hsla(340, 70%, 55%, 0.1);
+  backdrop-filter: blur(24px);
 }
 
 .light .glass-card {
-  background: hsla(174, 100%, 29%, 0.02);
-  border: 1px solid hsla(174, 100%, 29%, 0.1);
+  background: hsla(174, 100%, 29%, 0.01);
+  border: 1px solid hsla(174, 100%, 29%, 0.08);
+  backdrop-filter: blur(24px);
+}
+
+.animate-spin-slow {
+  animation: spin 8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .animate-custom-whatsapp {
-  animation: pulse-custom 2s infinite;
+  animation: pulse-custom 3s infinite;
 }
 
 @keyframes pulse-custom {
-  0% { transform: scale(1); box-shadow: 0 0 0 0 hsl(var(--primary) / 0.4); }
-  70% { transform: scale(1.1); box-shadow: 0 0 0 15px hsl(var(--primary) / 0); }
+  0% { transform: scale(1); box-shadow: 0 0 0 0 hsl(var(--primary) / 0.2); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 25px hsl(var(--primary) / 0); }
   100% { transform: scale(1); box-shadow: 0 0 0 0 hsl(var(--primary) / 0); }
+}
+
+/* Shadow Custom */
+.shadow-3xl {
+  box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.25), 0 30px 60px -30px rgba(0, 0, 0, 0.3);
 }
