@@ -4,8 +4,8 @@
 
 @layer base {
   :root {
-    /* MODO CLARO: Salubre, Elegante y Exclusivo (Teal & Cyan) */
-    --background: 180 40% 99%;
+    /* MODO CLARO: "THE INSURANCE LOOK" - Corporativo, Seguro, Médico */
+    --background: 180 40% 98%;
     --foreground: 180 80% 5%;
     --card: 0 0% 100%;
     --card-foreground: 180 80% 5%;
@@ -13,37 +13,44 @@
     --popover-foreground: 180 80% 5%;
     --primary: 174 100% 29%; 
     --primary-foreground: 0 0% 100%;
-    --secondary: 180 50% 96%;
+    --secondary: 180 30% 94%;
     --secondary-foreground: 174 100% 20%;
-    --muted: 180 20% 96%;
+    --muted: 180 20% 94%;
     --muted-foreground: 180 40% 35%;
-    --accent: 180 70% 45%; 
+    --accent: 180 80% 40%; 
     --accent-foreground: 0 0% 100%;
-    --border: 180 30% 92%;
-    --input: 180 30% 92%;
+    --border: 180 20% 88%;
+    --input: 180 20% 88%;
     --ring: 174 100% 29%;
-    --radius: 0.2rem;
+    --radius: 0.1rem; /* Bordes rectos corporativos */
+    
+    --font-main: 'Inter', sans-serif;
+    --font-display: 'Inter', sans-serif;
   }
   
   .dark {
-    /* MODO OSCURO: Soho Magazine (Deep Plum & Rose) */
-    --background: 340 60% 2%;
+    /* MODO OSCURO: "THE FASHION LOOK" - Editorial, Soho, Lujo */
+    --background: 340 60% 3%;
     --foreground: 340 20% 98%;
-    --card: 340 60% 4%;
+    --card: 340 60% 5%;
     --card-foreground: 340 20% 98%;
-    --popover: 340 60% 3%;
+    --popover: 340 60% 4%;
     --popover-foreground: 340 20% 98%;
-    --primary: 340 70% 55%; 
+    --primary: 340 75% 55%; 
     --primary-foreground: 340 60% 2%;
-    --secondary: 340 40% 10%;
+    --secondary: 340 40% 12%;
     --secondary-foreground: 340 20% 98%;
-    --muted: 340 40% 8%;
-    --muted-foreground: 340 20% 75%; 
-    --accent: 340 85% 65%; 
+    --muted: 340 40% 10%;
+    --muted-foreground: 340 20% 70%; 
+    --accent: 340 90% 65%; 
     --accent-foreground: 340 20% 98%;
-    --border: 340 40% 12%;
-    --input: 340 40% 12%;
-    --ring: 340 70% 55%;
+    --border: 340 40% 15%;
+    --input: 340 40% 15%;
+    --ring: 340 75% 55%;
+    --radius: 0rem; /* Editorial puro */
+
+    --font-main: 'Inter', sans-serif;
+    --font-display: 'Alegreya', serif;
   }
 }
 
@@ -52,42 +59,38 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-body antialiased;
-    /* Usamos CSS puro para evitar errores de Turbopack con valores arbitrarios en @apply */
-    transition: background-color 1500ms ease-in-out, color 1500ms ease-in-out;
-    letter-spacing: -0.01em;
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-main);
+    transition: background-color 1.2s ease, color 1.2s ease;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-headline;
-    letter-spacing: -0.03em;
+    font-family: var(--font-display);
+    @apply font-bold tracking-tight;
   }
 }
 
-.font-headline {
-  font-family: 'Alegreya', serif;
+/* Estilos Específicos por Modo */
+.insurance-header {
+  @apply uppercase tracking-[0.2em] text-[11px] font-bold text-primary border-l-4 border-primary pl-4;
 }
 
-.font-body {
-  font-family: 'Inter', sans-serif;
+.fashion-header {
+  @apply italic font-light text-accent lowercase tracking-normal;
 }
 
-.magazine-title {
-  @apply font-headline font-bold uppercase tracking-tighter;
-}
-
-/* Glassmorphism Refinado */
-.glass-card {
-  @apply backdrop-blur-[20px] border;
-  transition: all 1500ms ease-in-out;
-  background: hsla(180, 100%, 29%, 0.02); 
-  border-color: hsla(174, 100%, 29%, 0.08);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+.dark .magazine-title {
+  @apply font-headline font-bold uppercase tracking-tighter text-7xl md:text-9xl leading-[0.8];
 }
 
 .dark .glass-card {
-  background: hsla(340, 70%, 55%, 0.06);
-  border-color: hsla(340, 70%, 55%, 0.15);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  background: hsla(340, 70%, 55%, 0.05);
+  border: 1px solid hsla(340, 70%, 55%, 0.15);
+  backdrop-filter: blur(12px);
+}
+
+.light .glass-card {
+  background: hsla(174, 100%, 29%, 0.02);
+  border: 1px solid hsla(174, 100%, 29%, 0.1);
 }
 
 .animate-custom-whatsapp {
@@ -96,6 +99,6 @@
 
 @keyframes pulse-custom {
   0% { transform: scale(1); box-shadow: 0 0 0 0 hsl(var(--primary) / 0.4); }
-  70% { transform: scale(1.05); box-shadow: 0 0 0 15px hsl(var(--primary) / 0); }
+  70% { transform: scale(1.1); box-shadow: 0 0 0 15px hsl(var(--primary) / 0); }
   100% { transform: scale(1); box-shadow: 0 0 0 0 hsl(var(--primary) / 0); }
 }
