@@ -2,46 +2,46 @@
 {
   "placeholderImages": [
     {
-      "id": "hero-clinic",
-      "description": "Modern luxury aesthetic clinic interior",
-      "imageUrl": "https://picsum.photos/seed/clinic1/1200/600",
-      "imageHint": "luxury clinic"
+      "id": "hero-clinic-ext",
+      "description": "Fachada de clínica estética de lujo moderna",
+      "imageUrl": "https://picsum.photos/seed/lux-building/1920/1080",
+      "imageHint": "luxury architecture"
     },
     {
-      "id": "treatment-rhinoplasty",
-      "description": "Facial aesthetic treatment results",
-      "imageUrl": "https://picsum.photos/seed/rhino/600/400",
-      "imageHint": "facial surgery"
+      "id": "cat-facial",
+      "description": "Resultado de rejuvenecimiento facial",
+      "imageUrl": "https://picsum.photos/seed/face-res/800/600",
+      "imageHint": "facial aesthetics"
     },
     {
-      "id": "treatment-skincare",
-      "description": "Advanced skin rejuvenation therapy",
-      "imageUrl": "https://picsum.photos/seed/skin/600/400",
-      "imageHint": "skincare treatment"
+      "id": "cat-body",
+      "description": "Resultado de contorno corporal",
+      "imageUrl": "https://picsum.photos/seed/body-res/800/600",
+      "imageHint": "body sculpting"
     },
     {
-      "id": "treatment-body",
-      "description": "Body contouring and sculpting",
-      "imageUrl": "https://picsum.photos/seed/body/600/400",
-      "imageHint": "body contouring"
+      "id": "cat-injectables",
+      "description": "Detalle de tratamiento de labios y piel",
+      "imageUrl": "https://picsum.photos/seed/skin-res/800/600",
+      "imageHint": "skincare beauty"
     },
     {
       "id": "testimonial-1",
-      "description": "Happy patient portrait",
+      "description": "Paciente satisfecha",
       "imageUrl": "https://picsum.photos/seed/p1/200/200",
-      "imageHint": "smiling person"
+      "imageHint": "happy woman"
     },
     {
       "id": "testimonial-2",
-      "description": "Confident client after treatment",
+      "description": "Cliente masculino",
       "imageUrl": "https://picsum.photos/seed/p2/200/200",
-      "imageHint": "confident woman"
+      "imageHint": "confident man"
     },
     {
       "id": "testimonial-3",
-      "description": "Satisfied patient",
+      "description": "Paciente joven",
       "imageUrl": "https://picsum.photos/seed/p3/200/200",
-      "imageHint": "happy patient"
+      "imageHint": "smiling patient"
     }
   ]
 }
