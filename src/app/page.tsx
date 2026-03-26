@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Navigation } from "@/components/Navigation";
 import { TreatmentCatalog } from "@/components/TreatmentCatalog";
 import { AIGuide } from "@/components/AIGuide";
@@ -9,6 +8,15 @@ import { Toaster } from "@/components/ui/toaster";
 import { ShieldCheck, ArrowRight, Zap, Globe, HeartPulse } from "lucide-react";
 import Link from "next/link";
 
+const heroContent = {
+  badge: "Respaldo Quirúrgico Certificado",
+  title: "Define tu cuerpo, eleva tu confianza con la ",
+  highlight: "Abdominoplastia",
+  description: "Descubre un abdomen más firme y plano eliminando el exceso de piel y grasa. Resultados naturales y personalizados con garantía médica.",
+  cta: "Saber más de la Cirugía",
+  subText: "Protocolo de Bioseguridad Nivel 5"
+};
+
 export default function Home() {
   const stats = [
     { label: "Casos Auditados", val: "15.000+", icon: Zap },
@@ -17,27 +25,16 @@ export default function Home() {
     { label: "Tasa de Éxito", val: "100%", icon: ShieldCheck }
   ];
 
-  const heroContent = {
-    badge: "Respaldo Quirúrgico Certificado",
-    title: "Define tu cuerpo, eleva tu confianza con la ",
-    highlight: "Abdominoplastia",
-    description: "Descubre un abdomen más firme y plano eliminando el exceso de piel y grasa. Resultados naturales y personalizados con garantía médica.",
-    cta: "Saber más de la Cirugía",
-    subText: "Protocolo de Bioseguridad Nivel 5"
-  };
-
   return (
     <div className="min-h-screen">
       <Navigation />
       
-      {/* Hero Section: Unified Content, Dual Styling */}
-      <section className="relative min-h-[calc(100vh-6rem)] mt-24 flex items-center overflow-hidden border-b">
-        
-        {/* Split Screen Layout */}
+      {/* Hero Section: Split Layout with Experience Squares */}
+      <section className="relative mt-24 lg:mt-32 min-h-[calc(100vh-8rem)] flex items-center overflow-hidden border-b">
         <div className="w-full h-full grid grid-cols-1 lg:grid-cols-2">
           
           {/* Content Side */}
-          <div className="flex flex-col justify-center px-8 lg:px-24 py-12 bg-gradient-to-br from-[#e0f7fa] via-[#b2ebf2] to-[#49A9B4]/10 dark:from-background dark:via-background dark:to-accent/5">
+          <div className="flex flex-col justify-center px-8 lg:px-24 py-16 bg-gradient-to-br from-[#e0f7fa] via-[#b2ebf2] to-[#49A9B4]/10 dark:from-background dark:via-background dark:to-accent/5">
             <div className="space-y-8 animate-in fade-in slide-in-from-left duration-1000 max-w-2xl">
               <div className="insurance-header dark:text-accent dark:border-accent">
                 {heroContent.badge}
@@ -61,64 +58,23 @@ export default function Home() {
                   <span>{heroContent.subText}</span>
                 </div>
               </div>
-
-              {/* Experience Stats Integrated for Large Screens */}
-              <div className="hidden xl:grid grid-cols-2 gap-8 pt-12 border-t border-primary/10 dark:border-white/10 mt-12">
-                {stats.map((stat, i) => (
-                  <div key={i} className="flex items-start space-x-4">
-                    <stat.icon className="h-6 w-6 text-primary dark:text-accent mt-1" />
-                    <div>
-                      <div className="text-2xl font-black dark:font-headline dark:italic tracking-tighter text-[#003B49] dark:text-white">
-                        {stat.val}
-                      </div>
-                      <div className="text-[9px] uppercase tracking-[0.3em] font-bold text-muted-foreground">
-                        {stat.label}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
 
-          {/* Visual Side */}
-          <div className="relative hidden lg:block overflow-hidden min-h-[600px]">
-            {/* Image for Light Mode */}
-            <div className="dark:hidden absolute inset-0">
-              <Image
-                src="https://picsum.photos/seed/abdomen-lux/1000/1500"
-                alt="Resultados Abdominoplastia"
-                fill
-                className="object-cover"
-                priority
-                data-ai-hint="toned abdomen"
-              />
-            </div>
-            {/* Image for Dark Mode (Soho Look) */}
-            <div className="hidden dark:block absolute inset-0">
-              <Image
-                src="https://picsum.photos/seed/lux-arch/1920/1080"
-                alt="N-Vitality Architecture"
-                fill
-                className="object-cover grayscale-0 transition-all duration-[3s]"
-                priority
-                data-ai-hint="luxury architecture"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-transparent" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Trust Stats Section (Visible only on mobile/medium screens now) */}
-      <section className="xl:hidden py-16 border-b bg-muted/20 backdrop-blur-sm relative z-20">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          {/* Experience Grid Side (Replaces visual image) */}
+          <div className="grid grid-cols-2 bg-[#003B49] dark:bg-card">
             {stats.map((stat, i) => (
-              <div key={i} className="group cursor-default space-y-4">
-                <stat.icon className="h-6 w-6 mx-auto text-primary opacity-40 group-hover:opacity-100 transition-all duration-500" />
-                <div className="text-4xl font-black dark:font-headline dark:italic tracking-tighter transition-colors group-hover:text-primary">{stat.val}</div>
-                <div className="text-[8px] uppercase tracking-[0.3em] font-bold text-muted-foreground">{stat.label}</div>
+              <div 
+                key={i} 
+                className="flex flex-col items-center justify-center p-8 border border-white/5 group hover:bg-accent/10 transition-colors duration-500"
+              >
+                <stat.icon className="h-10 w-10 text-accent mb-6 opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all" />
+                <div className="text-4xl lg:text-5xl font-black text-white dark:font-headline dark:italic tracking-tighter mb-2">
+                  {stat.val}
+                </div>
+                <div className="text-[10px] uppercase tracking-[0.4em] font-bold text-white/40 text-center">
+                  {stat.label}
+                </div>
               </div>
             ))}
           </div>
