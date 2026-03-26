@@ -1,0 +1,47 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "hero-clinic",
+      "description": "Modern luxury aesthetic clinic interior",
+      "imageUrl": "https://picsum.photos/seed/clinic1/1200/600",
+      "imageHint": "luxury clinic"
+    },
+    {
+      "id": "treatment-rhinoplasty",
+      "description": "Facial aesthetic treatment results",
+      "imageUrl": "https://picsum.photos/seed/rhino/600/400",
+      "imageHint": "facial surgery"
+    },
+    {
+      "id": "treatment-skincare",
+      "description": "Advanced skin rejuvenation therapy",
+      "imageUrl": "https://picsum.photos/seed/skin/600/400",
+      "imageHint": "skincare treatment"
+    },
+    {
+      "id": "treatment-body",
+      "description": "Body contouring and sculpting",
+      "imageUrl": "https://picsum.photos/seed/body/600/400",
+      "imageHint": "body contouring"
+    },
+    {
+      "id": "testimonial-1",
+      "description": "Happy patient portrait",
+      "imageUrl": "https://picsum.photos/seed/p1/200/200",
+      "imageHint": "smiling person"
+    },
+    {
+      "id": "testimonial-2",
+      "description": "Confident client after treatment",
+      "imageUrl": "https://picsum.photos/seed/p2/200/200",
+      "imageHint": "confident woman"
+    },
+    {
+      "id": "testimonial-3",
+      "description": "Satisfied patient",
+      "imageUrl": "https://picsum.photos/seed/p3/200/200",
+      "imageHint": "happy patient"
+    }
+  ]
+}
