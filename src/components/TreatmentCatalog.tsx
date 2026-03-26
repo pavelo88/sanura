@@ -59,7 +59,7 @@ const treatments = [
 
 export function TreatmentCatalog() {
   return (
-    <section id="treatments" className="py-24 md:py-40 bg-background transition-colors duration-[1.5s]">
+    <section id="treatments" className="py-24 md:py-40 bg-background transition-colors duration-[1500ms]">
       <div className="container mx-auto px-6">
         
         {/* Encabezado dual */}
@@ -143,7 +143,7 @@ function TreatmentCard({ item, idx }: { item: any; idx: number }) {
           src={item.img}
           alt={item.name}
           fill
-          className="object-cover grayscale hover:grayscale-0 transition-all duration-[2s] group-hover:scale-105"
+          className="object-cover grayscale hover:grayscale-0 transition-all duration-[2000ms] group-hover:scale-105"
           data-ai-hint={item.hint}
         />
         <div className="absolute inset-0 bg-primary/5 group-hover:bg-transparent transition-colors" />

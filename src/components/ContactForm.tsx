@@ -22,7 +22,7 @@ export function ContactForm() {
   };
 
   return (
-    <section id="contact" className="py-32 bg-primary dark:bg-card text-white relative overflow-hidden transition-colors duration-[1.2s]">
+    <section id="contact" className="py-32 bg-primary dark:bg-card text-white relative overflow-hidden transition-colors duration-[1200ms]">
       <div className="absolute top-0 right-0 p-20 opacity-5">
         <div className="dark:hidden"><ShieldCheck className="h-96 w-96 rotate-12" /></div>
         <div className="hidden dark:block"><Sparkles className="h-96 w-96 -rotate-12" /></div>
