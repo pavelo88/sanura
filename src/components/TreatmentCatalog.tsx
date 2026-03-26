@@ -1,4 +1,3 @@
-
 "use client";
 
 import Image from "next/image";
@@ -6,6 +5,13 @@ import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/ca
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ShieldCheck, Sparkles } from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const treatments = [
   {
@@ -53,40 +59,40 @@ const treatments = [
 
 export function TreatmentCatalog() {
   return (
-    <section id="treatments" className="py-40 bg-background transition-colors duration-[1.5s]">
+    <section id="treatments" className="py-24 md:py-40 bg-background transition-colors duration-[1.5s]">
       <div className="container mx-auto px-6">
         
         {/* Encabezado dual */}
-        <div className="mb-32 flex flex-col items-center text-center">
+        <div className="mb-16 md:mb-32 flex flex-col items-center text-center">
           <div className="dark:hidden contents">
-            <Badge variant="outline" className="mb-8 px-6 py-2 border-primary text-primary text-xs uppercase font-bold tracking-[0.4em]">
+            <Badge variant="outline" className="mb-8 px-6 py-2 border-primary text-primary text-[10px] uppercase font-bold tracking-[0.4em]">
               Protocolos Quirúrgicos Certificados
             </Badge>
-            <h2 className="text-6xl md:text-[10rem] font-black uppercase tracking-tighter text-primary leading-[0.8]">
+            <h2 className="text-5xl md:text-[10rem] font-black uppercase tracking-tighter text-primary leading-[0.85]">
               26 <span className="text-accent">Garantías</span>
             </h2>
           </div>
           
           <div className="hidden dark:contents">
-            <span className="text-accent font-serif italic text-3xl mb-6 lowercase tracking-[0.3em]">the soho archives</span>
-            <h2 className="text-7xl md:text-[14rem] font-headline font-bold text-primary leading-[0.7]">
+            <span className="text-accent font-serif italic text-2xl md:text-3xl mb-6 lowercase tracking-[0.3em]">the soho archives</span>
+            <h2 className="text-6xl md:text-[14rem] font-headline font-bold text-primary leading-[0.75]">
               Edition <br /><span className="text-accent italic font-light lowercase">v.twenty-six</span>
             </h2>
           </div>
           
-          <p className="mt-12 text-2xl text-muted-foreground max-w-3xl font-light leading-relaxed dark:italic opacity-80">
+          <p className="mt-8 md:mt-12 text-lg md:text-2xl text-muted-foreground max-w-3xl font-light leading-relaxed dark:italic opacity-80">
             Una selección curada donde la rigorosa ciencia médica se encuentra con la visión editorial de la belleza.
           </p>
         </div>
 
         <Tabs defaultValue="Cirugía Facial" className="w-full">
-          <div className="flex justify-center mb-24">
-            <TabsList className="bg-muted p-2 rounded-none border border-border h-auto">
+          <div className="flex justify-center mb-12 md:mb-24">
+            <TabsList className="bg-muted p-1 md:p-2 rounded-none border border-border h-auto overflow-x-auto">
               {treatments.map((cat) => (
                 <TabsTrigger 
                   key={cat.category} 
                   value={cat.category} 
-                  className="px-12 py-4 rounded-none text-xs uppercase font-bold tracking-[0.2em] data-[state=active]:bg-primary data-[state=active]:text-white transition-all shadow-sm"
+                  className="px-6 md:px-12 py-3 md:py-4 rounded-none text-[10px] uppercase font-bold tracking-[0.2em] data-[state=active]:bg-primary data-[state=active]:text-white transition-all"
                 >
                   {cat.category}
                 </TabsTrigger>
@@ -95,54 +101,80 @@ export function TreatmentCatalog() {
           </div>
 
           {treatments.map((category) => (
-            <TabsContent key={category.category} value={category.category} className="animate-in fade-in zoom-in duration-1000">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16">
-                {category.items.map((item, idx) => (
-                  <Card key={idx} className="group border-none bg-transparent shadow-none hover:-translate-y-4 transition-all duration-700">
-                    <div className="relative h-[650px] w-full bg-muted overflow-hidden mb-10 shadow-3xl">
-                      <Image
-                        src={item.img}
-                        alt={item.name}
-                        fill
-                        className="object-cover grayscale hover:grayscale-0 transition-all duration-[2s] group-hover:scale-105"
-                        data-ai-hint={item.hint}
-                      />
-                      <div className="absolute inset-0 bg-primary/5 group-hover:bg-transparent transition-colors" />
-                      
-                      {/* Icono dinámico en esquina superior izquierda */}
-                      <div className="absolute top-0 left-0 h-16 w-16 bg-white dark:bg-black flex items-center justify-center transition-all group-hover:bg-primary group-hover:dark:bg-accent">
-                        <div className="dark:hidden"><ShieldCheck className="h-6 w-6 text-primary group-hover:text-white" /></div>
-                        <div className="hidden dark:block"><Sparkles className="h-6 w-6 text-accent group-hover:text-black" /></div>
-                      </div>
+            <TabsContent key={category.category} value={category.category} className="animate-in fade-in zoom-in duration-700">
+              
+              {/* Carrusel para Celular */}
+              <div className="block md:hidden">
+                <Carousel className="w-full">
+                  <CarouselContent>
+                    {category.items.map((item, idx) => (
+                      <CarouselItem key={idx}>
+                        <TreatmentCard item={item} idx={idx} />
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <div className="flex justify-center space-x-4 mt-8">
+                    <CarouselPrevious className="static translate-y-0 h-12 w-12 rounded-none border-primary text-primary" />
+                    <CarouselNext className="static translate-y-0 h-12 w-12 rounded-none bg-primary text-white" />
+                  </div>
+                </Carousel>
+              </div>
 
-                      {item.badge && (
-                        <div className="absolute top-0 right-0 bg-accent text-white px-6 py-3 text-[10px] uppercase font-bold tracking-[0.3em] shadow-xl">
-                          {item.badge}
-                        </div>
-                      )}
-                      
-                      <div className="absolute bottom-0 right-0 p-4 text-[10px] font-bold text-white/50 uppercase tracking-widest bg-black/20 backdrop-blur">
-                        Case: #0{idx + 1}
-                      </div>
-                    </div>
-                    
-                    <CardHeader className="p-0 space-y-6">
-                      <div className="flex justify-between items-end border-b border-primary/20 pb-6">
-                        <CardTitle className="text-4xl font-black uppercase dark:font-headline dark:italic dark:lowercase dark:text-5xl group-hover:text-primary transition-colors duration-500">
-                          {item.name}
-                        </CardTitle>
-                      </div>
-                      <CardDescription className="text-lg text-muted-foreground font-light leading-relaxed dark:italic opacity-80">
-                        {item.description}
-                      </CardDescription>
-                    </CardHeader>
-                  </Card>
+              {/* Grid para Desktop */}
+              <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-16">
+                {category.items.map((item, idx) => (
+                  <TreatmentCard key={idx} item={item} idx={idx} />
                 ))}
               </div>
+
             </TabsContent>
           ))}
         </Tabs>
       </div>
     </section>
+  );
+}
+
+function TreatmentCard({ item, idx }: { item: any; idx: number }) {
+  return (
+    <Card className="group border-none bg-transparent shadow-none hover:-translate-y-4 transition-all duration-700">
+      <div className="relative aspect-[3/4] md:h-[650px] w-full bg-muted overflow-hidden mb-6 md:mb-10 shadow-3xl">
+        <Image
+          src={item.img}
+          alt={item.name}
+          fill
+          className="object-cover grayscale hover:grayscale-0 transition-all duration-[2s] group-hover:scale-105"
+          data-ai-hint={item.hint}
+        />
+        <div className="absolute inset-0 bg-primary/5 group-hover:bg-transparent transition-colors" />
+        
+        {/* Icono dinámico en esquina superior izquierda */}
+        <div className="absolute top-0 left-0 h-12 w-12 md:h-16 md:w-16 bg-white dark:bg-black flex items-center justify-center transition-all group-hover:bg-primary group-hover:dark:bg-accent">
+          <div className="dark:hidden"><ShieldCheck className="h-5 w-5 md:h-6 md:w-6 text-primary group-hover:text-white" /></div>
+          <div className="hidden dark:block"><Sparkles className="h-5 w-5 md:h-6 md:w-6 text-accent group-hover:text-black" /></div>
+        </div>
+
+        {item.badge && (
+          <div className="absolute top-0 right-0 bg-accent text-white px-4 md:px-6 py-2 md:py-3 text-[8px] md:text-[10px] uppercase font-bold tracking-[0.3em] shadow-xl">
+            {item.badge}
+          </div>
+        )}
+        
+        <div className="absolute bottom-0 right-0 p-3 md:p-4 text-[8px] md:text-[10px] font-bold text-white/50 uppercase tracking-widest bg-black/20 backdrop-blur">
+          Case: #0{idx + 1}
+        </div>
+      </div>
+      
+      <CardHeader className="p-0 space-y-4 md:space-y-6">
+        <div className="flex justify-between items-end border-b border-primary/20 pb-4 md:pb-6">
+          <CardTitle className="text-3xl md:text-4xl font-black uppercase dark:font-headline dark:italic dark:lowercase dark:text-5xl group-hover:text-primary transition-colors duration-500">
+            {item.name}
+          </CardTitle>
+        </div>
+        <CardDescription className="text-base md:text-lg text-muted-foreground font-light leading-relaxed dark:italic opacity-80">
+          {item.description}
+        </CardDescription>
+      </CardHeader>
+    </Card>
   );
 }
