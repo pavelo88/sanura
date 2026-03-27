@@ -2,8 +2,8 @@ import type {Metadata} from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'N-VITALITY & SOHO | Alta Estética y Cirugía',
-  description: 'Tratamientos de élite en cirugía plástica y medicina estética. Donde la ciencia médica se encuentra con la perfección artística.',
+  title: 'NVitality | Alta Estética & Rigor Médico',
+  description: 'Clínica de especialidades estéticas en Quito. El rigor científico se encuentra con la alta costura.',
 };
 
 export default function RootLayout({
@@ -16,10 +16,9 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* Variantes itálicas (ital) añadidas para el toque de revista editorial */}
-        <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased selection:bg-primary selection:text-white transition-colors duration-500">
+      <body className="antialiased selection:bg-[#3A8B99] selection:text-white">
         {children}
       </body>
     </html>
