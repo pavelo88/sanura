@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -12,24 +11,68 @@ import { QuickGuide } from '@/components/editorial/QuickGuide';
 import { LeadForm } from '@/components/editorial/LeadForm';
 import { TreatmentModal } from '@/components/editorial/TreatmentModal';
 
-// Data Centralizada
-import { serviciosData, Treatment } from '@/lib/clinic-data';
+// Data Centralizada y Firebase
+import { serviciosData, Category, Treatment } from '@/lib/clinic-data';
 import { getFirestore } from '@/firebase';
-import { doc, onSnapshot } from 'firebase/firestore';
+import { doc, collection, onSnapshot } from 'firebase/firestore';
 
 export default function App() {
   const [activeCategory, setActiveCategory] = useState<string>('01_medicina_estetica_facial');
   const [selectedTreatment, setSelectedTreatment] = useState<Treatment | null>(null);
   const [showCertModal, setShowCertModal] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Estado para la configuración del CMS (Hero, Dra, etc)
   const [siteConfig, setSiteConfig] = useState<any>(null);
+
+  // ESTADO SEGURO: Inicia con el 100% de tus datos locales garantizados
+  const [liveServices, setLiveServices] = useState<Category[]>(serviciosData);
 
   useEffect(() => {
     const db = getFirestore();
-    const unsub = onSnapshot(doc(db, 'settings', 'site-content'), (doc) => {
-      if (doc.exists()) setSiteConfig(doc.data());
+
+    // 1. Escuchar CMS (Textos principales)
+    const unsubSettings = onSnapshot(doc(db, 'settings', 'site-content'), (docSnap) => {
+      if (docSnap.exists()) {
+        setSiteConfig(docSnap.data());
+      }
     });
-    return () => unsub();
+
+    // 2. Escuchar Servicios (Fotos e info) con Fusión Segura
+    const unsubServices = onSnapshot(collection(db, 'services'), (snapshot) => {
+      if (!snapshot.empty) {
+        // Creamos un diccionario rápido con lo que venga de Firebase
+        const firebaseTreatments = new Map();
+        snapshot.docs.forEach(doc => {
+          firebaseTreatments.set(doc.id, doc.data());
+        });
+
+        // FUSIÓN: Tomamos los datos locales como molde inquebrantable
+        const mergedServices = serviciosData.map(category => ({
+          ...category,
+          items: category.items.map(localItem => {
+            const firebaseItem = firebaseTreatments.get(localItem.id);
+
+            // Si Firebase tiene datos de este tratamiento, los sobreescribe (ej: nuevas fotos)
+            // Si Firebase NO lo tiene, se queda el localItem intacto.
+            if (firebaseItem) {
+              return {
+                ...localItem,
+                ...firebaseItem // Lo de Firebase gana en caso de conflicto
+              };
+            }
+            return localItem;
+          })
+        }));
+
+        setLiveServices(mergedServices);
+      }
+    });
+
+    return () => {
+      unsubSettings();
+      unsubServices();
+    };
   }, []);
 
   useEffect(() => {
@@ -40,12 +83,13 @@ export default function App() {
     }
   }, [selectedTreatment, showCertModal]);
 
-  const activeCatData = serviciosData.find(c => c.id === activeCategory) || serviciosData[0];
+  // Usamos los datos fusionados
+  const activeCatData = liveServices.find(c => c.id === activeCategory) || liveServices[0];
 
   return (
     <div className={`${isDarkMode ? 'dark' : ''} w-full min-h-screen transition-colors duration-1000 bg-background`}>
       <div className="text-[#06414B] dark:text-[#E2E8F0] font-sans antialiased min-h-screen selection:bg-[#3A8B99] dark:selection:bg-[#5BC0BE] selection:text-white">
-        
+
         <Navbar isDarkMode={isDarkMode} toggleTheme={() => setIsDarkMode(!isDarkMode)} />
 
         <Hero onOpenCert={() => setShowCertModal(true)} siteConfig={siteConfig} />
@@ -64,26 +108,25 @@ export default function App() {
 
               <div className="relative">
                 <div className="flex overflow-x-auto hide-scrollbar gap-4 md:gap-6 lg:gap-10 mb-6 md:mb-8 border-b border-white/10 pb-px justify-start lg:justify-center">
-                  {serviciosData.map(cat => (
+                  {liveServices.map(cat => (
                     <button
                       key={cat.id}
                       onClick={() => setActiveCategory(cat.id)}
                       className={`whitespace-nowrap pb-4 text-[8px] md:text-[9px] font-bold tracking-[0.4em] md:tracking-[0.5em] uppercase transition-all border-b-2 flex-shrink-0
                       ${activeCategory === cat.id
-                        ? 'border-[#5BC0BE] text-[#06414B] dark:text-[#5BC0BE]'
-                        : 'border-transparent text-[#3A8B99]/70 dark:text-white/40 hover:text-[#06414B] dark:hover:text-white'}`}
+                          ? 'border-[#5BC0BE] text-[#06414B] dark:text-[#5BC0BE]'
+                          : 'border-transparent text-[#3A8B99]/70 dark:text-white/40 hover:text-[#06414B] dark:hover:text-white'}`}
                     >
                       {cat.title}
                     </button>
                   ))}
                 </div>
-                {/* Right fade hint for mobile scroll */}
                 <div className="md:hidden absolute right-0 top-0 bottom-2 w-10 bg-gradient-to-l from-white/80 dark:from-[#0D1A22]/80 to-transparent pointer-events-none" />
               </div>
 
-              <ServiceCarousel 
-                category={activeCatData} 
-                onSelectTreatment={setSelectedTreatment} 
+              <ServiceCarousel
+                category={activeCatData}
+                onSelectTreatment={setSelectedTreatment}
               />
             </div>
           </div>
