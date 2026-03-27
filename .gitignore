@@ -38,8 +38,21 @@ yarn-error.log*
 next-env.d.ts
 
 .genkit/*
-.env*
 
-# firebase
+# ============================================
+# CRITICAL: ENVIRONMENT FILES - NEVER COMMIT
+# ============================================
+.env
+.env.*
+.env.local
+.env.development
+.env.production
+.env.staging
+*.env
+
+# Firebase
 firebase-debug.log
 firestore-debug.log
+*-service-account*.json
+serviceAccountKey.json
+firebase-adminsdk*.json
