@@ -12,39 +12,39 @@ export const Navbar = ({ isDarkMode, toggleTheme }: NavbarProps) => {
   const WHATSAPP_URL = "https://wa.me/593983992549";
 
   return (
-    <nav className="fixed w-full z-50 bg-white/95 dark:bg-[#090D10]/95 backdrop-blur-md border-b border-[#C4E8E9] dark:border-[#162128] transition-all duration-500 shadow-sm">
+    <nav className="fixed w-full z-50 bg-[#06414B] border-b border-white/10 transition-all duration-500 shadow-2xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-24">
+        <div className="flex justify-between items-center h-20">
           
-          <a href="#" className="font-serif text-3xl tracking-[0.2em] font-semibold uppercase text-[#06414B] dark:text-white transition-colors">
+          <a href="#" className="font-serif text-2xl tracking-[0.2em] font-semibold uppercase text-white transition-colors">
             NVitality
           </a>
           
-          <div className="hidden lg:flex items-center space-x-12">
-            <a href="#servicios" className="text-[10px] font-bold tracking-[0.4em] uppercase text-[#3A8B99] dark:text-[#5BC0BE] hover:text-[#06414B] dark:hover:text-white transition-colors">Curaduría</a>
-            <a href="#experiencia" className="text-[10px] font-bold tracking-[0.4em] uppercase text-[#3A8B99] dark:text-[#5BC0BE] hover:text-[#06414B] dark:hover:text-white transition-colors">Rigor</a>
-            <a href="#guia" className="text-[10px] font-bold tracking-[0.4em] uppercase text-[#3A8B99] dark:text-[#5BC0BE] hover:text-[#06414B] dark:hover:text-white transition-colors">Guía</a>
+          <div className="hidden lg:flex items-center space-x-10">
+            <a href="#servicios" className="text-[9px] font-bold tracking-[0.4em] uppercase text-white/70 hover:text-[#5BC0BE] transition-colors">Curaduría</a>
+            <a href="#experiencia" className="text-[9px] font-bold tracking-[0.4em] uppercase text-white/70 hover:text-[#5BC0BE] transition-colors">Rigor</a>
+            <a href="#guia" className="text-[9px] font-bold tracking-[0.4em] uppercase text-white/70 hover:text-[#5BC0BE] transition-colors">Guía</a>
             
             <button 
               onClick={toggleTheme} 
-              className="p-3 bg-[#F0F8F9] dark:bg-[#121A21] rounded-full text-[#3A8B99] dark:text-[#5BC0BE] hover:text-[#06414B] dark:hover:text-white transition-all shadow-inner"
+              className="p-2.5 bg-white/5 rounded-full text-[#5BC0BE] hover:bg-white/10 hover:text-white transition-all border border-white/10"
               aria-label="Cambiar tema"
             >
-              {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+              {isDarkMode ? <Sun size={16} /> : <Moon size={16} />}
             </button>
 
             <a 
               href={WHATSAPP_URL} 
               target="_blank" 
               rel="noreferrer" 
-              className="bg-[#06414B] dark:bg-[#1A2833] border border-[#06414B] dark:border-[#5BC0BE] text-white px-10 py-4 text-[10px] font-bold tracking-[0.4em] uppercase hover:bg-white dark:hover:bg-[#5BC0BE] hover:text-[#06414B] dark:hover:text-[#090D10] transition-all shadow-xl"
+              className="bg-transparent border border-[#5BC0BE] text-[#5BC0BE] px-8 py-3 text-[9px] font-bold tracking-[0.4em] uppercase hover:bg-[#5BC0BE] hover:text-[#06414B] transition-all shadow-lg"
             >
               Agendar
             </a>
           </div>
           
-          <button className="lg:hidden p-3 text-[#06414B] dark:text-white">
-            <Menu size={32} />
+          <button className="lg:hidden p-3 text-white">
+            <Menu size={28} />
           </button>
         </div>
       </div>
