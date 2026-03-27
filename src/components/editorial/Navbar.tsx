@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -22,8 +23,9 @@ export const Navbar = ({ isDarkMode, toggleTheme }: NavbarProps) => {
           
           <div className="hidden lg:flex items-center space-x-10">
             <a href="#servicios" className="text-[9px] font-bold tracking-[0.4em] uppercase text-white/70 hover:text-[#5BC0BE] transition-colors">Curaduría</a>
-            <a href="#experiencia" className="text-[9px] font-bold tracking-[0.4em] uppercase text-white/70 hover:text-[#5BC0BE] transition-colors">Rigor</a>
-            <a href="#guia" className="text-[9px] font-bold tracking-[0.4em] uppercase text-white/70 hover:text-[#5BC0BE] transition-colors">Guía</a>
+            <a href="#doctora" className="text-[9px] font-bold tracking-[0.4em] uppercase text-white/70 hover:text-[#5BC0BE] transition-colors">Dra. Vitali</a>
+            <a href="#guia" className="text-[9px] font-bold tracking-[0.4em] uppercase text-white/70 hover:text-[#5BC0BE] transition-colors">Rigor</a>
+            <a href="#valoracion" className="text-[9px] font-bold tracking-[0.4em] uppercase text-white/70 hover:text-[#5BC0BE] transition-colors">Contacto</a>
             
             <button 
               onClick={toggleTheme} 
