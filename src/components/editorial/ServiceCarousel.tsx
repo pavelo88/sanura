@@ -12,14 +12,14 @@ interface ServiceCarouselProps {
 }
 
 export const ServiceCarousel = ({ category, onSelectTreatment }: ServiceCarouselProps) => {
-  const [autoplayDelay, setAutoplayDelay] = useState(2500);
+  const [autoplayDelay, setAutoplayDelay] = useState(2500); 
   
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { 
       loop: true, 
       align: 'center', 
       skipSnaps: false,
-      duration: 40 // Transición más lenta solicitada
+      duration: 50 // Transición más suave
     }, 
     [Autoplay({ delay: autoplayDelay, stopOnInteraction: false })]
   );
@@ -43,40 +43,44 @@ export const ServiceCarousel = ({ category, onSelectTreatment }: ServiceCarousel
 
   return (
     <div 
-      className="embla overflow-hidden py-16" 
+      className="embla overflow-hidden py-4 md:py-6" 
       ref={emblaRef}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="embla__container flex">
+      <div className="embla__container flex -ml-4 md:-ml-6">
         {category.items.map((item, index) => {
           const isSelected = selectedIndex === index;
           
           return (
             <div 
               key={item.id} 
-              className="embla__slide flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.33%] px-4 transition-transform duration-[1500ms] ease-out"
-              style={{ transform: isSelected ? 'scale(1.05)' : 'scale(0.95)' }}
+              className="embla__slide flex-[0_0_85%] sm:flex-[0_0_45%] lg:flex-[0_0_30%] pl-4 md:pl-6 transition-all duration-[1200ms] ease-out"
+              style={{ 
+                transform: isSelected ? 'scale(1.02)' : 'scale(0.95)',
+                opacity: isSelected ? 1 : 0.4
+              }}
             >
-              <div className="flex flex-col h-full bg-white dark:bg-[#121A21] border border-[#C4E8E9] dark:border-[#1F2E3A] shadow-xl overflow-hidden group">
-                <div className="h-[450px] relative overflow-hidden">
+              <div className="flex flex-col h-full bg-white dark:bg-[#121A21] border border-[#C4E8E9] dark:border-[#1F2E3A] shadow-lg overflow-hidden group">
+                <div className="h-[280px] md:h-[340px] relative overflow-hidden">
                   <BeforeAfterSlider 
                     imgAntes={item.imgAntes} 
                     imgDespues={item.imgDespues} 
-                    isCardMode={true} 
+                    isCardMode={true}
+                    isActive={isSelected} 
                   />
                 </div>
                 
-                <div className="p-8 flex flex-col flex-grow items-center text-center justify-between gap-6">
-                  <h4 className="font-serif text-2xl tracking-widest text-[#06414B] dark:text-white uppercase transition-colors group-hover:text-[#3A8B99] dark:group-hover:text-[#5BC0BE]">
+                <div className="p-4 flex flex-col items-center text-center justify-between gap-2">
+                  <h4 className="font-serif text-base tracking-widest text-[#06414B] dark:text-white uppercase transition-colors group-hover:text-[#3A8B99] dark:group-hover:text-[#5BC0BE] leading-tight">
                     {item.name}
                   </h4>
                   
                   <button 
                     onClick={() => onSelectTreatment(item)}
-                    className="w-full bg-[#06414B] dark:bg-[#1A2833] text-white py-5 text-[10px] font-bold tracking-[0.4em] uppercase hover:bg-[#3A8B99] dark:hover:bg-[#5BC0BE] dark:hover:text-[#090D10] transition-all"
+                    className="w-full bg-[#06414B] dark:bg-[#1A2833] text-white py-2.5 text-[7px] font-bold tracking-[0.4em] uppercase hover:bg-[#3A8B99] dark:hover:bg-[#5BC0BE] dark:hover:text-[#090D10] transition-all"
                   >
-                    Ver Protocolo Elite
+                    Detalle Elite
                   </button>
                 </div>
               </div>

@@ -1,10 +1,10 @@
 
 export const firebaseConfig = {
-  apiKey: "AIzaSyB3Da_l1gcLTyhqvawZsOlfamrt4ygeSRg",
-  authDomain: "nvitality-32876.firebaseapp.com",
-  projectId: "nvitality-32876",
-  storageBucket: "nvitality-32876.firebasestorage.app",
-  messagingSenderId: "779963091768",
-  appId: "1:779963091768:web:dde998520530d6a340cfcd",
-  measurementId: "G-54DECVMKB3"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
