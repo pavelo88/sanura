@@ -1,18 +1,23 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 191 100% 98%;
-    --foreground: 191 100% 14%;
-    --primary: 191 100% 14%;
-    --accent: 187 43% 50%;
+    /* MODO CLARO CORREGIDO: Más limpio, elegante y con buen contraste */
+    --background: 0 0% 100%;
+    /* Fondo blanco puro */
+    --foreground: 189 84% 15%;
+    /* Texto en tu azul oscuro corporativo */
+    --primary: 189 84% 15%;
+    /* Color principal oscuro */
+    --accent: 178 45% 55%;
+    /* El cian de la mariposa para detalles */
     --radius: 1.5rem;
   }
-  
+
   .dark {
+    /* MODO OSCURO (Intacto, como te gusta) */
     --background: 204 29% 5%;
     --foreground: 210 40% 98%;
     --primary: 180 47% 55%;
@@ -24,19 +29,24 @@
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
   .hide-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
   .glass-cyan {
-    @apply bg-[#5BC0BE]/10 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_0_rgba(91,192,190,0.15)];
+    @apply bg-[#5BC0BE]/10 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_0_rgba(91, 192, 190, 0.15)];
   }
+
   .glass-teal {
-    @apply bg-[#06414B]/30 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)];
+    @apply bg-[#06414B]/30 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_0_rgba(0, 0, 0, 0.5)];
   }
+
   .double-glass-light {
     @apply bg-white/20 backdrop-blur-3xl border border-white/40 shadow-2xl;
   }
+
   .double-glass-dark {
     @apply bg-[#06414B]/40 backdrop-blur-3xl border border-white/10 shadow-2xl;
   }
@@ -44,6 +54,6 @@
 
 body {
   @apply bg-background text-foreground transition-colors duration-700;
-  background-image: radial-gradient(circle at top right, rgba(91,192,190,0.05), transparent),
-                    radial-gradient(circle at bottom left, rgba(6,65,75,0.05), transparent);
+  background-image: radial-gradient(circle at top right, rgba(91, 192, 190, 0.05), transparent),
+    radial-gradient(circle at bottom left, rgba(6, 65, 75, 0.05), transparent);
 }

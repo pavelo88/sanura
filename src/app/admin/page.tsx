@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, LogOut, Users, Edit, Globe, Menu, X } from 'lucide-react';
@@ -13,7 +12,6 @@ export default function AdminPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
 
-  // Verificar sesión al montar (doble validación cliente-side por si el middleware falla o para estado de UI)
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -59,8 +57,8 @@ export default function AdminPage() {
           <h1 className="font-serif text-xl tracking-tighter uppercase leading-none">NVitality</h1>
           <span className="text-[8px] tracking-[0.3em] text-[#5BC0BE] font-bold uppercase mt-1">Admin Central</span>
         </div>
-        <button 
-          onClick={() => setSidebarOpen(!sidebarOpen)} 
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
           className="p-3 bg-[#090D10] border border-[#1F2E3A] rounded-xl text-[#5BC0BE] active:scale-90 transition-transform shadow-inner"
         >
           {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
@@ -86,23 +84,19 @@ export default function AdminPage() {
                 setActiveTab(tab.id as typeof activeTab);
                 setSidebarOpen(false);
               }}
-              className={`w-full flex items-center gap-4 px-6 py-4 rounded-xl text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 relative group ${
-                activeTab === tab.id
+              className={`w-full flex items-center gap-4 px-6 py-4 rounded-xl text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 relative group ${activeTab === tab.id
                   ? 'bg-[#5BC0BE] text-[#090D10] shadow-lg shadow-[#5BC0BE]/20'
                   : 'text-white/40 hover:text-white hover:bg-white/5 border border-transparent hover:border-[#1F2E3A]'
-              }`}
+                }`}
             >
               <tab.icon size={18} className={`${activeTab === tab.id ? 'opacity-100' : 'opacity-40 group-hover:opacity-100'} transition-opacity`} />
               <span>{tab.label}</span>
-              {activeTab === tab.id && (
-                <div className="absolute right-3 w-1.5 h-1.5 rounded-full bg-[#090D10]/30"></div>
-              )}
             </button>
           ))}
         </nav>
 
         <div className="p-6 border-t border-[#1F2E3A]/50 mt-auto">
-          <button 
+          <button
             onClick={handleLogout}
             className="w-full flex items-center justify-center gap-3 px-6 py-4 text-[10px] font-bold tracking-[0.3em] uppercase text-white/30 hover:text-red-400 hover:bg-red-400/5 rounded-xl transition-all border border-transparent hover:border-red-400/20"
           >
@@ -114,11 +108,21 @@ export default function AdminPage() {
 
       {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto bg-[#090D10] p-6 md:p-10 lg:p-14 custom-scrollbar">
-        <div className="max-w-7xl mx-auto animate-fade-in relative">
-          {activeTab === 'leads' && <LeadsTable />}
-          {activeTab === 'cms' && <CMSPanel />}
-          {activeTab === 'services' && <ServicesManager />}
-          
+        <div className="max-w-7xl mx-auto relative">
+
+          {/* TRUCO: Las tres pestañas están cargadas siempre, solo ocultamos las que no usas */}
+          <div className={activeTab === 'leads' ? 'block animate-fade-in' : 'hidden'}>
+            <LeadsTable />
+          </div>
+
+          <div className={activeTab === 'cms' ? 'block animate-fade-in' : 'hidden'}>
+            <CMSPanel />
+          </div>
+
+          <div className={activeTab === 'services' ? 'block animate-fade-in' : 'hidden'}>
+            <ServicesManager />
+          </div>
+
           <footer className="mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[9px] uppercase tracking-[0.4em] font-medium text-white/20">
             <p>© 2026 NVitality Clinic Operations</p>
             <div className="flex gap-6">
@@ -131,7 +135,7 @@ export default function AdminPage() {
 
       {/* Mobile Navigation Overlay */}
       {sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/80 backdrop-blur-sm lg:hidden z-40 transition-opacity duration-500"
           onClick={() => setSidebarOpen(false)}
         />
