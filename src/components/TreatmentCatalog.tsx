@@ -49,22 +49,22 @@ export function TreatmentCatalog() {
       <div className="container mx-auto px-6">
         
         <div className="mb-24 text-center">
-          <Badge variant="outline" className="mb-8 px-8 py-2 border-accent text-accent text-[11px] uppercase font-bold tracking-[0.5em] rounded-none">
+          <Badge variant="outline" className="mb-6 px-6 py-2 border-accent text-accent text-[10px] uppercase font-bold tracking-[0.4em] rounded-none">
             Elite Procedures 2026
           </Badge>
-          <h2 className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-primary dark:font-headline dark:italic dark:lowercase">
+          <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter text-primary dark:font-headline dark:italic dark:lowercase">
             Pure <span className="text-accent">Aesthetics</span>
           </h2>
         </div>
 
         <Tabs defaultValue="Cirugía Facial" className="w-full">
-          <div className="flex justify-center mb-20">
+          <div className="flex justify-center mb-16">
             <TabsList className="bg-muted p-1 rounded-none border h-auto flex flex-wrap justify-center">
               {treatments.map((cat) => (
                 <TabsTrigger 
                   key={cat.category} 
                   value={cat.category} 
-                  className="px-10 py-4 rounded-none text-[10px] uppercase font-bold tracking-[0.3em] data-[state=active]:bg-primary data-[state=active]:text-white transition-all"
+                  className="px-8 py-3 rounded-none text-[9px] uppercase font-bold tracking-[0.2em] data-[state=active]:bg-primary data-[state=active]:text-white transition-all"
                 >
                   {cat.category}
                 </TabsTrigger>
@@ -73,7 +73,7 @@ export function TreatmentCatalog() {
           </div>
 
           {treatments.map((category) => (
-            <TabsContent key={category.category} value={category.category} className="animate-in fade-in slide-in-from-bottom duration-[1000ms]">
+            <TabsContent key={category.category} value={category.category} className="animate-in fade-in slide-in-from-bottom duration-1000">
               <Carousel className="w-full">
                 <CarouselContent className="-ml-6">
                   {category.items.map((item, idx) => (
@@ -82,9 +82,9 @@ export function TreatmentCatalog() {
                     </CarouselItem>
                   ))}
                 </CarouselContent>
-                <div className="flex justify-center space-x-6 mt-16">
-                  <CarouselPrevious className="static translate-y-0 h-14 w-14 rounded-none border-primary" />
-                  <CarouselNext className="static translate-y-0 h-14 w-14 rounded-none bg-primary text-white" />
+                <div className="flex justify-center space-x-4 mt-12">
+                  <CarouselPrevious className="static translate-y-0 h-12 w-12 rounded-none border-primary" />
+                  <CarouselNext className="static translate-y-0 h-12 w-12 rounded-none bg-primary text-white" />
                 </div>
               </Carousel>
             </TabsContent>
@@ -97,26 +97,26 @@ export function TreatmentCatalog() {
 
 function TreatmentCard({ item }: { item: any }) {
   return (
-    <Card className="group border-none bg-transparent shadow-none hover:-translate-y-3 transition-all duration-[800ms]">
-      <div className="relative aspect-[3/4] w-full bg-muted overflow-hidden mb-8 shadow-2xl">
+    <Card className="group border-none bg-transparent shadow-none hover:-translate-y-2 transition-all duration-700">
+      <div className="relative aspect-[3/4] w-full bg-muted overflow-hidden mb-6 shadow-xl">
         <Image
           src={item.img}
           alt={item.name}
           fill
-          className="object-cover transition-all duration-[1200ms] group-hover:scale-110"
+          className="object-cover transition-transform duration-[1500ms] group-hover:scale-110"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           data-ai-hint={item.hint}
         />
-        <div className="absolute top-0 left-0 h-14 w-14 bg-white dark:bg-black flex items-center justify-center transition-all group-hover:bg-accent">
-          <ShieldCheck className="h-6 w-6 text-primary group-hover:text-white dark:hidden" />
-          <Sparkles className="h-6 w-6 text-accent group-hover:text-black hidden dark:block" />
+        <div className="absolute top-0 left-0 h-12 w-12 bg-white dark:bg-black flex items-center justify-center transition-colors group-hover:bg-accent">
+          <ShieldCheck className="h-5 w-5 text-primary group-hover:text-white dark:hidden" />
+          <Sparkles className="h-5 w-5 text-accent group-hover:text-black hidden dark:block" />
         </div>
       </div>
-      <CardHeader className="p-0 space-y-5">
-        <CardTitle className="text-2xl font-black uppercase dark:font-headline dark:italic dark:lowercase dark:text-3xl group-hover:text-accent transition-colors">
+      <CardHeader className="p-0 space-y-4">
+        <CardTitle className="text-xl font-black uppercase dark:font-headline dark:italic dark:lowercase dark:text-2xl group-hover:text-accent transition-colors">
           {item.name}
         </CardTitle>
-        <CardDescription className="text-sm text-muted-foreground font-medium leading-relaxed dark:italic border-l-2 border-accent/20 pl-6">
+        <CardDescription className="text-sm text-muted-foreground font-medium leading-relaxed dark:italic border-l border-accent/30 pl-4">
           {item.description}
         </CardDescription>
       </CardHeader>

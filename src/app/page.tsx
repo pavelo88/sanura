@@ -27,68 +27,70 @@ const stats = [
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background selection:bg-primary selection:text-white transition-colors duration-[1500ms]">
+    <div className="min-h-screen bg-background transition-colors duration-1000">
       <Navigation />
       
-      {/* Hero Section: Split Editorial Layout */}
-      <section className="relative pt-24 lg:pt-32 min-h-[calc(100vh-6rem)] flex items-stretch overflow-hidden">
+      {/* Hero Section: Editorial Split Composition */}
+      <section className="relative pt-24 lg:pt-0 min-h-screen flex items-stretch overflow-hidden">
         <div className="w-full grid grid-cols-1 lg:grid-cols-2">
           
-          {/* Content Side: Insurance / Health Magazine Style */}
-          <div className="flex flex-col justify-center px-8 lg:px-20 py-20 split-gradient relative z-10">
-            <div className="space-y-10 animate-in fade-in slide-in-from-left duration-[1000ms] max-w-2xl">
+          {/* Left Side: Insurance / Corporate Health Magazine */}
+          <div className="flex flex-col justify-center px-8 lg:px-24 py-20 split-gradient relative z-10">
+            <div className="space-y-8 animate-in fade-in slide-in-from-left duration-1000 max-w-2xl">
               <div className="insurance-header dark:text-accent dark:border-accent">
                 {heroContent.badge}
               </div>
               
-              <h1 className="text-5xl lg:text-7xl font-black text-[#003B49] dark:text-white leading-[1.05] dark:font-headline dark:italic tracking-tighter">
+              <h1 className="text-5xl lg:text-7xl font-black text-[#003B49] dark:text-white leading-[1.1] dark:font-headline dark:italic dark:lowercase">
                 {heroContent.title} <br />
-                <span className="text-[#49A9B4] dark:text-accent">{heroContent.highlight}</span>
+                <span className="text-accent">{heroContent.highlight}</span>
               </h1>
               
-              <p className="text-xl text-[#333333] dark:text-muted-foreground font-medium leading-relaxed max-w-xl dark:italic opacity-80">
+              <p className="text-lg lg:text-xl text-[#333333]/80 dark:text-muted-foreground font-medium leading-relaxed max-w-xl dark:italic">
                 {heroContent.description}
               </p>
               
-              <div className="flex flex-wrap gap-8 pt-8">
-                <Link href="#treatments" className="bg-[#003B49] dark:bg-accent dark:text-background text-white px-12 py-6 font-bold uppercase tracking-widest text-xs hover:scale-105 transition-all flex items-center shadow-3xl">
+              <div className="flex flex-wrap gap-6 pt-10">
+                <Link href="#treatments" className="bg-[#003B49] dark:bg-accent dark:text-background text-white px-10 py-5 font-bold uppercase tracking-widest text-[10px] hover:scale-105 transition-all flex items-center shadow-xl">
                   {heroContent.cta} <ArrowRight className="ml-4 h-4 w-4" />
                 </Link>
-                <div className="flex items-center space-x-4 text-[#49A9B4] dark:text-accent font-bold text-[10px] uppercase tracking-[0.4em]">
-                  <ShieldCheck className="h-6 w-6" />
+                <div className="flex items-center space-x-4 text-accent font-bold text-[9px] uppercase tracking-[0.3em]">
+                  <ShieldCheck className="h-5 w-5" />
                   <span>{heroContent.subText}</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Visual Side: Torso Silhouette + Modular Experience Stats */}
-          <div className="relative bg-white dark:bg-card overflow-hidden min-h-[600px]">
-            {/* Background Silhouette (Torso Focused) */}
+          {/* Right Side: Visual Silhouette + Modular Experience Grid */}
+          <div className="relative bg-white dark:bg-card overflow-hidden">
+            {/* Visual Anchor: Torso Silhouette */}
             <div className="absolute inset-0 z-0">
               <Image 
                 src="https://picsum.photos/seed/abdomen-lux/1000/1500" 
-                alt="Silueta Abdominal" 
+                alt="Silueta Estética" 
                 fill 
-                className="object-cover object-center grayscale opacity-40 mix-blend-multiply dark:mix-blend-overlay dark:opacity-20"
+                className="object-cover object-center grayscale opacity-30 dark:opacity-20 mix-blend-multiply dark:mix-blend-overlay"
                 priority
                 data-ai-hint="toned abdomen"
               />
-              <div className="absolute inset-0 bg-gradient-to-l from-transparent via-white/20 to-white dark:via-black/20 dark:to-background"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-white/80 via-transparent to-transparent dark:from-background/80"></div>
             </div>
             
-            {/* Modular Experience Grid: Elegant & Subtle */}
-            <div className="relative z-10 h-full grid grid-cols-2 gap-px bg-border/20 dark:bg-white/5">
+            {/* Modular Experience Grid: The "Reference" Style */}
+            <div className="relative z-10 h-full grid grid-cols-2 modular-grid-border">
               {stats.map((stat, i) => (
                 <div 
                   key={i} 
-                  className="flex flex-col items-center justify-center p-12 bg-white/10 dark:bg-black/20 backdrop-blur-[2px] group hover:bg-accent/5 transition-all duration-[800ms] border border-transparent hover:border-accent/20"
+                  className="flex flex-col items-center justify-center p-10 modular-grid-border bg-white/5 backdrop-blur-[1px] hover:bg-accent/5 transition-colors duration-700"
                 >
-                  <stat.icon className="h-10 w-10 text-accent mb-8 opacity-40 group-hover:opacity-100 group-hover:scale-110 transition-all duration-[600ms]" />
-                  <div className="text-5xl lg:text-6xl font-black text-[#003B49] dark:text-white dark:font-headline dark:italic tracking-tighter mb-3">
+                  <div className="mb-6 opacity-30 group-hover:opacity-100 transition-opacity">
+                    <stat.icon className="h-8 w-8 text-accent" />
+                  </div>
+                  <div className="text-4xl lg:text-6xl font-black text-[#003B49] dark:text-white dark:font-headline dark:italic tracking-tighter mb-2">
                     {stat.val}
                   </div>
-                  <div className="text-[10px] uppercase tracking-[0.5em] font-bold text-[#333333]/50 dark:text-white/40 text-center leading-loose">
+                  <div className="text-[9px] uppercase tracking-[0.4em] font-bold text-[#333333]/60 dark:text-white/40 text-center leading-loose">
                     {stat.label}
                   </div>
                 </div>
@@ -106,19 +108,17 @@ export default function Home() {
       
       <ContactForm />
 
-      <footer className="py-32 bg-background border-t">
+      <footer className="py-24 bg-background border-t">
         <div className="container mx-auto px-6 text-center">
-          <div className="flex flex-col items-center space-y-10 mb-16">
-            <div className="flex items-center space-x-6 group">
-              <HeartPulse className="h-14 w-14 text-[#49A9B4] group-hover:scale-110 transition-transform" />
-              <span className="text-5xl font-black dark:font-headline dark:italic tracking-tighter uppercase dark:lowercase">N-VITALITY</span>
-            </div>
+          <div className="flex flex-col items-center space-y-8 mb-12">
+            <HeartPulse className="h-12 w-12 text-accent" />
+            <span className="text-3xl font-black dark:font-headline dark:italic tracking-tighter uppercase dark:lowercase">N-VITALITY</span>
           </div>
-          <p className="text-[12px] uppercase tracking-[0.8em] font-bold text-muted-foreground/60 mb-12">
-            Quito • Metropolitan • Luxury Aesthetics
+          <p className="text-[11px] uppercase tracking-[0.6em] font-bold text-muted-foreground/50 mb-8">
+            Quito • Metropolitan • Private Aesthetic Atelier
           </p>
-          <div className="text-[10px] text-muted-foreground/30 uppercase tracking-[0.4em]">
-            © 2026 N-VITALITY AESTHETICS. HIGH PERFORMANCE BEAUTY.
+          <div className="text-[9px] text-muted-foreground/30 uppercase tracking-[0.3em]">
+            © 2026 N-VITALITY AESTHETICS. BEYOND PERFECTION.
           </div>
         </div>
       </footer>
