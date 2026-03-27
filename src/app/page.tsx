@@ -6,6 +6,7 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { Testimonials } from "@/components/Testimonials";
 import { Toaster } from "@/components/ui/toaster";
 import { ShieldCheck, ArrowRight, Zap, Globe, HeartPulse } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 const heroContent = {
@@ -30,17 +31,17 @@ export default function Home() {
       <Navigation />
       
       {/* Hero Section: Split Editorial Layout */}
-      <section className="relative mt-24 lg:mt-32 min-h-[calc(100vh-8rem)] flex items-center overflow-hidden border-b">
-        <div className="w-full h-full grid grid-cols-1 lg:grid-cols-2">
+      <section className="relative pt-24 lg:pt-28 min-h-[calc(100vh-6rem)] flex items-stretch overflow-hidden">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-2">
           
-          {/* Content Side: Insurance/Editorial */}
-          <div className="flex flex-col justify-center px-8 lg:px-24 py-20 bg-gradient-to-br from-[#e0f7fa] via-[#b2ebf2] to-white dark:from-background dark:via-background dark:to-accent/10">
-            <div className="space-y-10 animate-in fade-in slide-in-from-left duration-1000 max-w-2xl">
+          {/* Content Side */}
+          <div className="flex flex-col justify-center px-8 lg:px-20 py-20 split-gradient">
+            <div className="space-y-8 animate-in fade-in slide-in-from-left duration-1000 max-w-2xl">
               <div className="insurance-header dark:text-accent dark:border-accent">
                 {heroContent.badge}
               </div>
               
-              <h1 className="text-6xl lg:text-[100px] font-black text-[#003B49] dark:text-white leading-[0.85] dark:font-headline dark:italic dark:lowercase tracking-tighter">
+              <h1 className="text-5xl lg:text-7xl font-black text-[#003B49] dark:text-white leading-[1.1] dark:font-headline dark:italic dark:lowercase">
                 {heroContent.title} <br />
                 <span className="text-[#49A9B4] dark:text-accent">{heroContent.highlight}</span>
               </h1>
@@ -49,8 +50,8 @@ export default function Home() {
                 {heroContent.description}
               </p>
               
-              <div className="flex flex-wrap gap-6 pt-8">
-                <Link href="#treatments" className="bg-[#003B49] dark:bg-accent dark:text-background text-white px-12 py-6 font-bold uppercase tracking-widest text-xs hover:scale-105 transition-all flex items-center shadow-3xl">
+              <div className="flex flex-wrap gap-6 pt-6">
+                <Link href="#treatments" className="bg-[#003B49] dark:bg-accent dark:text-background text-white px-10 py-5 font-bold uppercase tracking-widest text-xs hover:scale-105 transition-all flex items-center shadow-3xl">
                   {heroContent.cta} <ArrowRight className="ml-4 h-4 w-4" />
                 </Link>
                 <div className="flex items-center space-x-4 text-[#49A9B4] dark:text-accent font-bold text-[9px] uppercase tracking-[0.4em]">
@@ -61,22 +62,35 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Experience Side: The Authority Grid */}
-          <div className="grid grid-cols-2 bg-[#003B49] dark:bg-card">
-            {stats.map((stat, i) => (
-              <div 
-                key={i} 
-                className="flex flex-col items-center justify-center p-12 border border-white/5 group hover:bg-accent/20 transition-all duration-700"
-              >
-                <stat.icon className="h-12 w-12 text-accent mb-8 opacity-40 group-hover:opacity-100 group-hover:scale-110 transition-all" />
-                <div className="text-5xl lg:text-7xl font-black text-white dark:font-headline dark:italic tracking-tighter mb-4">
-                  {stat.val}
+          {/* Experience Grid Side */}
+          <div className="relative bg-[#003B49] dark:bg-card overflow-hidden">
+            {/* Background Image (Subtle) */}
+            <div className="absolute inset-0 opacity-20 grayscale mix-blend-overlay">
+              <Image 
+                src="https://picsum.photos/seed/abdomen-lux/1000/1500" 
+                alt="Silueta" 
+                fill 
+                className="object-cover"
+                data-ai-hint="toned abdomen"
+              />
+            </div>
+            
+            <div className="relative h-full grid grid-cols-2">
+              {stats.map((stat, i) => (
+                <div 
+                  key={i} 
+                  className="flex flex-col items-center justify-center p-8 border border-white/5 group hover:bg-accent/10 transition-all duration-700"
+                >
+                  <stat.icon className="h-10 w-10 text-accent mb-6 opacity-40 group-hover:opacity-100 group-hover:scale-110 transition-all" />
+                  <div className="text-4xl lg:text-5xl font-black text-white dark:font-headline dark:italic tracking-tighter mb-2">
+                    {stat.val}
+                  </div>
+                  <div className="text-[9px] uppercase tracking-[0.4em] font-bold text-white/30 text-center leading-loose">
+                    {stat.label}
+                  </div>
                 </div>
-                <div className="text-[10px] uppercase tracking-[0.5em] font-bold text-white/30 text-center leading-loose">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -89,20 +103,19 @@ export default function Home() {
       
       <ContactForm />
 
-      <footer className="py-40 bg-background border-t">
+      <footer className="py-24 bg-background border-t">
         <div className="container mx-auto px-6 text-center">
-          <div className="flex flex-col items-center space-y-12 mb-20">
-            <div className="flex items-center space-x-8">
-              <HeartPulse className="h-16 w-16 text-[#49A9B4]" />
-              <span className="text-6xl font-black dark:font-headline dark:italic tracking-tighter uppercase dark:lowercase">N-VITALITY</span>
+          <div className="flex flex-col items-center space-y-8 mb-12">
+            <div className="flex items-center space-x-6">
+              <HeartPulse className="h-12 w-12 text-[#49A9B4]" />
+              <span className="text-4xl font-black dark:font-headline dark:italic tracking-tighter uppercase dark:lowercase">N-VITALITY</span>
             </div>
-            <div className="h-px w-32 bg-primary/20" />
           </div>
-          <p className="text-[12px] uppercase tracking-[0.8em] font-bold text-muted-foreground/60 mb-16">
-            Quito • Luxury Suite Metropolitan • Architecture of Beauty
+          <p className="text-[11px] uppercase tracking-[0.6em] font-bold text-muted-foreground/60 mb-10">
+            Quito • Metropolitan • Luxury Aesthetics
           </p>
-          <div className="text-[10px] text-muted-foreground/30 uppercase tracking-[0.4em]">
-            © 2026 N-VITALITY AESTHETICS & SOHO COLLECTION. HIGH PERFORMANCE BEAUTY.
+          <div className="text-[9px] text-muted-foreground/30 uppercase tracking-[0.4em]">
+            © 2026 N-VITALITY AESTHETICS. HIGH PERFORMANCE BEAUTY.
           </div>
         </div>
       </footer>

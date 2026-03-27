@@ -47,7 +47,6 @@
     --border: 340 40% 12%;
     --input: 340 40% 12%;
     --ring: 340 75% 55%;
-    --radius: 0rem;
 
     --font-main: 'Inter', sans-serif;
     --font-display: 'Alegreya', serif;
@@ -69,32 +68,22 @@
   }
 }
 
-.insurance-nav-link {
-  @apply text-[11px] font-bold uppercase tracking-[0.2em] text-[#333333] hover:text-accent transition-colors;
-}
-
 .insurance-header {
   @apply uppercase tracking-[0.5em] text-[12px] font-black text-primary border-l-4 border-accent pl-6 py-1 mb-8;
 }
 
 .dark .magazine-title {
-  @apply font-headline font-bold uppercase tracking-tighter leading-[0.75] italic;
-}
-
-.animate-spin-slow {
-  animation: spin 8000ms linear infinite;
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  @apply font-headline font-bold uppercase tracking-tighter italic;
 }
 
 .shadow-3xl {
-  box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.25), 0 30px 60px -30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.15), 0 30px 60px -30px rgba(0, 0, 0, 0.2);
 }
 
-.dotted-line-guide {
-  background-image: radial-gradient(circle, hsl(var(--accent)) 1px, transparent 1px);
-  background-size: 20px 20px;
+.split-gradient {
+  background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 50%, #ffffff 100%);
+}
+
+.dark .split-gradient {
+  background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--secondary)) 100%);
 }
