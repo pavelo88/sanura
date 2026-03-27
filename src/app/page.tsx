@@ -1,3 +1,4 @@
+
 import { Navigation } from "@/components/Navigation";
 import { TreatmentCatalog } from "@/components/TreatmentCatalog";
 import { AIGuide } from "@/components/AIGuide";

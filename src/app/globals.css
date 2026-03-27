@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,13 +11,13 @@
     --card-foreground: 0 0% 15%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 15%;
-    --primary: 191 100% 14%; 
+    --primary: 191 100% 14%; /* Teal Profundo #003B49 */
     --primary-foreground: 0 0% 100%;
     --secondary: 187 43% 96%;
     --secondary-foreground: 191 100% 14%;
     --muted: 187 20% 96%;
     --muted-foreground: 187 10% 40%;
-    --accent: 187 43% 50%; 
+    --accent: 187 43% 50%; /* Cian Turquesa #49A9B4 */
     --accent-foreground: 0 0% 100%;
     --border: 187 20% 90%;
     --input: 187 20% 90%;
@@ -34,13 +35,13 @@
     --card-foreground: 340 20% 98%;
     --popover: 340 60% 4%;
     --popover-foreground: 340 20% 98%;
-    --primary: 340 75% 55%; 
+    --primary: 340 75% 55%; /* Deep Plum */
     --primary-foreground: 340 60% 2%;
     --secondary: 340 40% 10%;
     --secondary-foreground: 340 20% 98%;
     --muted: 340 40% 8%;
     --muted-foreground: 340 20% 70%; 
-    --accent: 340 95% 65%; 
+    --accent: 340 95% 65%; /* Soft Rose */
     --accent-foreground: 340 20% 98%;
     --border: 340 40% 12%;
     --input: 340 40% 12%;
