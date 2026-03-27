@@ -4,13 +4,13 @@
 
 @layer base {
   :root {
-    /* MODO CLARO: "THE INSURANCE LOOK" - Corporativo, Seguro, Médico */
+    /* MODO CLARO: "THE INSURANCE LOOK" - Salud, Seguridad, Médico */
     --background: 0 0% 100%;
-    --foreground: 0 0% 20%;
+    --foreground: 0 0% 15%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 20%;
+    --card-foreground: 0 0% 15%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 20%;
+    --popover-foreground: 0 0% 15%;
     --primary: 191 100% 14%; /* #003B49 Teal Profundo */
     --primary-foreground: 0 0% 100%;
     --secondary: 187 43% 94%;
@@ -29,12 +29,12 @@
   }
   
   .dark {
-    /* MODO OSCURO: "THE FASHION LOOK" - Editorial, Soho, Lujo */
-    --background: 340 60% 2%;
+    /* MODO OSCURO: "THE SOHO SENSUALITY LOOK" - Moda, Lujo, Sensualidad */
+    --background: 340 60% 3%;
     --foreground: 340 20% 98%;
-    --card: 340 60% 4%;
+    --card: 340 60% 5%;
     --card-foreground: 340 20% 98%;
-    --popover: 340 60% 3%;
+    --popover: 340 60% 4%;
     --popover-foreground: 340 20% 98%;
     --primary: 340 75% 55%; 
     --primary-foreground: 340 60% 2%;
@@ -61,7 +61,7 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-main);
-    transition: background-color 1.2s ease, color 1.2s ease;
+    transition: background-color 1200ms ease, color 1200ms ease;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
@@ -74,11 +74,7 @@
 }
 
 .insurance-header {
-  @apply uppercase tracking-[0.5em] text-[12px] font-black text-primary border-l-8 border-accent pl-6 py-1 mb-8;
-}
-
-.fashion-header {
-  @apply italic font-light text-accent lowercase tracking-[0.2em] mb-4 text-3xl;
+  @apply uppercase tracking-[0.5em] text-[12px] font-black text-primary border-l-4 border-accent pl-6 py-1 mb-8;
 }
 
 .dark .magazine-title {
@@ -86,22 +82,12 @@
 }
 
 .animate-spin-slow {
-  animation: spin 8s linear infinite;
+  animation: spin 8000ms linear infinite;
 }
 
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
-}
-
-.animate-custom-whatsapp {
-  animation: pulse-custom 3s infinite;
-}
-
-@keyframes pulse-custom {
-  0% { transform: scale(1); box-shadow: 0 0 0 0 hsl(var(--accent) / 0.2); }
-  70% { transform: scale(1.05); box-shadow: 0 0 0 25px hsl(var(--accent) / 0); }
-  100% { transform: scale(1); box-shadow: 0 0 0 0 hsl(var(--accent) / 0); }
 }
 
 .shadow-3xl {

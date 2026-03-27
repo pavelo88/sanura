@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ShieldCheck, Sparkles } from "lucide-react";
+import { ShieldCheck, Sparkles, ArrowRight } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -59,40 +59,40 @@ const treatments = [
 
 export function TreatmentCatalog() {
   return (
-    <section id="treatments" className="py-24 md:py-40 bg-background transition-colors duration-[1500ms]">
+    <section id="treatments" className="py-40 bg-background transition-colors duration-[1500ms]">
       <div className="container mx-auto px-6">
         
-        {/* Encabezado dual */}
-        <div className="mb-16 md:mb-32 flex flex-col items-center text-center">
-          <div className="dark:hidden contents">
-            <Badge variant="outline" className="mb-8 px-6 py-2 border-accent text-accent text-[10px] uppercase font-bold tracking-[0.4em]">
-              Protocolos Quirúrgicos Certificados
+        {/* Editorial Headers */}
+        <div className="mb-40 text-center flex flex-col items-center">
+          <div className="dark:hidden">
+            <Badge variant="outline" className="mb-10 px-8 py-3 border-accent text-accent text-[11px] uppercase font-bold tracking-[0.6em] rounded-none">
+              Health & Insurance Issue 2026
             </Badge>
-            <h2 className="text-5xl md:text-[10rem] font-black uppercase tracking-tighter text-primary leading-[0.85]">
-              26 <span className="text-accent">Garantías</span>
+            <h2 className="text-8xl md:text-[12rem] font-black uppercase tracking-tighter text-primary leading-[0.75]">
+              Pure <br /><span className="text-accent">Aesthetics</span>
             </h2>
           </div>
           
-          <div className="hidden dark:contents">
-            <span className="text-accent font-serif italic text-2xl md:text-3xl mb-6 lowercase tracking-[0.3em]">the soho archives</span>
-            <h2 className="text-6xl md:text-[14rem] font-headline font-bold text-primary leading-[0.75]">
-              Edition <br /><span className="text-accent italic font-light lowercase">v.twenty-six</span>
+          <div className="hidden dark:block">
+            <span className="text-accent font-serif italic text-3xl mb-8 lowercase tracking-[0.4em] block">the soho lookbook</span>
+            <h2 className="text-8xl md:text-[15rem] font-headline font-bold text-white leading-[0.7] tracking-tighter">
+              Private <br /><span className="text-accent italic font-light lowercase">atelier</span>
             </h2>
           </div>
           
-          <p className="mt-8 md:mt-12 text-lg md:text-2xl text-muted-foreground max-w-3xl font-light leading-relaxed dark:italic opacity-80">
-            Una selección curada donde la rigorosa ciencia médica se encuentra con la visión editorial de la belleza.
+          <p className="mt-16 text-2xl md:text-3xl text-muted-foreground max-w-4xl font-light leading-relaxed dark:italic opacity-60">
+            Una colección curada donde la rigorosa ciencia médica de seguros se encuentra con la visión editorial de la belleza.
           </p>
         </div>
 
         <Tabs defaultValue="Cirugía Facial" className="w-full">
-          <div className="flex justify-center mb-12 md:mb-24">
-            <TabsList className="bg-muted p-1 md:p-2 rounded-none border border-border h-auto overflow-x-auto">
+          <div className="flex justify-center mb-32">
+            <TabsList className="bg-muted p-2 rounded-none border border-border h-auto overflow-x-auto flex flex-wrap justify-center">
               {treatments.map((cat) => (
                 <TabsTrigger 
                   key={cat.category} 
                   value={cat.category} 
-                  className="px-6 md:px-12 py-3 md:py-4 rounded-none text-[10px] uppercase font-bold tracking-[0.2em] data-[state=active]:bg-primary data-[state=active]:text-white transition-all"
+                  className="px-12 py-5 rounded-none text-[11px] uppercase font-bold tracking-[0.4em] data-[state=active]:bg-primary data-[state=active]:text-white transition-all"
                 >
                   {cat.category}
                 </TabsTrigger>
@@ -101,29 +101,29 @@ export function TreatmentCatalog() {
           </div>
 
           {treatments.map((category) => (
-            <TabsContent key={category.category} value={category.category} className="animate-in fade-in zoom-in duration-700">
+            <TabsContent key={category.category} value={category.category} className="animate-in fade-in slide-in-from-bottom duration-1000">
               
-              {/* Carrusel para Celular */}
-              <div className="block md:hidden">
+              {/* Carrusel Móvil */}
+              <div className="block lg:hidden">
                 <Carousel className="w-full">
                   <CarouselContent>
                     {category.items.map((item, idx) => (
                       <CarouselItem key={idx}>
-                        <TreatmentCard item={item} idx={idx} />
+                        <TreatmentCard item={item} />
                       </CarouselItem>
                     ))}
                   </CarouselContent>
-                  <div className="flex justify-center space-x-4 mt-8">
-                    <CarouselPrevious className="static translate-y-0 h-12 w-12 rounded-none border-primary text-primary" />
-                    <CarouselNext className="static translate-y-0 h-12 w-12 rounded-none bg-primary text-white" />
+                  <div className="flex justify-center space-x-6 mt-12">
+                    <CarouselPrevious className="static translate-y-0 h-16 w-16 rounded-none border-primary text-primary" />
+                    <CarouselNext className="static translate-y-0 h-16 w-16 rounded-none bg-primary text-white" />
                   </div>
                 </Carousel>
               </div>
 
-              {/* Grid para Desktop */}
-              <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-16">
+              {/* Grid Desktop */}
+              <div className="hidden lg:grid grid-cols-3 gap-20">
                 {category.items.map((item, idx) => (
-                  <TreatmentCard key={idx} item={item} idx={idx} />
+                  <TreatmentCard key={idx} item={item} />
                 ))}
               </div>
 
@@ -135,39 +135,40 @@ export function TreatmentCatalog() {
   );
 }
 
-function TreatmentCard({ item, idx }: { item: any; idx: number }) {
+function TreatmentCard({ item }: { item: any }) {
   return (
-    <Card className="group border-none bg-transparent shadow-none hover:-translate-y-4 transition-all duration-700">
-      <div className="relative aspect-[3/4] md:h-[650px] w-full bg-muted overflow-hidden mb-6 md:mb-10 shadow-3xl">
+    <Card className="group border-none bg-transparent shadow-none hover:-translate-y-6 transition-all duration-[1000ms]">
+      <div className="relative aspect-[3/4] w-full bg-muted overflow-hidden mb-10 shadow-3xl">
         <Image
           src={item.img}
           alt={item.name}
           fill
-          className="object-cover grayscale hover:grayscale-0 transition-all duration-[2000ms] group-hover:scale-105"
+          className="object-cover grayscale hover:grayscale-0 transition-all duration-[2000ms] group-hover:scale-110"
           data-ai-hint={item.hint}
         />
-        <div className="absolute inset-0 bg-primary/5 group-hover:bg-transparent transition-colors" />
+        <div className="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors duration-1000" />
         
-        {/* Icono dinámico */}
-        <div className="absolute top-0 left-0 h-12 w-12 md:h-16 md:w-16 bg-white dark:bg-black flex items-center justify-center transition-all group-hover:bg-primary group-hover:dark:bg-accent">
-          <ShieldCheck className="h-5 w-5 md:h-6 md:w-6 text-primary group-hover:text-white dark:hidden" />
-          <Sparkles className="h-5 w-5 md:h-6 md:w-6 text-accent group-hover:text-black hidden dark:block" />
+        {/* Editorial Icons */}
+        <div className="absolute top-0 left-0 h-16 w-16 bg-white dark:bg-black flex items-center justify-center transition-all group-hover:bg-primary group-hover:dark:bg-accent">
+          <ShieldCheck className="h-6 w-6 text-primary group-hover:text-white dark:hidden" />
+          <Sparkles className="h-6 w-6 text-accent group-hover:text-black hidden dark:block" />
         </div>
 
         {item.badge && (
-          <div className="absolute top-0 right-0 bg-accent text-white px-4 md:px-6 py-2 md:py-3 text-[8px] md:text-[10px] uppercase font-bold tracking-[0.3em] shadow-xl">
+          <div className="absolute top-0 right-0 bg-accent text-white px-8 py-3 text-[10px] uppercase font-bold tracking-[0.4em] shadow-2xl">
             {item.badge}
           </div>
         )}
       </div>
       
-      <CardHeader className="p-0 space-y-4 md:space-y-6">
-        <div className="flex justify-between items-end border-b border-primary/20 pb-4 md:pb-6">
-          <CardTitle className="text-3xl md:text-4xl font-black uppercase dark:font-headline dark:italic dark:lowercase dark:text-5xl group-hover:text-primary transition-colors duration-500">
+      <CardHeader className="p-0 space-y-8">
+        <div className="flex justify-between items-end border-b border-primary/20 pb-8">
+          <CardTitle className="text-4xl font-black uppercase dark:font-headline dark:italic dark:lowercase dark:text-5xl group-hover:text-accent transition-colors duration-700">
             {item.name}
           </CardTitle>
+          <ArrowRight className="h-6 w-6 text-accent opacity-0 group-hover:opacity-100 group-hover:translate-x-4 transition-all" />
         </div>
-        <CardDescription className="text-base md:text-lg text-muted-foreground font-light leading-relaxed dark:italic opacity-80">
+        <CardDescription className="text-xl text-muted-foreground font-light leading-relaxed dark:italic opacity-80 border-l-2 border-accent/20 pl-6">
           {item.description}
         </CardDescription>
       </CardHeader>
