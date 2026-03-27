@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -6,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/editorial/Navbar';
 import { Hero } from '@/components/editorial/Hero';
 import { ServiceCarousel } from '@/components/editorial/ServiceCarousel';
+import { DoctorProfile } from '@/components/editorial/DoctorProfile';
 import { QuickGuide } from '@/components/editorial/QuickGuide';
 import { LeadForm } from '@/components/editorial/LeadForm';
 import { TreatmentModal } from '@/components/editorial/TreatmentModal';
@@ -72,6 +74,9 @@ export default function App() {
 
           </div>
         </section>
+
+        {/* Fase 2: Restauración de la Figura Médica */}
+        <DoctorProfile />
 
         <QuickGuide />
 
