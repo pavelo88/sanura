@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { getFirestore, useCollection } from '@/firebase';
 import { collection, query, orderBy, doc, updateDoc } from 'firebase/firestore';
-import { Loader2, ShieldCheck, LogOut, Trash2 } from 'lucide-react';
+import { Loader2, ShieldCheck, LogOut } from 'lucide-react';
 
 export default function AdminPage() {
   const [password, setPassword] = useState('');

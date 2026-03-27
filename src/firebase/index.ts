@@ -35,7 +35,7 @@ export const getAuthInstance = () => {
   return auth;
 };
 
-// Exportamos hooks y proveedores desde sus archivos específicos
+// Exportamos hooks y proveedores
 export { FirebaseProvider, useFirestore, useAuth, useFirebaseApp, useFirebase } from './provider';
 export { FirebaseClientProvider } from './client-provider';
 export { useCollection } from './firestore/use-collection';

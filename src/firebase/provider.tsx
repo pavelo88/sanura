@@ -29,13 +29,11 @@ export const FirebaseProvider: React.FC<{
 export const useFirebase = () => {
   const context = useContext(FirebaseContext);
   if (!context) {
-    // Si no hay contexto, intentamos devolver instancias inicializadas directamente
-    // Esto previene errores de "null" durante SSR o fuera del árbol de React
     return null;
   }
   return context;
 };
 
 export const useFirestore = () => useFirebase()?.firestore;
-export const useAuth = useFirebase()?.auth;
-export const useFirebaseApp = useFirebase()?.app;
+export const useAuth = () => useFirebase()?.auth;
+export const useFirebaseApp = () => useFirebase()?.app;
