@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { ChevronUp, X, CheckCircle, Phone, Instagram, Facebook, MoveHorizontal, Sun, Moon, Menu } from 'lucide-react';
+import useEmblaCarousel from 'embla-carousel-react';
 
 // ==============================================================================
 //  DATA MAESTRA: 26 TRATAMIENTOS
@@ -12,7 +13,7 @@ const serviciosData = [
     title: 'Estética Facial & Inyectables',
     items: [
       { id: '01_botox', name: 'Neuromoduladores', desc: 'Prevención y tratamiento de rítides dinámicas (frente, entrecejo, patas de gallo). Efecto lifting sin pérdida de expresión facial.', imgAntes: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1607748862156-7c548e7e98f4?w=800&q=80' },
-      { id: '02_hialuronico', name: 'Ácido Hialurónico', desc: 'Reposición de volumen profundo (pómulos, mentón, perfilamiento mandibular). Efecto "Tense & Lift" para una arquitectura facial estructurada.', imgAntes: 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&q=80' },
+      { id: '02_hialuronico', name: 'Ácido Hialurónico', desc: 'Reposición de volumen profundo (pómulos, mentón, perfilamiento mandibular). Efecto "Tense & Lift" para una arquitectura facial estructurada.', imgAntes: 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1548624313-0396c75e4b1a?w=800&q=80' },
       { id: '03_rinomodelacion', name: 'Rinomodelación', desc: 'Perfilamiento y elevación de la punta nasal con ácido hialurónico de alta densidad. Corrección del caballete en tan solo 20 minutos sin cirugía.', imgAntes: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=800&q=80' },
       { id: '04_hilos', name: 'Hilos Tensores', desc: 'Efecto lifting no quirúrgico mediante hilos de polidioxanona que reposicionan los tejidos caídos e inducen la formación de colágeno.', imgAntes: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=800&q=80' },
       { id: '05_meso_facial', name: 'Mesoterapia Facial', desc: 'Infusión subdérmica de un cóctel de vitaminas, antioxidantes y péptidos para una revitalización profunda y luminosidad extrema.', imgAntes: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&q=80' },
@@ -75,7 +76,7 @@ const guiaData = [
 // ==============================================================================
 //  COMPONENTE INTERACTIVO: SLIDER ANTES/DESPUÉS
 // ==============================================================================
-const BeforeAfterSlider = ({ imgAntes, imgDespues, isCardMode = false }: { imgAntes: string; imgDespues: string; isCardMode?: boolean }) => {
+const BeforeAfterSlider = ({ imgAntes, imgDespues, isCardMode = false }) => {
   const [position, setPosition] = useState(100);
 
   return (
@@ -125,17 +126,43 @@ const BeforeAfterSlider = ({ imgAntes, imgDespues, isCardMode = false }: { imgAn
   );
 };
 
-export default function Home() {
+export default function App() {
   const [activeCategory, setActiveCategory] = useState('01_medicina_estetica_facial');
-  const [selectedTreatment, setSelectedTreatment] = useState<any>(null);
+  const [selectedTreatment, setSelectedTreatment] = useState(null);
   const [showCertModal, setShowCertModal] = useState(false);
-  const [activeGuide, setActiveGuide] = useState<number | null>(null);
+  const [activeGuide, setActiveGuide] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const WHATSAPP_URL = "https://wa.me/593983992549";
+
+  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+    loop: true, 
+    align: 'center',
+    skipSnaps: false
+  });
+
+  const activeCatData = serviciosData.find(c => c.id === activeCategory);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    if (!emblaApi) return;
+    emblaApi.on('select', onSelect);
+    emblaApi.on('reInit', onSelect);
+  }, [emblaApi, onSelect]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    const interval = setInterval(() => {
+      emblaApi.scrollNext();
+    }, isHovered ? 4000 : 2500);
+    return () => clearInterval(interval);
+  }, [emblaApi, isHovered]);
 
   useEffect(() => {
     if (selectedTreatment || showCertModal) {
@@ -145,37 +172,44 @@ export default function Home() {
     }
   }, [selectedTreatment, showCertModal]);
 
-  if (!mounted) return null;
-
-  const activeCatData = serviciosData.find(c => c.id === activeCategory) || serviciosData[0];
-  const WHATSAPP_URL = "https://wa.me/593983992549";
-
   return (
     <div className={`${isDarkMode ? 'dark' : ''} w-full h-full min-h-screen`}>
-      <div className="bg-white dark:bg-[#090D10] text-[#06414B] dark:text-[#E2E8F0] font-sans antialiased min-h-screen overflow-x-hidden transition-colors duration-500">
+      <div className="bg-white dark:bg-[#090D10] text-[#06414B] dark:text-[#E2E8F0] font-sans antialiased min-h-screen overflow-x-hidden selection:bg-[#3A8B99] dark:selection:bg-[#5BC0BE] selection:text-white transition-colors duration-500">
         
-        {/* --- NAVBAR --- */}
+        <style dangerouslySetInnerHTML={{__html: `
+          @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Lato:wght@300;400;700&display=swap');
+          .font-serif { font-family: 'Playfair Display', serif; }
+          .font-sans { font-family: 'Lato', sans-serif; }
+          html { scroll-behavior: smooth; }
+          .hide-scrollbar::-webkit-scrollbar { display: none; }
+          .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        `}} />
+
+        {/* --- 1. NAVBAR --- */}
         <nav className="fixed w-full z-40 bg-white/95 dark:bg-[#090D10]/95 backdrop-blur-md border-b border-[#C4E8E9] dark:border-[#162128] transition-colors duration-500 shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-20">
               <a href="#" className="font-serif text-2xl tracking-[0.2em] font-semibold uppercase text-[#06414B] dark:text-white transition-colors">NVitality</a>
               
               <div className="flex items-center gap-4 md:gap-6">
-                <button 
-                  onClick={() => setIsDarkMode(!isDarkMode)} 
-                  className="p-2 text-[#3A8B99] dark:text-[#5BC0BE] hover:text-[#06414B] dark:hover:text-white transition-colors"
-                >
-                  {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-                </button>
-
                 <div className="hidden md:flex items-center space-x-6">
                   <a href="#servicios" className="text-xs font-bold tracking-widest uppercase text-[#3A8B99] dark:text-[#5BC0BE] hover:text-[#06414B] dark:hover:text-white transition-colors">Curaduría</a>
                   <a href="#experiencia" className="text-xs font-bold tracking-widest uppercase text-[#3A8B99] dark:text-[#5BC0BE] hover:text-[#06414B] dark:hover:text-white transition-colors">Rigor Médico</a>
                   <a href="#guia" className="text-xs font-bold tracking-widest uppercase text-[#3A8B99] dark:text-[#5BC0BE] hover:text-[#06414B] dark:hover:text-white transition-colors">Guía</a>
-                  <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="bg-[#06414B] dark:bg-[#1A2833] border border-[#06414B] dark:border-[#5BC0BE] text-white px-5 py-2 text-xs font-bold tracking-widest uppercase hover:bg-white dark:hover:bg-[#5BC0BE] hover:text-[#06414B] dark:hover:text-[#090D10] transition-colors shadow-md ml-2">
+                  
+                  {/* Botón Dark Mode reubicado entre Guía y Agendar */}
+                  <button 
+                    onClick={() => setIsDarkMode(!isDarkMode)} 
+                    className="p-2 text-[#3A8B99] dark:text-[#5BC0BE] hover:text-[#06414B] dark:hover:text-white transition-colors"
+                  >
+                    {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+                  </button>
+
+                  <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="bg-[#06414B] dark:bg-[#1A2833] border border-[#06414B] dark:border-[#5BC0BE] text-white px-5 py-2 text-xs font-bold tracking-widest uppercase hover:bg-white dark:hover:bg-[#5BC0BE] hover:text-[#06414B] dark:hover:text-[#090D10] transition-colors shadow-md">
                     Agendar
                   </a>
                 </div>
+                
                 <button className="md:hidden p-2 text-[#06414B] dark:text-white">
                   <Menu size={24} />
                 </button>
@@ -184,17 +218,17 @@ export default function Home() {
           </div>
         </nav>
 
-        {/* --- HERO --- */}
+        {/* --- 2. HERO --- */}
         <header className="relative pt-20 lg:h-screen flex flex-col lg:flex-row bg-[#F0F8F9] dark:bg-[#0C1217] transition-colors duration-500">
           <div className="w-full lg:w-1/2 flex flex-col justify-center px-6 py-16 lg:px-16 xl:px-24 z-10">
-            <h1 className="font-serif text-4xl md:text-6xl xl:text-8xl text-[#06414B] dark:text-white mb-4 tracking-widest leading-none">NVITALITY</h1>
-            <p className="font-serif italic text-xl md:text-2xl text-[#3A8B99] dark:text-[#5BC0BE] mb-12">Clínica de Especialidades Estéticas</p>
-            <p className="font-sans text-base text-[#06414B]/80 dark:text-[#E2E8F0]/80 leading-relaxed mb-12 max-w-md">
+            <h1 className="font-serif text-4xl md:text-6xl xl:text-8xl text-[#06414B] dark:text-white mb-4 tracking-widest leading-none transition-colors">NVITALITY</h1>
+            <p className="font-serif italic text-xl md:text-2xl text-[#3A8B99] dark:text-[#5BC0BE] mb-12 transition-colors">Clínica de Especialidades Estéticas</p>
+            <p className="font-sans text-base text-[#06414B]/80 dark:text-[#E2E8F0]/80 leading-relaxed mb-12 max-w-md transition-colors">
               Donde el rigor científico se encuentra con la alta costura. Redefiniendo la estética médica en Quito con protocolos internacionales de empoderamiento.
             </p>
             <button 
               onClick={() => setShowCertModal(true)}
-              className="group self-start flex flex-col items-start gap-3 bg-white dark:bg-[#121A21] hover:bg-[#F2F9F9] dark:hover:bg-[#1A2630] py-4 px-6 rounded border border-[#C4E8E9] dark:border-[#1F2E3A] transition-all shadow-sm"
+              className="group self-start flex flex-col items-start gap-3 bg-white dark:bg-[#121A21] hover:bg-[#F2F9F9] dark:hover:bg-[#1A2630] py-4 px-6 rounded border border-[#C4E8E9] dark:border-[#1F2E3A] transition-all cursor-pointer shadow-sm"
             >
               <div className="flex flex-col gap-2">
                 <span className="text-[#06414B] dark:text-[#E2E8F0] text-xs tracking-[0.15em] uppercase font-bold flex items-center"><CheckCircle size={14} className="text-[#5BC0BE] mr-2"/> Permiso ACESS</span>
@@ -216,15 +250,15 @@ export default function Home() {
           </div>
         </header>
 
-        {/* --- CURADURÍA CLÍNICA --- */}
-        <section id="servicios" className="py-20 md:py-24 bg-white dark:bg-[#090D10] border-t border-[#C4E8E9] dark:border-[#162128]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-10">
+        {/* --- 3. CURADURÍA CLÍNICA (CARRUSEL INFINITO EDITORIAL) --- */}
+        <section id="servicios" className="py-20 md:py-32 bg-white dark:bg-[#090D10] border-t border-[#C4E8E9] dark:border-[#162128] transition-colors duration-500">
+          <div className="max-w-full px-0 sm:px-6 lg:px-8">
+            <div className="text-center mb-16 max-w-7xl mx-auto px-4">
               <h2 className="font-serif text-3xl md:text-5xl tracking-widest uppercase mb-4 text-[#06414B] dark:text-white">La Curaduría Clínica</h2>
               <p className="font-serif italic text-xl text-[#3A8B99] dark:text-[#5BC0BE]">Seleccione un área para explorar la galería de especialidades</p>
             </div>
 
-            <div className="flex overflow-x-auto hide-scrollbar gap-4 md:gap-8 mb-10 border-b border-[#C4E8E9] dark:border-[#1F2E3A] px-2">
+            <div className="flex overflow-x-auto hide-scrollbar gap-4 md:gap-8 mb-16 border-b border-[#C4E8E9] dark:border-[#1F2E3A] px-2 max-w-7xl mx-auto">
               {serviciosData.map(cat => (
                  <button
                    key={cat.id}
@@ -239,31 +273,41 @@ export default function Home() {
               ))}
             </div>
 
-            <div className="animate-in fade-in zoom-in-95 duration-700 ease-out">
-              <div className="flex overflow-x-auto gap-6 pb-6 hide-scrollbar snap-x snap-mandatory">
-                {activeCatData.items.map((item) => (
-                  <div 
-                    key={item.id} 
-                    className="snap-start shrink-0 w-[280px] md:w-[320px] flex flex-col shadow-lg border border-gray-100 dark:border-[#1F2E3A] bg-white dark:bg-[#121A21] hover:shadow-xl transition-shadow"
-                  >
-                    <div className="h-[350px] md:h-[380px] w-full relative">
-                      <BeforeAfterSlider 
-                        imgAntes={item.imgAntes} 
-                        imgDespues={item.imgDespues} 
-                        isCardMode={true} 
-                      />
-                    </div>
-                    <div className="p-4 md:p-5 flex-grow flex items-center justify-center text-center">
-                      <h4 className="font-serif text-lg tracking-wider text-[#06414B] dark:text-[#E2E8F0] leading-tight">{item.name}</h4>
-                    </div>
-                    <button 
-                      onClick={() => setSelectedTreatment(item)}
-                      className="w-full bg-[#06414B] dark:bg-[#1A2833] text-white p-4 text-center hover:bg-[#3A8B99] dark:hover:bg-[#5BC0BE] transition-colors"
+            <div 
+              className="embla overflow-hidden cursor-grab active:cursor-grabbing" 
+              ref={emblaRef}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            >
+              <div className="embla__container flex">
+                {activeCatData.items.map((item, index) => {
+                  const isCenter = index === selectedIndex;
+                  return (
+                    <div 
+                      key={item.id} 
+                      className={`embla__slide flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.33%] px-3 md:px-6 transition-transform duration-700 ease-in-out ${isCenter ? 'scale-105 z-10' : 'scale-90 opacity-60'}`}
                     >
-                      <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Ver Protocolo Completo</span>
-                    </button>
-                  </div>
-                ))}
+                      <div className="flex flex-col shadow-2xl border border-gray-100 dark:border-[#1F2E3A] bg-white dark:bg-[#121A21] h-full">
+                        <div className="h-[400px] md:h-[450px] w-full relative">
+                          <BeforeAfterSlider 
+                            imgAntes={item.imgAntes} 
+                            imgDespues={item.imgDespues} 
+                            isCardMode={true} 
+                          />
+                        </div>
+                        <div className="p-6 flex-grow flex flex-col items-center justify-center text-center">
+                          <h4 className="font-serif text-xl tracking-wider text-[#06414B] dark:text-[#E2E8F0] mb-4 leading-tight">{item.name}</h4>
+                          <button 
+                            onClick={() => setSelectedTreatment(item)}
+                            className="bg-[#06414B] dark:bg-[#1A2833] text-white px-6 py-3 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-[#3A8B99] dark:hover:bg-[#5BC0BE] dark:hover:text-[#090D10] transition-colors"
+                          >
+                            Ver Protocolo Completo
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -276,22 +320,16 @@ export default function Home() {
               <button onClick={() => setSelectedTreatment(null)} className="absolute top-3 right-3 z-50 bg-white/80 dark:bg-black/50 p-2 rounded-full text-[#06414B] dark:text-[#E2E8F0] shadow-md">
                 <X size={20} />
               </button>
-              <div className="w-full h-[45%] md:h-full md:w-1/2 relative bg-[#F0F8F9] dark:bg-[#090D10]">
+              <div className="w-full h-[45%] md:h-full md:w-1/2 relative">
                  <BeforeAfterSlider imgAntes={selectedTreatment.imgAntes} imgDespues={selectedTreatment.imgDespues} />
               </div>
-              <div className="w-full h-[55%] md:h-full md:w-1/2 p-5 sm:p-10 flex flex-col overflow-y-auto">
+              <div className="w-full h-[55%] md:h-full md:w-1/2 p-6 md:p-10 flex flex-col overflow-y-auto bg-white dark:bg-[#0C1217]">
                 <div className="flex-grow">
-                  <span className="text-[#5BC0BE] text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] mb-4 border-b border-[#C4E8E9] dark:border-[#1F2E3A] pb-1">
-                    Análisis Clínico y Protocolo
-                  </span>
-                  <h3 className="font-serif text-2xl sm:text-4xl text-[#06414B] dark:text-white mb-4 uppercase tracking-wide">
-                    {selectedTreatment.name}
-                  </h3>
-                  <p className="font-sans text-[#3A8B99] dark:text-[#A0AAB2] text-sm sm:text-lg leading-relaxed mb-6">
-                    {selectedTreatment.desc}
-                  </p>
-                  <div className="bg-[#F0F8F9] dark:bg-[#121A21] p-4 sm:p-6 border-l-2 border-[#5BC0BE] mb-6">
-                    <p className="text-xs sm:text-sm text-[#06414B] dark:text-[#E2E8F0] font-serif italic">Procedimiento realizado bajo estrictos estándares de bioseguridad. Operado exclusivamente por médicos especialistas.</p>
+                  <span className="text-[#5BC0BE] text-[10px] font-bold uppercase tracking-[0.2em] mb-4 border-b border-[#C4E8E9] dark:border-[#1F2E3A] pb-1">Análisis Clínico y Protocolo</span>
+                  <h3 className="font-serif text-2xl md:text-4xl text-[#06414B] dark:text-white mb-4 uppercase tracking-wide">{selectedTreatment.name}</h3>
+                  <p className="font-sans text-[#3A8B99] dark:text-[#A0AAB2] text-sm md:text-lg leading-relaxed mb-6">{selectedTreatment.desc}</p>
+                  <div className="bg-[#F0F8F9] dark:bg-[#121A21] p-6 border-l-2 border-[#5BC0BE] mb-6">
+                    <p className="text-sm text-[#06414B] dark:text-[#E2E8F0] font-serif italic">Procedimiento realizado bajo estrictos estándares de bioseguridad. Operado exclusivamente por médicos especialistas.</p>
                   </div>
                 </div>
                 <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="bg-[#06414B] dark:bg-[#1A2833] text-white text-center py-4 px-6 text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-3">
@@ -315,10 +353,7 @@ export default function Home() {
                 <p className="font-sans text-[#3A8B99] dark:text-[#A0AAB2] leading-relaxed mb-6 text-base md:text-lg">
                   Con más de una década de experiencia clínica en Quito, combinamos el estricto rigor científico con la visión artística de la estética internacional de vanguardia.
                 </p>
-                <p className="font-sans text-[#3A8B99] dark:text-[#A0AAB2] leading-relaxed mb-10 text-base md:text-lg">
-                  Nuestra filosofía rechaza los excesos. Utilizamos tecnología médica para optimizar su identidad anatómica garantizando resultados seguros y naturales.
-                </p>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 mt-12">
                   <div>
                     <span className="font-serif text-xl md:text-2xl block text-[#06414B] dark:text-white">Dra. Directora Médica</span>
                     <span className="font-sans text-[10px] md:text-xs tracking-widest text-[#5BC0BE] uppercase font-bold">Especialista Titular Reg. SENESCYT</span>
