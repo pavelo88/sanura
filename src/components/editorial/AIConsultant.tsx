@@ -1,105 +1,100 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Sparkles, Loader2, Send, Phone } from 'lucide-react';
+import { Sparkles, ArrowRight, Loader2, Stethoscope } from 'lucide-react';
 import { suggestAestheticTreatments, AITreatmentSuggesterOutput } from '@/ai/flows/ai-treatment-suggester';
 
-export function AIConsultant() {
-  const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+export const AIConsultant = () => {
+  const [description, setDescription] = useState('');
+  const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AITreatmentSuggesterOutput | null>(null);
 
-  const handleSuggest = async () => {
-    if (!input.trim()) return;
-    setIsLoading(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!description.trim()) return;
+
+    setLoading(true);
     try {
-      const output = await suggestAestheticTreatments({ userDescription: input });
+      const output = await suggestAestheticTreatments({ userDescription: description });
       setResult(output);
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error("AI Consultation Error:", error);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   return (
-    <section className="py-24 md:py-32 bg-[#F0F8F9] dark:bg-[#0C1217] transition-colors duration-500">
-      <div className="max-w-5xl mx-auto px-4">
-        
-        <div className="flex flex-col items-center text-center mb-16">
-          <div className="flex items-center gap-4 mb-6">
-            <Sparkles className="h-8 w-8 text-[#5BC0BE] animate-pulse" />
-            <h2 className="font-serif text-4xl md:text-6xl tracking-widest uppercase text-[#06414B] dark:text-white">
-              VIP AI Consultation
-            </h2>
-          </div>
-          <p className="font-serif italic text-xl text-[#3A8B99] dark:text-[#5BC0BE]">
-            El atelier inteligente de N-VITALITY
-          </p>
-        </div>
-
-        <div className="bg-white dark:bg-[#121A21] border border-[#C4E8E9] dark:border-[#1F2E3A] p-8 md:p-16 shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-[#5BC0BE]/5 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+    <section id="ia-consultant" className="py-24 md:py-32 bg-[#F0F8F9] dark:bg-[#0C1217] transition-colors duration-500 overflow-hidden border-y border-[#C4E8E9] dark:border-[#1F2E3A]">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           
-          <div className="relative z-10 space-y-10">
-            <div className="space-y-4">
-              <label className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#3A8B99] dark:text-[#5BC0BE]">
-                Describa sus objetivos estéticos
-              </label>
-              <textarea
-                placeholder="Ej: Busco rejuvenecer mi mirada y mejorar la definición de mi mandíbula de forma natural..."
-                className="w-full min-h-[150px] bg-transparent border-b-2 border-[#C4E8E9] dark:border-[#1F2E3A] focus:border-[#5BC0BE] outline-none py-4 text-lg md:text-2xl font-serif text-[#06414B] dark:text-white transition-all placeholder:text-[#3A8B99]/30"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-              />
+          {/* LADO IZQUIERDO: INTRODUCCIÓN */}
+          <div className="space-y-10">
+            <div className="inline-flex items-center gap-3 px-4 py-2 bg-[#5BC0BE]/10 border border-[#5BC0BE]/20 rounded-full">
+              <Sparkles className="text-[#5BC0BE]" size={16} />
+              <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-[#3A8B99] dark:text-[#5BC0BE]">Consultoría Gen-AI de Élite</span>
             </div>
+            
+            <h2 className="font-serif text-4xl md:text-6xl tracking-tighter uppercase text-[#06414B] dark:text-white leading-[0.9]">
+              Análisis <br /><span className="text-[#3A8B99] dark:text-[#5BC0BE] italic">Algorítmico</span> de Belleza
+            </h2>
+            
+            <p className="font-sans text-xl text-[#3A8B99] dark:text-[#A0AAB2] leading-relaxed max-w-xl font-light">
+              Nuestra IA exclusiva procesa sus objetivos estéticos comparándolos con miles de protocolos internacionales para sugerir una ruta clínica personalizada.
+            </p>
 
-            <button 
-              onClick={handleSuggest} 
-              disabled={isLoading || !input}
-              className="w-full bg-[#06414B] dark:bg-[#1A2833] text-white py-6 md:py-8 text-xs font-bold uppercase tracking-[0.4em] hover:bg-[#3A8B99] dark:hover:bg-[#5BC0BE] dark:hover:text-[#090D10] transition-all flex items-center justify-center gap-4 disabled:opacity-50"
-            >
-              {isLoading ? (
-                <Loader2 className="animate-spin" />
-              ) : (
-                <>Obtener Diagnóstico Inteligente <Send size={16} /></>
-              )}
-            </button>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <textarea 
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Describa sus objetivos (ej: deseo mejorar la firmeza de mi rostro y definir el contorno mandibular)..."
+                className="w-full bg-white dark:bg-[#121A21] border border-[#C4E8E9] dark:border-[#1F2E3A] p-8 h-48 focus:border-[#5BC0BE] outline-none transition-colors text-[#06414B] dark:text-white font-light text-lg resize-none shadow-sm"
+              />
+              <button 
+                disabled={loading || !description.trim()}
+                className="group w-full md:w-auto bg-[#06414B] dark:bg-[#1A2833] text-white px-12 py-5 text-xs font-bold tracking-[0.4em] uppercase hover:bg-[#3A8B99] dark:hover:bg-[#5BC0BE] dark:hover:text-[#090D10] transition-all flex items-center justify-center gap-4 disabled:opacity-50"
+              >
+                {loading ? <Loader2 className="animate-spin" size={20} /> : "Iniciar Análisis VIP"}
+                <ArrowRight className="group-hover:translate-x-2 transition-transform" size={18} />
+              </button>
+            </form>
+          </div>
 
-            {result && (
-              <div className="mt-16 animate-in fade-in zoom-in duration-1000 space-y-12">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  {result.suggestedTreatments.map((treatment, idx) => (
-                    <div key={idx} className="p-8 border border-[#C4E8E9] dark:border-[#1F2E3A] bg-[#F0F8F9] dark:bg-[#090D10] hover:scale-105 transition-all">
-                      <h3 className="font-serif font-bold text-xl text-[#06414B] dark:text-[#5BC0BE] mb-4 uppercase">
-                        {treatment.name}
-                      </h3>
-                      <p className="text-sm text-[#3A8B99] dark:text-[#A0AAB2] mb-6 leading-relaxed">
-                        {treatment.description}
-                      </p>
-                      <div className="text-[10px] font-bold uppercase tracking-widest text-[#06414B] dark:text-white/50 mb-2 border-t border-black/5 dark:border-white/5 pt-4">Razón Clínica</div>
-                      <p className="text-xs italic leading-relaxed text-[#06414B] dark:text-white">
-                        {treatment.reasoning}
-                      </p>
+          {/* LADO DERECHO: RESULTADOS */}
+          <div className="relative min-h-[500px] flex items-center justify-center">
+            {!result && !loading && (
+              <div className="absolute inset-0 border-[1px] border-dashed border-[#C4E8E9] dark:border-[#1F2E3A] flex flex-col items-center justify-center p-12 text-center opacity-40">
+                <Stethoscope size={64} className="text-[#3A8B99] mb-6" />
+                <p className="font-serif italic text-xl text-[#3A8B99]">Esperando diagnóstico inicial...</p>
+              </div>
+            )}
+
+            {loading && (
+              <div className="flex flex-col items-center justify-center space-y-8">
+                <div className="w-24 h-24 border-2 border-[#5BC0BE]/20 border-t-[#5BC0BE] rounded-full animate-spin" />
+                <p className="font-serif italic text-2xl text-[#3A8B99] dark:text-[#5BC0BE]">Procesando arquitectura estética...</p>
+              </div>
+            )}
+
+            {result && !loading && (
+              <div className="w-full space-y-6 animate-in fade-in slide-in-from-right-10 duration-700">
+                <h3 className="font-serif text-2xl uppercase tracking-widest text-[#06414B] dark:text-white border-b border-[#C4E8E9] dark:border-[#1F2E3A] pb-4">Sugerencias Clínicas</h3>
+                {result.suggestedTreatments.map((treatment, idx) => (
+                  <div key={idx} className="bg-white dark:bg-[#121A21] p-8 border border-[#C4E8E9] dark:border-[#1F2E3A] shadow-lg group hover:border-[#5BC0BE] transition-colors">
+                    <span className="text-[10px] font-bold text-[#5BC0BE] uppercase tracking-[0.4em] mb-2 block">Protocolo {idx + 1}</span>
+                    <h4 className="font-serif text-2xl text-[#06414B] dark:text-white mb-3">{treatment.name}</h4>
+                    <p className="text-[#3A8B99] dark:text-[#A0AAB2] text-sm leading-relaxed mb-4">{treatment.description}</p>
+                    <div className="bg-[#F0F8F9] dark:bg-[#090D10] p-4 text-[10px] uppercase tracking-widest text-[#06414B] dark:text-white border-l-2 border-[#5BC0BE]">
+                      <strong>Razón:</strong> {treatment.reasoning}
                     </div>
-                  ))}
-                </div>
-                
-                {result.generalAdvice && (
-                  <div className="p-8 bg-[#06414B]/5 dark:bg-white/5 border-l-4 border-[#5BC0BE] text-sm italic font-serif text-[#06414B] dark:text-[#A0AAB2]">
-                    {result.generalAdvice}
                   </div>
+                ))}
+                {result.generalAdvice && (
+                  <p className="text-[10px] uppercase tracking-widest text-[#3A8B99]/60 text-center mt-8 italic">
+                    {result.generalAdvice}
+                  </p>
                 )}
-                
-                <div className="flex justify-center pt-8">
-                  <a 
-                    href="https://wa.me/593983992549" 
-                    target="_blank" 
-                    className="border-2 border-[#06414B] dark:border-[#5BC0BE] text-[#06414B] dark:text-[#5BC0BE] px-12 py-4 text-[10px] font-bold uppercase tracking-[0.4em] hover:bg-[#06414B] hover:text-white dark:hover:bg-[#5BC0BE] dark:hover:text-[#090D10] transition-all flex items-center gap-4"
-                  >
-                    Validar con Especialista <Phone size={14} />
-                  </a>
-                </div>
               </div>
             )}
           </div>
@@ -107,4 +102,4 @@ export function AIConsultant() {
       </div>
     </section>
   );
-}
+};

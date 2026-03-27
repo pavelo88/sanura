@@ -1,4 +1,3 @@
-
 /**
  * @fileOverview Data maestra de la clínica N-VITALITY.
  * Centraliza los 26 servicios, la guía rápida y las estadísticas de experiencia.

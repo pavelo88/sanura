@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -12,26 +11,20 @@ interface ServiceCarouselProps {
   onSelectTreatment: (treatment: Treatment) => void;
 }
 
-export function ServiceCarousel({ category, onSelectTreatment }: ServiceCarouselProps) {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
-
-  // Carrusel Infinito con Autoplay Variable (2.5s -> 4s en hover)
+export const ServiceCarousel = ({ category, onSelectTreatment }: ServiceCarouselProps) => {
+  const [autoplayDelay, setAutoplayDelay] = useState(2500);
+  
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { 
       loop: true, 
-      align: 'center',
+      align: 'center', 
       skipSnaps: false,
-      duration: 40 // Transición más lenta y suave
-    },
-    [
-      Autoplay({ 
-        delay: isHovered ? 4000 : 2500, 
-        stopOnInteraction: false,
-        stopOnMouseEnter: false 
-      })
-    ]
+      duration: 40 // Transición más lenta solicitada
+    }, 
+    [Autoplay({ delay: autoplayDelay, stopOnInteraction: false })]
   );
+
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -40,30 +33,33 @@ export function ServiceCarousel({ category, onSelectTreatment }: ServiceCarousel
 
   useEffect(() => {
     if (!emblaApi) return;
+    onSelect();
     emblaApi.on('select', onSelect);
     emblaApi.on('reInit', onSelect);
   }, [emblaApi, onSelect]);
 
+  const handleMouseEnter = () => setAutoplayDelay(4000);
+  const handleMouseLeave = () => setAutoplayDelay(2500);
+
   return (
     <div 
-      className="embla overflow-hidden cursor-grab active:cursor-grabbing py-12" 
+      className="embla overflow-hidden py-16" 
       ref={emblaRef}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <div className="embla__container flex">
         {category.items.map((item, index) => {
-          const isCenter = index === selectedIndex;
+          const isSelected = selectedIndex === index;
+          
           return (
             <div 
               key={item.id} 
-              // Visibilidad 3-2-1
-              className={`embla__slide flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.33%] px-4 md:px-8 transition-all duration-1000 ease-in-out ${isCenter ? 'scale-105 z-10 opacity-100' : 'scale-90 opacity-40 grayscale-[30%]'}`}
+              className="embla__slide flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.33%] px-4 transition-transform duration-[1500ms] ease-out"
+              style={{ transform: isSelected ? 'scale(1.05)' : 'scale(0.95)' }}
             >
-              <div className="flex flex-col shadow-2xl border border-gray-100 dark:border-[#1F2E3A] bg-white dark:bg-[#121A21] h-full group/card transition-all">
-                
-                {/* Visual Section con Glide Cinematográfico */}
-                <div className="h-[400px] md:h-[480px] w-full relative overflow-hidden">
+              <div className="flex flex-col h-full bg-white dark:bg-[#121A21] border border-[#C4E8E9] dark:border-[#1F2E3A] shadow-xl overflow-hidden group">
+                <div className="h-[450px] relative overflow-hidden">
                   <BeforeAfterSlider 
                     imgAntes={item.imgAntes} 
                     imgDespues={item.imgDespues} 
@@ -71,16 +67,16 @@ export function ServiceCarousel({ category, onSelectTreatment }: ServiceCarousel
                   />
                 </div>
                 
-                {/* Content Section */}
-                <div className="p-8 flex-grow flex flex-col items-center justify-center text-center">
-                  <h4 className="font-serif text-xl md:text-2xl tracking-wider text-[#06414B] dark:text-[#E2E8F0] mb-6 leading-tight group-hover/card:text-[#3A8B99] dark:group-hover/card:text-[#5BC0BE] transition-colors">
+                <div className="p-8 flex flex-col flex-grow items-center text-center justify-between gap-6">
+                  <h4 className="font-serif text-2xl tracking-widest text-[#06414B] dark:text-white uppercase transition-colors group-hover:text-[#3A8B99] dark:group-hover:text-[#5BC0BE]">
                     {item.name}
                   </h4>
+                  
                   <button 
                     onClick={() => onSelectTreatment(item)}
-                    className="bg-[#06414B] dark:bg-[#1A2833] text-white px-8 py-4 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-[#3A8B99] dark:hover:bg-[#5BC0BE] dark:hover:text-[#090D10] transition-all transform hover:-translate-y-1 shadow-md"
+                    className="w-full bg-[#06414B] dark:bg-[#1A2833] text-white py-5 text-[10px] font-bold tracking-[0.4em] uppercase hover:bg-[#3A8B99] dark:hover:bg-[#5BC0BE] dark:hover:text-[#090D10] transition-all"
                   >
-                    Ver Protocolo Completo
+                    Ver Protocolo Elite
                   </button>
                 </div>
               </div>
@@ -90,4 +86,4 @@ export function ServiceCarousel({ category, onSelectTreatment }: ServiceCarousel
       </div>
     </div>
   );
-}
+};
