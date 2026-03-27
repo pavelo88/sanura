@@ -1,0 +1,31 @@
+
+{
+  "entities": {
+    "Lead": {
+      "title": "Lead de Paciente VIP",
+      "description": "Información de contacto y estado de valoración de un paciente potencial.",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string", "description": "Nombre completo del paciente" },
+        "phone": { "type": "string", "description": "Número de WhatsApp" },
+        "treatmentInterest": { "type": "string", "description": "Tratamiento de interés" },
+        "status": { 
+          "type": "string", 
+          "enum": ["Solicitado", "Pendiente", "Atendido", "Cerrado"],
+          "description": "Estado del flujo de gestión clínica"
+        },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Fecha de registro" }
+      },
+      "required": ["fullName", "phone", "treatmentInterest", "status", "createdAt"]
+    }
+  },
+  "auth": {
+    "providers": ["google.com"]
+  },
+  "firestore": {
+    "/leads/{leadId}": {
+      "schema": "Lead",
+      "description": "Colección centralizada de solicitudes de valoración VIP"
+    }
+  }
+}

@@ -1,28 +1,17 @@
+
 {
   "placeholderImages": [
     {
-      "id": "hero-bg",
-      "description": "Fondo arquitectónico de lujo para el hero",
-      "imageUrl": "https://picsum.photos/seed/lux-arch/1920/1080",
-      "imageHint": "luxury architecture"
+      "id": "hero-before",
+      "description": "Imagen de antes para el protocolo central",
+      "imageUrl": "https://picsum.photos/seed/nv-before/1920/1080",
+      "imageHint": "medical profile"
     },
     {
-      "id": "abdomen-lux",
-      "description": "Silueta femenina con abdomen definido",
-      "imageUrl": "https://picsum.photos/seed/abdomen-lux/1000/1500",
-      "imageHint": "toned abdomen"
-    },
-    {
-      "id": "face-1",
-      "description": "Resultado de rinoplastia",
-      "imageUrl": "https://picsum.photos/seed/face1/800/1000",
-      "imageHint": "facial profile"
-    },
-    {
-      "id": "face-2",
-      "description": "Resultado de rejuvenecimiento facial",
-      "imageUrl": "https://picsum.photos/seed/face2/800/1000",
-      "imageHint": "smooth skin"
+      "id": "hero-after",
+      "description": "Imagen de después para el protocolo central",
+      "imageUrl": "https://picsum.photos/seed/nv-after/1920/1080",
+      "imageHint": "beauty after"
     }
   ]
 }
