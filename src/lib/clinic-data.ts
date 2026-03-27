@@ -1,6 +1,6 @@
 /**
  * @fileOverview Data maestra de la clínica N-VITALITY.
- * Centraliza los 26 servicios, la guía rápida y las estadísticas de experiencia.
+ * SOLO DATOS. NADA DE HTML NI COMPONENTES AQUÍ.
  */
 
 export interface Treatment {
@@ -68,10 +68,10 @@ export const serviciosData: Category[] = [
     id: '05_otros_especializados',
     title: 'Especialidades Quirúrgicas',
     items: [
-      { id: '25_blefaro', name: 'Blefaroplastia', desc: 'Resección quirúrgica precisa de piel excedente y bolsas palpebrales. Mirada rejuvenecida con cicatrices ocultas.', imgAntes: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=800&q=80' },
-      { id: '26_dermapen', name: 'Microneedling', desc: 'Microperforaciones automatizadas para inducir colágeno masivo y permitir la penetración de principios activos médicos.', imgAntes: 'https://images.unsplash.com/photo-1550159930-40066082a4fc?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1531299244174-d247dd4e5a66?w=800&q=80' },
       { id: '23_meso_capilar', name: 'Mesoterapia Capilar', desc: 'Infiltración directa en el cuero cabelludo de dutasteride y vitaminas para frenar la alopecia y engrosar el folículo.', imgAntes: 'https://images.unsplash.com/photo-1522338242992-e1a54906a8da?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1560869713-7d0a29430803?w=800&q=80' },
-      { id: '24_nutricion', name: 'Nutrición Estética', desc: 'Abordaje clínico del metabolismo para pérdida de peso saludable y mantenimiento de los resultados estéticos corporales.', imgAntes: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80' }
+      { id: '24_nutricion', name: 'Nutrición Estética', desc: 'Abordaje clínico del metabolismo para pérdida de peso saludable y mantenimiento de los resultados estéticos corporales.', imgAntes: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80' },
+      { id: '25_blefaro', name: 'Blefaroplastia', desc: 'Resección quirúrgica precisa de piel excedente y bolsas palpebrales. Mirada rejuvenecida con cicatrices ocultas.', imgAntes: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=800&q=80' },
+      { id: '26_dermapen', name: 'Microneedling', desc: 'Microperforaciones automatizadas para inducir colágeno masivo y permitir la penetración de principios activos médicos.', imgAntes: 'https://images.unsplash.com/photo-1550159930-40066082a4fc?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1531299244174-d247dd4e5a66?w=800&q=80' }
     ]
   }
 ];

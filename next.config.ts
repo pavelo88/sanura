@@ -3,10 +3,12 @@ import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
+    tsconfigPath: './tsconfig.json',
   },
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
+    dirs: ['src', 'pages', 'components', 'lib', 'utils'],
   },
   images: {
     remotePatterns: [

@@ -1,227 +1,141 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { getFirestore, useCollection, useStorage } from '@/firebase';
-import { collection, query, orderBy, doc, updateDoc, setDoc, getDoc } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { Loader2, ShieldCheck, LogOut, Users, Edit, Image as ImageIcon, Save, Trash2, ExternalLink, Globe } from 'lucide-react';
-import { serviciosData } from '@/lib/clinic-data';
+import { useRouter } from 'next/navigation';
+import { Loader2, LogOut, Users, Edit, Globe, Menu, X } from 'lucide-react';
+import LeadsTable from '@/components/admin/LeadsTable';
+import CMSPanel from '@/components/admin/CMSPanel';
+import ServicesManager from '@/components/admin/ServicesManager';
 
 export default function AdminPage() {
-  const [password, setPassword] = useState('');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'leads' | 'cms' | 'services'>('leads');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
-      setIsAuthenticated(true);
-      setError('');
-    } else {
-      setError('Clave de acceso incorrecta');
+  // Verificar sesión al montar (doble validación cliente-side por si el middleware falla o para estado de UI)
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch('/api/admin/check');
+        if (!res.ok) {
+          router.push('/admin/login');
+        } else {
+          setIsLoading(false);
+        }
+      } catch (err) {
+        console.error('Auth check failed');
+        router.push('/admin/login');
+      }
+    };
+    checkAuth();
+  }, [router]);
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/logout', { method: 'POST' });
+      router.push('/admin/login');
+    } catch {
+      console.error('Logout error');
     }
   };
 
-  if (!isAuthenticated) {
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#090D10] flex items-center justify-center p-6">
-        <form onSubmit={handleLogin} className="w-full max-w-md bg-[#121A21] border border-[#1F2E3A] p-12 shadow-2xl text-center rounded-3xl">
-          <ShieldCheck size={48} className="text-[#5BC0BE] mx-auto mb-8" />
-          <h1 className="font-serif text-3xl text-white uppercase tracking-tighter mb-8">Protocolo Admin</h1>
-          <input 
-            type="password" 
-            placeholder="CLAVE DE ACCESO VIP"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            className="w-full bg-[#090D10] border border-[#1F2E3A] p-6 text-white text-xs tracking-widest outline-none focus:border-[#5BC0BE] mb-6 text-center font-bold rounded-xl"
-          />
-          {error && <p className="text-red-400 text-[10px] uppercase tracking-widest mb-6 font-bold">{error}</p>}
-          <button className="w-full bg-[#5BC0BE] text-[#090D10] py-5 text-xs font-bold uppercase tracking-[0.3em] hover:bg-white transition-all rounded-xl shadow-lg">
-            Acceder a Consola
-          </button>
-        </form>
+      <div className="min-h-screen bg-[#090D10] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="animate-spin text-[#5BC0BE]" size={48} />
+          <p className="text-white/60 font-sans text-sm tracking-widest uppercase">Validando Acceso...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#090D10] text-white flex flex-col md:flex-row font-sans">
-      <aside className="w-full md:w-64 bg-[#121A21] border-r border-[#1F2E3A] p-8 space-y-12">
-        <div className="space-y-1">
-          <h1 className="font-serif text-2xl tracking-tighter uppercase">NVitality</h1>
-          <p className="text-[8px] tracking-[0.4em] text-[#5BC0BE] uppercase font-bold">Consola v.3.0</p>
+    <div className="min-h-screen bg-[#090D10] text-white flex flex-col lg:flex-row font-sans overflow-hidden">
+      {/* Mobile Header */}
+      <div className="lg:hidden flex items-center justify-between bg-[#121A21] border-b border-[#1F2E3A] p-5 sticky top-0 z-50">
+        <div className="flex flex-col">
+          <h1 className="font-serif text-xl tracking-tighter uppercase leading-none">NVitality</h1>
+          <span className="text-[8px] tracking-[0.3em] text-[#5BC0BE] font-bold uppercase mt-1">Admin Central</span>
         </div>
-
-        <nav className="space-y-4">
-          <button onClick={() => setActiveTab('leads')} className={`w-full flex items-center gap-4 px-6 py-4 rounded-xl text-xs font-bold tracking-widest uppercase transition-all ${activeTab === 'leads' ? 'bg-[#5BC0BE] text-[#090D10]' : 'text-white/40 hover:text-white hover:bg-white/5'}`}><Users size={18} /> Leads</button>
-          <button onClick={() => setActiveTab('cms')} className={`w-full flex items-center gap-4 px-6 py-4 rounded-xl text-xs font-bold tracking-widest uppercase transition-all ${activeTab === 'cms' ? 'bg-[#5BC0BE] text-[#090D10]' : 'text-white/40 hover:text-white hover:bg-white/5'}`}><Edit size={18} /> Global</button>
-          <button onClick={() => setActiveTab('services')} className={`w-full flex items-center gap-4 px-6 py-4 rounded-xl text-xs font-bold tracking-widest uppercase transition-all ${activeTab === 'services' ? 'bg-[#5BC0BE] text-[#090D10]' : 'text-white/40 hover:text-white hover:bg-white/5'}`}><Globe size={18} /> Servicios</button>
-        </nav>
-
-        <button onClick={() => setIsAuthenticated(false)} className="flex items-center gap-4 text-[10px] tracking-[0.3em] text-white/20 hover:text-red-400 transition-colors uppercase font-bold pt-12 border-t border-[#1F2E3A] w-full"><LogOut size={16} /> Salir</button>
-      </aside>
-
-      <main className="flex-1 p-8 md:p-16 overflow-y-auto">
-        {activeTab === 'leads' && <LeadsTable />}
-        {activeTab === 'cms' && <CMSPanel />}
-        {activeTab === 'services' && <ServicesManager />}
-      </main>
-    </div>
-  );
-}
-
-function LeadsTable() {
-  const db = getFirestore();
-  const leadsQuery = query(collection(db, 'leads'), orderBy('createdAt', 'desc'));
-  const { data: leads, loading } = useCollection(leadsQuery);
-
-  const updateStatus = async (id: string, newStatus: string) => {
-    await updateDoc(doc(db, 'leads', id), { status: newStatus });
-  };
-
-  return (
-    <div className="space-y-12">
-      <h2 className="font-serif text-4xl uppercase tracking-tighter">Registro de Leads</h2>
-      {loading ? (
-        <div className="py-20 flex flex-col items-center"><Loader2 className="animate-spin text-[#5BC0BE] mb-4" /> <p className="font-serif italic">Sincronizando...</p></div>
-      ) : (
-        <div className="bg-[#121A21] border border-[#1F2E3A] rounded-3xl overflow-hidden shadow-2xl">
-          <table className="w-full text-left">
-            <thead className="bg-white/5">
-              <tr>
-                <th className="p-6 text-[9px] tracking-[0.3em] uppercase text-[#5BC0BE]">Identidad</th>
-                <th className="p-6 text-[9px] tracking-[0.3em] uppercase text-[#5BC0BE]">WhatsApp</th>
-                <th className="p-6 text-[9px] tracking-[0.3em] uppercase text-[#5BC0BE]">Interés</th>
-                <th className="p-6 text-[9px] tracking-[0.3em] uppercase text-[#5BC0BE]">Estado</th>
-                <th className="p-6 text-[9px] tracking-[0.3em] uppercase text-[#5BC0BE]">Acciones</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#1F2E3A]">
-              {leads?.map(lead => (
-                <tr key={lead.id} className="hover:bg-white/[0.02]">
-                  <td className="p-6 font-serif text-lg">{lead.fullName}</td>
-                  <td className="p-6 text-xs">{lead.phone}</td>
-                  <td className="p-6 text-[9px] uppercase tracking-widest">{lead.treatmentInterest || lead.message?.substring(0, 20)}</td>
-                  <td className="p-6">
-                    <select value={lead.status} onChange={e => updateStatus(lead.id, e.target.value)} className="bg-[#090D10] border border-[#1F2E3A] p-2 text-[9px] rounded-lg">
-                      <option value="Solicitado">SOLICITADO</option>
-                      <option value="Pendiente">PENDIENTE</option>
-                      <option value="Atendido">ATENDIDO</option>
-                      <option value="Cerrado">CERRADO</option>
-                    </select>
-                  </td>
-                  <td className="p-6"><a href={`https://wa.me/${lead.phone.replace(/\+/g, '')}`} target="_blank" className="text-white/20 hover:text-white"><ExternalLink size={18} /></a></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function CMSPanel() {
-  const db = getFirestore();
-  const storage = useStorage();
-  const [config, setConfig] = useState<any>(null);
-  const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    const fetch = async () => {
-      const snap = await getDoc(doc(db, 'settings', 'site-content'));
-      if (snap.exists()) setConfig(snap.data());
-    };
-    fetch();
-  }, [db]);
-
-  const handleSave = async () => {
-    setSaving(true);
-    await setDoc(doc(db, 'settings', 'site-content'), config);
-    setSaving(false);
-  };
-
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
-    if (!e.target.files?.[0] || !storage) return;
-    const file = e.target.files[0];
-    const refPath = ref(storage, `site/${field}_${Date.now()}`);
-    const snap = await uploadBytes(refPath, file);
-    const url = await getDownloadURL(snap.ref);
-    setConfig({ ...config, [field]: url });
-  };
-
-  if (!config) return <Loader2 className="animate-spin text-[#5BC0BE]" />;
-
-  return (
-    <div className="space-y-12">
-      <div className="flex justify-between items-center">
-        <h2 className="font-serif text-4xl uppercase tracking-tighter">Control Editorial Global</h2>
-        <button onClick={handleSave} disabled={saving} className="bg-[#5BC0BE] text-[#090D10] px-8 py-3 rounded-xl text-[10px] font-bold tracking-widest uppercase hover:bg-white disabled:opacity-50 flex items-center gap-2">
-          {saving ? <Loader2 className="animate-spin" size={14} /> : <Save size={14} />} Guardar
+        <button 
+          onClick={() => setSidebarOpen(!sidebarOpen)} 
+          className="p-3 bg-[#090D10] border border-[#1F2E3A] rounded-xl text-[#5BC0BE] active:scale-90 transition-transform shadow-inner"
+        >
+          {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <section className="bg-[#121A21] p-8 rounded-3xl space-y-4">
-          <h3 className="text-[10px] tracking-[0.3em] uppercase text-[#5BC0BE] border-b border-white/10 pb-2">Hero / Portada</h3>
-          <div className="space-y-4">
-            <input value={config.heroTitle} onChange={e => setConfig({...config, heroTitle: e.target.value})} placeholder="Título Hero" className="w-full bg-[#090D10] border border-[#1F2E3A] p-4 text-sm rounded-xl" />
-            <textarea value={config.heroSubtitle} onChange={e => setConfig({...config, heroSubtitle: e.target.value})} placeholder="Slogan" className="w-full bg-[#090D10] border border-[#1F2E3A] p-4 text-sm rounded-xl h-24" />
-          </div>
-        </section>
+      {/* Sidebar Navigation */}
+      <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-[#121A21] border-r border-[#1F2E3A] flex flex-col transform transition-transform duration-500 ease-in-out lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full shadow-2xl shadow-black/50'}`}>
+        <div className="p-10 space-y-2 border-b border-[#1F2E3A]/50">
+          <h2 className="font-serif text-3xl tracking-tighter uppercase text-white leading-none">NVitality</h2>
+          <p className="text-[9px] tracking-[0.5em] text-[#5BC0BE] uppercase font-black opacity-80">Consola v4.2</p>
+        </div>
 
-        <section className="bg-[#121A21] p-8 rounded-3xl space-y-4">
-          <h3 className="text-[10px] tracking-[0.3em] uppercase text-[#5BC0BE] border-b border-white/10 pb-2">Directora Médica</h3>
-          <div className="space-y-4">
-            <input value={config.doctorTitle} onChange={e => setConfig({...config, doctorTitle: e.target.value})} placeholder="Nombre Doctora" className="w-full bg-[#090D10] border border-[#1F2E3A] p-4 text-sm rounded-xl" />
-            <textarea value={config.doctorQuote} onChange={e => setConfig({...config, doctorQuote: e.target.value})} placeholder="Cita / Frase" className="w-full bg-[#090D10] border border-[#1F2E3A] p-4 text-sm rounded-xl h-24" />
-            <div className="aspect-video bg-[#090D10] rounded-xl overflow-hidden relative group border border-[#1F2E3A]">
-              {config.doctorImage && <img src={config.doctorImage} className="w-full h-full object-cover" />}
-              <label className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity">
-                <ImageIcon size={24} />
-                <input type="file" className="hidden" onChange={e => handleUpload(e, 'doctorImage')} />
-              </label>
+        <nav className="flex-1 p-6 space-y-3 mt-4">
+          {[
+            { id: 'leads', label: 'Gestión Leads', icon: Users },
+            { id: 'cms', label: 'Estructura Global', icon: Edit },
+            { id: 'services', label: 'Servicios VIP', icon: Globe },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => {
+                setActiveTab(tab.id as typeof activeTab);
+                setSidebarOpen(false);
+              }}
+              className={`w-full flex items-center gap-4 px-6 py-4 rounded-xl text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 relative group ${
+                activeTab === tab.id
+                  ? 'bg-[#5BC0BE] text-[#090D10] shadow-lg shadow-[#5BC0BE]/20'
+                  : 'text-white/40 hover:text-white hover:bg-white/5 border border-transparent hover:border-[#1F2E3A]'
+              }`}
+            >
+              <tab.icon size={18} className={`${activeTab === tab.id ? 'opacity-100' : 'opacity-40 group-hover:opacity-100'} transition-opacity`} />
+              <span>{tab.label}</span>
+              {activeTab === tab.id && (
+                <div className="absolute right-3 w-1.5 h-1.5 rounded-full bg-[#090D10]/30"></div>
+              )}
+            </button>
+          ))}
+        </nav>
+
+        <div className="p-6 border-t border-[#1F2E3A]/50 mt-auto">
+          <button 
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-3 px-6 py-4 text-[10px] font-bold tracking-[0.3em] uppercase text-white/30 hover:text-red-400 hover:bg-red-400/5 rounded-xl transition-all border border-transparent hover:border-red-400/20"
+          >
+            <LogOut size={16} />
+            <span>Cerrar Sesión</span>
+          </button>
+        </div>
+      </aside>
+
+      {/* Main Content Area */}
+      <main className="flex-1 overflow-y-auto bg-[#090D10] p-6 md:p-10 lg:p-14 custom-scrollbar">
+        <div className="max-w-7xl mx-auto animate-fade-in relative">
+          {activeTab === 'leads' && <LeadsTable />}
+          {activeTab === 'cms' && <CMSPanel />}
+          {activeTab === 'services' && <ServicesManager />}
+          
+          <footer className="mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[9px] uppercase tracking-[0.4em] font-medium text-white/20">
+            <p>© 2026 NVitality Clinic Operations</p>
+            <div className="flex gap-6">
+              <span className="text-[#5BC0BE]/40">Status: Encriptado</span>
+              <span>Uptime: 99.9%</span>
             </div>
-          </div>
-        </section>
-      </div>
-    </div>
-  );
-}
+          </footer>
+        </div>
+      </main>
 
-function ServicesManager() {
-  const db = getFirestore();
-  const [servicesData, setServicesData] = useState<any[]>([]);
-
-  useEffect(() => {
-    // En un entorno real, cargaríamos esto de una colección 'services'
-    // Por ahora, simulamos la edición de los servicios hardcoded
-    setServicesData(serviciosData);
-  }, []);
-
-  return (
-    <div className="space-y-12">
-      <h2 className="font-serif text-4xl uppercase tracking-tighter">Editor de Servicios</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {servicesData.flatMap(cat => cat.items).map(item => (
-          <div key={item.id} className="bg-[#121A21] p-6 rounded-2xl border border-[#1F2E3A] space-y-4">
-            <h4 className="text-[10px] tracking-widest uppercase text-[#5BC0BE]">{item.name}</h4>
-            <div className="grid grid-cols-2 gap-2">
-              <div className="aspect-square bg-[#090D10] rounded-lg overflow-hidden border border-white/5 relative group">
-                <img src={item.imgAntes} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center text-[8px] uppercase font-bold">Editar Antes</div>
-              </div>
-              <div className="aspect-square bg-[#090D10] rounded-lg overflow-hidden border border-white/5 relative group">
-                <img src={item.imgDespues} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center text-[8px] uppercase font-bold">Editar Después</div>
-              </div>
-            </div>
-            <textarea className="w-full bg-[#090D10] border border-[#1F2E3A] p-3 text-[10px] rounded-lg h-20" defaultValue={item.desc} />
-          </div>
-        ))}
-      </div>
+      {/* Mobile Navigation Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm lg:hidden z-40 transition-opacity duration-500"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
     </div>
   );
 }

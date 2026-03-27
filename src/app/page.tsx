@@ -50,7 +50,7 @@ export default function App() {
 
         <Hero onOpenCert={() => setShowCertModal(true)} siteConfig={siteConfig} />
 
-        <section id="servicios" className="py-16 relative overflow-hidden transition-all duration-700">
+        <section id="servicios" className="py-8 md:py-12 relative overflow-hidden transition-all duration-700">
           <div className="max-w-7xl mx-auto px-6 relative z-10">
             <div className="glass-cyan dark:glass-teal p-10 md:p-16 rounded-[4rem] border border-white/40 dark:border-white/10 shadow-2xl">
               <div className="text-center mb-10 space-y-4">
@@ -62,19 +62,23 @@ export default function App() {
                 </p>
               </div>
 
-              <div className="flex overflow-x-auto hide-scrollbar gap-6 md:gap-10 mb-8 border-b border-white/10 px-4 justify-start lg:justify-center">
-                {serviciosData.map(cat => (
-                  <button
-                    key={cat.id}
-                    onClick={() => setActiveCategory(cat.id)}
-                    className={`whitespace-nowrap pb-4 text-[9px] font-bold tracking-[0.5em] uppercase transition-all border-b-2 
-                    ${activeCategory === cat.id 
-                      ? 'border-[#5BC0BE] text-[#06414B] dark:text-[#5BC0BE]' 
-                      : 'border-transparent text-[#3A8B99] dark:text-white/40 hover:text-white'}`}
-                  >
-                    {cat.title}
-                  </button>
-                ))}
+              <div className="relative">
+                <div className="flex overflow-x-auto hide-scrollbar gap-4 md:gap-6 lg:gap-10 mb-6 md:mb-8 border-b border-white/10 pb-px justify-start lg:justify-center">
+                  {serviciosData.map(cat => (
+                    <button
+                      key={cat.id}
+                      onClick={() => setActiveCategory(cat.id)}
+                      className={`whitespace-nowrap pb-4 text-[8px] md:text-[9px] font-bold tracking-[0.4em] md:tracking-[0.5em] uppercase transition-all border-b-2 flex-shrink-0
+                      ${activeCategory === cat.id
+                        ? 'border-[#5BC0BE] text-[#06414B] dark:text-[#5BC0BE]'
+                        : 'border-transparent text-[#3A8B99]/70 dark:text-white/40 hover:text-[#06414B] dark:hover:text-white'}`}
+                    >
+                      {cat.title}
+                    </button>
+                  ))}
+                </div>
+                {/* Right fade hint for mobile scroll */}
+                <div className="md:hidden absolute right-0 top-0 bottom-2 w-10 bg-gradient-to-l from-white/80 dark:from-[#0D1A22]/80 to-transparent pointer-events-none" />
               </div>
 
               <ServiceCarousel 
@@ -85,7 +89,7 @@ export default function App() {
           </div>
         </section>
 
-        <DoctorProfile siteConfig={siteConfig} />
+        <DoctorProfile />
 
         <QuickGuide />
 

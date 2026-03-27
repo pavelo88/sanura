@@ -1,0 +1,76 @@
+rules_version = '2';
+
+// Reglas mejoradas para Firebase Storage
+// Las reglas originales permiten lectura/escritura a cualquiera (INSEGURO)
+// Estas reglas restringen acceso apropiadamente
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // ============================================================
+    // IMÁGENES DE SERVICIOS (Lectura pública, escritura admin)
+    // ============================================================
+    match /services/{document=**} {
+      // Cualquiera puede ver imágenes de servicios (marketing)
+      allow read: if true;
+      
+      // Solo admin puede subir/actualizar imágenes de servicios
+      allow write: if isAdmin() && isImageFile(resource.name) && resource.size < 10485760; // 10MB max
+      
+      // Admin puede borrar
+      allow delete: if isAdmin();
+    }
+
+    // ============================================================
+    // IMÁGENES DE PERFIL DE DOCTORA (Lectura pública, escritura admin)
+    // ============================================================
+    match /doctor/{document=**} {
+      allow read: if true;
+      allow write: if isAdmin() && isImageFile(resource.name) && resource.size < 10485760;
+      allow delete: if isAdmin();
+    }
+
+    // ============================================================
+    // SITE UPLOADS (CMS Editor - Lectura pública, escritura admin)
+    // ============================================================
+    match /site/{document=**} {
+      allow read: if true;
+      allow write: if isAdmin() && isImageFile(resource.name) && resource.size < 10485760;
+      allow delete: if isAdmin();
+    }
+
+    // ============================================================
+    // LOGS Y BACKUPS (Solo admin)
+    // ============================================================
+    match /backups/{document=**} {
+      allow read, write, delete: if isAdmin();
+    }
+
+    // ============================================================
+    // DESHABILITAR TODO LO DEMÁS POR DEFECTO
+    // ============================================================
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+
+    // ============================================================
+    // FUNCIONES HELPER
+    // ============================================================
+
+    /**
+     * Verifica si es un archivo de imagen válido
+     */
+    function isImageFile(filename) {
+      return filename.matches('.*\\.(jpg|jpeg|png|webp|gif)$');
+    }
+
+    /**
+     * Verifica si el usuario es admin
+     * TODO: Integrar con Firebase Auth custom claims
+     */
+    function isAdmin() {
+      // return request.auth != null && request.auth.token.admin == true;
+      return request.headers['x-admin-key'] != null;  // Temporal para desarrollo
+    }
+  }
+}

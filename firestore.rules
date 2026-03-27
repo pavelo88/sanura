@@ -1,0 +1,98 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ============================================================
+    // CONFIGURACIÓN Y SETTINGS (Solo Admin)
+    // ============================================================
+    match /settings/{document=**} {
+      // Solo admin puede leer y escribir configuraciones
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // ============================================================
+    // LEADS (Lectura admin, creación publica con validación)
+    // ============================================================
+    match /leads/{leadId} {
+      // Admin: puede leer todos los leads (para dashboard)
+      allow read: if isAdmin();
+      
+      // Público: puede crear nuevos leads con validación
+      allow create: if validateLeadCreation(request.resource.data);
+      
+      // Admin: puede actualizar estado del lead
+      allow update: if isAdmin() && validateLeadUpdate(resource.data, request.resource.data);
+      
+      // Admin: puede borrar leads
+      allow delete: if isAdmin();
+    }
+
+    // ============================================================
+    // SERVICIOS Y TRATAMIENTOS (Lectura pública, escritura admin)
+    // ============================================================
+    match /services/{serviceId} {
+      allow read: if true;  // Cualquiera puede ver servicios
+      allow write: if isAdmin();  // Solo admin puede crear/editar
+    }
+
+    match /services/{serviceId}/treatments/{treatmentId} {
+      allow read: if true;  // Cualquiera puede ver tratamientos
+      allow write: if isAdmin();  // Solo admin puede gestionar
+    }
+
+    // ============================================================
+    // AI QUERIES LOG (Para tracking de uso - Solo admin)
+    // ============================================================
+    match /ai_queries/{queryId} {
+      allow read: if isAdmin();
+      allow create: if true;  // Cualquiera puede registrar su query
+      allow write: if false;  // No se pueden editar queries una vez creadas
+      allow delete: if isAdmin();
+    }
+
+    // ============================================================
+    // FUNCIONES HELPER
+    // ============================================================
+
+    /**
+     * Verifica si el usuario es admin
+     * En producción, esto debe estar vinculado a Firebase Auth
+     * con custom claims
+     */
+    function isAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+
+    /**
+     * Valida que un nuevo lead cumpla con requerimientos
+     */
+    function validateLeadCreation(data) {
+      return data.keys().hasAll(['fullName', 'phone', 'message', 'createdAt'])
+        && data.fullName is string && data.fullName.size() > 0 && data.fullName.size() <= 100
+        && data.phone is string && data.phone.size() >= 5 && data.phone.size() <= 20
+        && data.phone.matches('^[0-9+\\s\\-()]+$')
+        && data.message is string && data.message.size() > 10 && data.message.size() <= 1000
+        && data.createdAt == request.time
+        && (!'treatmentInterest' in data || (data.treatmentInterest is string && data.treatmentInterest.size() <= 200))
+        && (!'status' in data || data.status == 'SOLICITADO');
+    }
+
+    /**
+     * Valida actualizaciones de lead (solo admin)
+     */
+    function validateLeadUpdate(oldData, newData) {
+      return newData.keys().hasAll(['fullName', 'phone', 'message', 'createdAt'])
+        && oldData.createdAt == newData.createdAt
+        && oldData.fullName == newData.fullName
+        && newData.status in ['SOLICITADO', 'PENDIENTE', 'ATENDIDO', 'CERRADO'];
+    }
+
+    /**
+     * Utilidad regex para validar formato
+     */
+    function regex(text, pattern) {
+      return text.matches(pattern);
+    }
+  }
+}
