@@ -1,6 +1,7 @@
+
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { getFirestore, useCollection } from '@/firebase';
 import { collection, query, orderBy, doc, updateDoc } from 'firebase/firestore';
 import { Loader2, ShieldCheck, LogOut } from 'lucide-react';
@@ -12,7 +13,9 @@ export default function AdminPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === 'Nvitalyty{2026}') {
+    const adminPass = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
+    
+    if (password === adminPass) {
       setIsAuthenticated(true);
       setError('');
     } else {
@@ -54,7 +57,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     try {
       await updateDoc(doc(db, 'leads', id), { status: newStatus });
     } catch (e) {
-      console.error(e);
+      console.error("Error al actualizar estado:", e);
     }
   };
 
