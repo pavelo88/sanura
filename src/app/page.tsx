@@ -40,24 +40,24 @@ export default function App() {
 
         <Hero onOpenCert={() => setShowCertModal(true)} />
 
-        <section id="servicios" className="py-12 md:py-16 bg-white dark:bg-[#090D10] border-t border-[#C4E8E9] dark:border-[#1F2E3A] transition-colors duration-500 overflow-hidden">
+        <section id="servicios" className="pt-24 pb-12 bg-white dark:bg-[#090D10] transition-colors duration-500 overflow-hidden">
           <div className="max-w-7xl mx-auto px-6">
             
-            <div className="text-center mb-6 max-w-4xl mx-auto">
-              <h2 className="font-serif text-2xl md:text-4xl tracking-tighter uppercase mb-2 text-[#06414B] dark:text-white leading-[0.8]">
+            <div className="text-center mb-12 max-w-4xl mx-auto">
+              <h2 className="font-serif text-4xl md:text-5xl tracking-tighter uppercase mb-4 text-[#06414B] dark:text-white leading-[0.85]">
                 Curaduría <span className="text-[#3A8B99] dark:text-[#5BC0BE] italic">de Elite</span>
               </h2>
-              <p className="font-serif italic text-base text-[#3A8B99] dark:text-[#5BC0BE]">
+              <p className="font-serif italic text-xl text-[#3A8B99] dark:text-[#5BC0BE]">
                 Protocolos donde la ciencia médica se encuentra con la visión editorial.
               </p>
             </div>
 
-            <div className="flex overflow-x-auto hide-scrollbar gap-6 md:gap-10 mb-4 border-b border-[#C4E8E9] dark:border-[#1F2E3A] px-4 justify-start lg:justify-center">
+            <div className="flex overflow-x-auto hide-scrollbar gap-8 md:gap-12 mb-8 border-b border-[#C4E8E9] dark:border-[#1F2E3A] px-4 justify-start lg:justify-center">
               {serviciosData.map(cat => (
                  <button
                    key={cat.id}
                    onClick={() => setActiveCategory(cat.id)}
-                   className={`whitespace-nowrap pb-2 text-[7px] font-bold tracking-[0.3em] uppercase transition-all border-b-[2px] 
+                   className={`whitespace-nowrap pb-4 text-[8px] font-bold tracking-[0.4em] uppercase transition-all border-b-[2px] 
                    ${activeCategory === cat.id 
                      ? 'border-[#06414B] dark:border-[#5BC0BE] text-[#06414B] dark:text-[#5BC0BE]' 
                      : 'border-transparent text-[#3A8B99] dark:text-[#A0AAB2] hover:text-[#06414B] dark:hover:text-white'}`}
@@ -78,6 +78,9 @@ export default function App() {
         {/* Fase 2: Restauración de la Figura Médica */}
         <DoctorProfile />
 
+        {/* Reducción de espacio entre secciones */}
+        <div className="bg-white dark:bg-[#090D10] py-4 transition-colors duration-500" />
+
         <QuickGuide />
 
         <LeadForm />
@@ -87,7 +90,7 @@ export default function App() {
             <div className="flex flex-col md:flex-row justify-between items-center text-[8px] tracking-[0.5em] text-white/40 uppercase gap-6">
               <div className="flex items-center gap-4">
                 <span className="font-serif text-xl tracking-widest text-white/80">NVITALITY</span>
-                <p>© 2026 Clínica Estética. Archive v.2.6</p>
+                <p>© 2026 Clínica Estética. Archive v.3.0</p>
               </div>
               <div className="flex gap-8">
                 <a href="#" className="hover:text-white transition-colors">Aviso Legal</a>
