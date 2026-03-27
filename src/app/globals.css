@@ -60,7 +60,7 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-main);
-    transition: background-color 1200ms ease, color 1200ms ease;
+    transition: background-color 1500ms ease, color 1500ms ease;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
@@ -69,11 +69,7 @@
 }
 
 .insurance-header {
-  @apply uppercase tracking-[0.5em] text-[12px] font-black text-primary border-l-4 border-accent pl-6 py-1 mb-8;
-}
-
-.dark .magazine-title {
-  @apply font-headline font-bold uppercase tracking-tighter italic;
+  @apply uppercase tracking-[0.5em] text-[12px] font-black text-primary border-l-4 border-accent pl-6 py-1 mb-10;
 }
 
 .shadow-3xl {
@@ -86,4 +82,14 @@
 
 .dark .split-gradient {
   background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--secondary)) 100%);
+}
+
+@keyframes custom-whatsapp {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.animate-custom-whatsapp {
+  animation: custom-whatsapp 3s infinite ease-in-out;
 }
