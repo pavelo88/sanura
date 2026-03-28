@@ -1,145 +1,164 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader2, LogOut, Users, Edit, Globe, Menu, X } from 'lucide-react';
+import {
+  Loader2, LogOut, Users, Edit, Globe, Menu, X,
+  ChevronRight, Save, Filter, CheckCircle2
+} from 'lucide-react';
 import LeadsTable from '@/components/admin/LeadsTable';
 import CMSPanel from '@/components/admin/CMSPanel';
 import ServicesManager from '@/components/admin/ServicesManager';
+import { serviciosData } from '@/lib/clinic-data';
 
 export default function AdminPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'leads' | 'cms' | 'services'>('leads');
+  const [activeServiceCat, setActiveServiceCat] = useState(serviciosData[0].id);
+  const [leadsFilter, setLeadsFilter] = useState('TODOS'); // Estado del filtro para Leads
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
+
+  const STATUSES = ['SOLICITADO', 'EN GESTIÓN', 'CITA AGENDADA', 'VENDIDO', 'DESCARTADO'];
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
         const res = await fetch('/api/admin/check');
-        if (!res.ok) {
-          router.push('/admin/login');
-        } else {
-          setIsLoading(false);
-        }
-      } catch (err) {
-        console.error('Auth check failed');
-        router.push('/admin/login');
-      }
+        if (!res.ok) router.push('/admin/login');
+        else setIsLoading(false);
+      } catch (err) { router.push('/admin/login'); }
     };
     checkAuth();
   }, [router]);
 
   const handleLogout = async () => {
-    try {
-      await fetch('/api/admin/logout', { method: 'POST' });
-      router.push('/admin/login');
-    } catch {
-      console.error('Logout error');
-    }
+    await fetch('/api/admin/logout', { method: 'POST' });
+    router.push('/admin/login');
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-[#090D10] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="animate-spin text-[#5BC0BE]" size={48} />
-          <p className="text-white/60 font-sans text-sm tracking-widest uppercase">Validando Acceso...</p>
-        </div>
-      </div>
-    );
-  }
+  const triggerGlobalSave = () => {
+    window.dispatchEvent(new CustomEvent('cms-save-trigger'));
+  };
+
+  if (isLoading) return (
+    <div className="h-screen bg-[#090D10] flex items-center justify-center">
+      <Loader2 className="animate-spin text-[#5BC0BE]" size={48} />
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-[#090D10] text-white flex flex-col lg:flex-row font-sans overflow-hidden">
-      {/* Mobile Header */}
-      <div className="lg:hidden flex items-center justify-between bg-[#121A21] border-b border-[#1F2E3A] p-5 sticky top-0 z-50">
-        <div className="flex flex-col">
-          <h1 className="font-serif text-xl tracking-tighter uppercase leading-none">NVitality</h1>
-          <span className="text-[8px] tracking-[0.3em] text-[#5BC0BE] font-bold uppercase mt-1">Admin Central</span>
-        </div>
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-3 bg-[#090D10] border border-[#1F2E3A] rounded-xl text-[#5BC0BE] active:scale-90 transition-transform shadow-inner"
-        >
-          {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
-      </div>
+    <div className="h-screen w-full bg-[#090D10] text-white flex overflow-hidden font-sans">
 
-      {/* Sidebar Navigation */}
-      <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-[#121A21] border-r border-[#1F2E3A] flex flex-col transform transition-transform duration-500 ease-in-out lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full shadow-2xl shadow-black/50'}`}>
-        <div className="p-10 space-y-2 border-b border-[#1F2E3A]/50">
-          <h2 className="font-serif text-3xl tracking-tighter uppercase text-white leading-none">NVitality</h2>
-          <p className="text-[9px] tracking-[0.5em] text-[#5BC0BE] uppercase font-black opacity-80">Consola v4.2</p>
+      {/* 1. SIDEBAR FIJO IZQUIERDA [cite: 50, 592-593] */}
+      <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-80 bg-[#121A21] border-r border-[#1F2E3A] flex flex-col h-full transform transition-transform duration-500 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full shadow-2xl'}`}>
+        <div className="p-10 border-b border-[#1F2E3A]/50 flex-shrink-0">
+          <h2 className="font-serif text-3xl uppercase text-white leading-none">NVitality</h2>
+          <p className="text-[9px] tracking-[0.5em] text-[#5BC0BE] uppercase font-black opacity-80 mt-2">Consola v4.2</p>
         </div>
 
-        <nav className="flex-1 p-6 space-y-3 mt-4">
-          {[
-            { id: 'leads', label: 'Gestión Leads', icon: Users },
-            { id: 'cms', label: 'Estructura Global', icon: Edit },
-            { id: 'services', label: 'Servicios VIP', icon: Globe },
-          ].map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => {
-                setActiveTab(tab.id as typeof activeTab);
-                setSidebarOpen(false);
-              }}
-              className={`w-full flex items-center gap-4 px-6 py-4 rounded-xl text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 relative group ${activeTab === tab.id
-                  ? 'bg-[#5BC0BE] text-[#090D10] shadow-lg shadow-[#5BC0BE]/20'
-                  : 'text-white/40 hover:text-white hover:bg-white/5 border border-transparent hover:border-[#1F2E3A]'
-                }`}
-            >
-              <tab.icon size={18} className={`${activeTab === tab.id ? 'opacity-100' : 'opacity-40 group-hover:opacity-100'} transition-opacity`} />
-              <span>{tab.label}</span>
-            </button>
-          ))}
+        <nav className="flex-1 overflow-y-auto p-6 space-y-2 custom-scrollbar">
+          <button onClick={() => setActiveTab('leads')} className={`w-full flex items-center gap-4 px-6 py-4 rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] transition-all ${activeTab === 'leads' ? 'bg-[#5BC0BE] text-[#090D10] shadow-lg shadow-[#5BC0BE]/20' : 'text-white/40 hover:text-white hover:bg-white/5'}`}>
+            <Users size={18} /> Gestión Leads
+          </button>
+
+          <button onClick={() => setActiveTab('cms')} className={`w-full flex items-center gap-4 px-6 py-4 rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] transition-all ${activeTab === 'cms' ? 'bg-[#5BC0BE] text-[#090D10] shadow-lg shadow-[#5BC0BE]/20' : 'text-white/40 hover:text-white hover:bg-white/5'}`}>
+            <Edit size={18} /> Estructura Global
+          </button>
+
+          <button onClick={() => setActiveTab('services')} className={`w-full flex items-center gap-4 px-6 py-4 rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] transition-all ${activeTab === 'services' ? 'bg-[#5BC0BE] text-[#090D10] shadow-lg shadow-[#5BC0BE]/20' : 'text-white/40 hover:text-white hover:bg-white/5'}`}>
+            <Globe size={18} /> Servicios VIP
+          </button>
+
+          {activeTab === 'services' && (
+            <div className="mt-8 pt-6 border-t border-white/5 space-y-1 animate-in fade-in slide-in-from-top-4">
+              <p className="text-[8px] uppercase font-black text-[#5BC0BE] px-6 mb-3 tracking-[0.3em]">Curaduría</p>
+              {serviciosData.map(cat => (
+                <button key={cat.id} onClick={() => setActiveServiceCat(cat.id)} className={`w-full flex items-center justify-between px-6 py-3.5 rounded-lg text-[9px] font-bold uppercase transition-all ${activeServiceCat === cat.id ? 'text-[#5BC0BE] bg-[#5BC0BE]/10 border-l-2 border-[#5BC0BE]' : 'text-white/20 hover:text-white/60 hover:bg-white/5'}`}>
+                  <span className="truncate text-left">{cat.title}</span>
+                  {activeServiceCat === cat.id && <ChevronRight size={12} />}
+                </button>
+              ))}
+            </div>
+          )}
         </nav>
 
-        <div className="p-6 border-t border-[#1F2E3A]/50 mt-auto">
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-3 px-6 py-4 text-[10px] font-bold tracking-[0.3em] uppercase text-white/30 hover:text-red-400 hover:bg-red-400/5 rounded-xl transition-all border border-transparent hover:border-red-400/20"
-          >
-            <LogOut size={16} />
-            <span>Cerrar Sesión</span>
+        <div className="p-6 border-t border-[#1F2E3A]/50 flex-shrink-0">
+          <button onClick={handleLogout} className="w-full flex items-center justify-center gap-3 px-6 py-4 text-[10px] font-bold tracking-[0.3em] uppercase text-white/30 hover:text-red-400 transition-all">
+            <LogOut size={16} /> Cerrar Sesión
           </button>
         </div>
       </aside>
 
-      {/* Main Content Area */}
-      <main className="flex-1 overflow-y-auto bg-[#090D10] p-6 md:p-10 lg:p-14 custom-scrollbar">
-        <div className="max-w-7xl mx-auto relative">
+      {/* 2. CONTENIDO PRINCIPAL CON CABECERA FIJA */}
+      <div className="flex-1 flex flex-col h-full overflow-hidden relative">
 
-          {/* TRUCO: Las tres pestañas están cargadas siempre, solo ocultamos las que no usas */}
-          <div className={activeTab === 'leads' ? 'block animate-fade-in' : 'hidden'}>
-            <LeadsTable />
+        <header className="h-24 md:h-32 bg-[#090D10] border-b border-white/5 flex items-center justify-between px-6 md:px-14 flex-shrink-0 z-40">
+          <div className="space-y-1">
+            <h1 className="font-serif text-3xl md:text-5xl uppercase tracking-tighter text-white">
+              {activeTab === 'leads' && "Registro de Leads"}
+              {activeTab === 'cms' && "Control Editorial Global"}
+              {activeTab === 'services' && "Edición de Protocolos"}
+            </h1>
+            <p className="text-[9px] uppercase font-black text-[#5BC0BE] tracking-[0.4em] opacity-60">Admin Panel / NVitality</p>
           </div>
 
-          <div className={activeTab === 'cms' ? 'block animate-fade-in' : 'hidden'}>
-            <CMSPanel />
+          <div className="flex items-center gap-4">
+            {/* FILTRO DE LEADS EN LA CABECERA FIJA */}
+            {activeTab === 'leads' && (
+              <div className="flex items-center gap-2 bg-[#121A21] border border-white/10 p-2 rounded-xl">
+                <Filter size={16} className="text-[#5BC0BE] ml-2" />
+                <select
+                  value={leadsFilter}
+                  onChange={(e) => setLeadsFilter(e.target.value)}
+                  className="bg-transparent text-[10px] text-white uppercase font-bold outline-none border-none pr-4 cursor-pointer focus:ring-0"
+                >
+                  <option value="TODOS" className="bg-[#090D10]">TODOS LOS ESTADOS</option>
+                  {STATUSES.map(s => <option key={s} value={s} className="bg-[#090D10]">{s}</option>)}
+                </select>
+              </div>
+            )}
+
+            {/* BOTÓN GUARDAR CMS EN LA CABECERA FIJA */}
+            {activeTab === 'cms' && (
+              <button
+                onClick={triggerGlobalSave}
+                className="bg-[#5BC0BE] text-[#090D10] px-8 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest flex items-center gap-3 hover:bg-white transition-all shadow-lg active:scale-95"
+              >
+                <Save size={16} /> Guardar Todo
+              </button>
+            )}
+
+            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden p-3 bg-[#121A21] border border-[#1F2E3A] rounded-xl text-[#5BC0BE]">
+              {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
           </div>
+        </header>
 
-          <div className={activeTab === 'services' ? 'block animate-fade-in' : 'hidden'}>
-            <ServicesManager />
+        {/* 3. CUERPO CON SCROLL [cite: 598-599] */}
+        <main className="flex-1 overflow-y-auto p-6 md:p-14 custom-scrollbar bg-[#090D10]">
+          <div className="max-w-7xl mx-auto">
+            {activeTab === 'leads' && (
+              <LeadsTable hideHeader={true} externalFilter={leadsFilter} />
+            )}
+            {activeTab === 'cms' && (
+              <CMSPanel hideHeader={true} />
+            )}
+            {activeTab === 'services' && (
+              <ServicesManager activeCategoryId={activeServiceCat} hideHeader={true} />
+            )}
+
+            <footer className="mt-20 pt-10 border-t border-white/5 flex justify-between items-center text-[9px] uppercase tracking-[0.4em] font-medium text-white/20">
+              <p>© 2026 NVitality Clinic Operations</p>
+              <div className="flex gap-6">
+                <span className="text-[#5BC0BE]/40">Status: Live</span>
+                <span>Uptime: 99.9%</span>
+              </div>
+            </footer>
           </div>
+        </main>
+      </div>
 
-          <footer className="mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[9px] uppercase tracking-[0.4em] font-medium text-white/20">
-            <p>© 2026 NVitality Clinic Operations</p>
-            <div className="flex gap-6">
-              <span className="text-[#5BC0BE]/40">Status: Encriptado</span>
-              <span>Uptime: 99.9%</span>
-            </div>
-          </footer>
-        </div>
-      </main>
-
-      {/* Mobile Navigation Overlay */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm lg:hidden z-40 transition-opacity duration-500"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+      {sidebarOpen && <div className="fixed inset-0 bg-black/80 backdrop-blur-sm lg:hidden z-[60]" onClick={() => setSidebarOpen(false)} />}
     </div>
   );
 }

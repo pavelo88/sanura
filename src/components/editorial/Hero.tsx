@@ -1,10 +1,9 @@
-
 "use client";
 
 import React from 'react';
 import { CheckCircle } from 'lucide-react';
 import { BeforeAfterSlider } from './BeforeAfterSlider';
-import { experienceStats } from '@/lib/clinic-data';
+import { experienceStats as defaultStats } from '@/lib/clinic-data';
 
 interface HeroProps {
   onOpenCert: () => void;
@@ -12,66 +11,84 @@ interface HeroProps {
 }
 
 export const Hero = ({ onOpenCert, siteConfig }: HeroProps) => {
-  return (
-    <header className="relative pt-20 min-h-screen flex flex-col lg:flex-row transition-all duration-1000 overflow-hidden bg-background">
+  // 1. Prioridad a Firebase, luego a valores estáticos por defecto
+  const title = siteConfig?.heroTitle || "ALTA ESTÉTICA";
+  const subtitle = siteConfig?.heroSubtitle || "El rigor científico se encuentra con la alta costura en protocolos de bioseguridad nivel 5.";
+  const description = siteConfig?.heroDescription || "Redefiniendo la medicina regenerativa en Quito. Nuestra póliza de salud VIP garantiza protocolos de bioseguridad nivel 5 y resultados de elegancia atemporal.";
+  const imgAntes = siteConfig?.heroImgAntes || "https://images.unsplash.com/photo-1615397323114-648c08126d40?q=80&w=1887";
+  const imgDespues = siteConfig?.heroImgDespues || "https://images.unsplash.com/photo-1548624313-0396c75e4b1a?q=80&w=1974";
+  const stats = siteConfig?.stats || defaultStats;
+  const permitText = siteConfig?.heroPermit || "Permiso ACESS N° 0000";
+  const vipLabel = siteConfig?.heroVipLabel || "Garantías Institucionales VIP";
 
-      <div className="w-full lg:w-1/2 flex flex-col justify-center px-6 sm:px-8 py-10 sm:py-12 lg:px-24 xl:px-32 z-10 glass-cyan dark:glass-teal border-r border-white/10">
-        <div className="animate-in fade-in slide-in-from-left-20 duration-1000 space-y-5 md:space-y-6">
-          <h1 className="font-serif text-4xl sm:text-5xl md:text-7xl xl:text-8xl text-[#06414B] dark:text-white tracking-tighter leading-[0.85]">
-            {siteConfig?.heroTitle?.split(' ')[0] || 'ALTA'} <br />
-            <span className="text-[#3A8B99] dark:text-[#5BC0BE] italic">
-              {siteConfig?.heroTitle?.split(' ').slice(1).join(' ') || 'ESTÉTICA'}
-            </span>
+  // Lógica para separar la primera palabra del resto para el diseño editorial
+  const firstWord = title.split(' ')[0];
+  const restOfTitle = title.split(' ').slice(1).join(' ');
+
+  return (
+    <header className="relative w-full pt-28 md:pt-32 pb-12 lg:pb-24 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-10 lg:px-12 flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
+
+        {/* LADO IZQUIERDO: TEXTOS */}
+        <div className="w-full lg:w-1/2 space-y-6 md:space-y-8 animate-in fade-in slide-in-from-left-10 duration-1000">
+          <h1 className="font-serif text-5xl sm:text-6xl md:text-7xl xl:text-8xl text-[#06414B] dark:text-white tracking-tighter leading-[0.85]">
+            {firstWord} <br />
+            {restOfTitle && (
+              <span className="text-[#3A8B99] dark:text-[#5BC0BE] italic font-light">
+                {restOfTitle}
+              </span>
+            )}
           </h1>
 
-          <p className="font-serif italic text-base sm:text-lg md:text-xl text-[#3A8B99] dark:text-[#5BC0BE]">
-            {siteConfig?.heroSubtitle || 'El rigor científico se encuentra con la alta costura.'}
+          <p className="font-serif italic text-lg md:text-xl text-[#3A8B99] dark:text-[#5BC0BE] max-w-md leading-relaxed">
+            {subtitle}
           </p>
 
-          <p className="font-sans text-sm sm:text-base md:text-lg text-[#06414B]/70 dark:text-[#E2E8F0]/70 leading-relaxed max-w-md font-light">
-            Redefiniendo la medicina regenerativa en Quito. Nuestra póliza de salud VIP garantiza protocolos de bioseguridad nivel 5 y resultados de elegancia atemporal.
+          <p className="font-sans text-sm md:text-lg text-[#06414B]/70 dark:text-[#E2E8F0]/70 leading-relaxed max-w-md font-light">
+            {description}
           </p>
 
           <button
             onClick={onOpenCert}
-            className="group self-start flex flex-col items-start gap-2 md:gap-3 double-glass-light dark:double-glass-dark py-4 md:py-6 px-6 md:px-10 border border-[#3A8B99]/20 transition-all cursor-pointer shadow-2xl rounded-2xl md:rounded-[2rem] hover:scale-105 active:scale-95"
+            className="group flex flex-col items-start gap-3 bg-[#06414B] dark:bg-white/10 p-6 md:p-8 border border-white/10 transition-all rounded-3xl hover:scale-105 active:scale-95 shadow-2xl"
           >
-            <div className="grid grid-cols-1 gap-2">
-              <span className="text-[#06414B] dark:text-white text-[9px] tracking-[0.3em] uppercase font-bold flex items-center gap-3">
-                <CheckCircle size={14} className="text-[#5BC0BE]" /> Permiso ACESS N° 0000
+            <div className="space-y-1 text-left">
+              <span className="text-white dark:text-[#5BC0BE] text-[10px] tracking-[0.3em] uppercase font-bold flex items-center gap-2">
+                <CheckCircle size={14} /> {permitText}
               </span>
-              <span className="text-[#06414B] dark:text-white text-[9px] tracking-[0.3em] uppercase font-bold flex items-center gap-3">
-                <CheckCircle size={14} className="text-[#5BC0BE]" /> Insumos Grado Médico
+              <span className="text-white/60 dark:text-white/40 text-[9px] tracking-[0.3em] uppercase font-medium">
+                {vipLabel}
               </span>
             </div>
-            <span className="text-[#3A8B99] dark:text-[#5BC0BE] text-[8px] uppercase tracking-[0.4em] mt-3 md:mt-4 border-t border-[#3A8B99]/10 pt-3 md:pt-4 w-full text-left font-bold">
-              Garantías Institucionales VIP
-            </span>
           </button>
         </div>
-      </div>
 
-      <div className="w-full lg:w-1/2 h-[350px] sm:h-[420px] lg:h-auto relative bg-[#090D10]">
-        <BeforeAfterSlider
-          imgAntes="https://images.unsplash.com/photo-1615397323114-648c08126d40?q=80&w=1887&auto=format&fit=crop"
-          imgDespues="https://images.unsplash.com/photo-1548624313-0396c75e4b1a?q=80&w=1974&auto=format&fit=crop"
-        />
+        {/* LADO DERECHO: FOTO + CUADROS 2x2 */}
+        <div className="w-full lg:w-1/2 flex flex-col gap-8 md:gap-10 lg:relative lg:aspect-[4/5] lg:overflow-visible">
 
-        <div className="absolute inset-x-0 bottom-4 sm:bottom-8 md:bottom-12 z-20 flex justify-center px-3 sm:px-6 md:px-8">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 md:gap-4 w-full max-w-4xl">
-            {experienceStats.map((stat, idx) => (
-              <div key={idx} className="glass-teal border border-white/20 p-2 sm:p-4 md:p-6 text-center rounded-xl md:rounded-2xl shadow-2xl transition-all hover:scale-105">
-                <span className="block text-lg sm:text-2xl md:text-3xl font-serif text-[#5BC0BE] mb-0.5 sm:mb-1">{stat.value}</span>
-                <span className="block text-[6px] sm:text-[7px] tracking-[0.2em] sm:tracking-[0.3em] uppercase text-white/40 font-bold">{stat.label}</span>
+          <div className="w-full aspect-[4/5] relative bg-[#090D10] rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden shadow-2xl border border-white/10 z-20 lg:absolute lg:inset-0">
+            <BeforeAfterSlider
+              imgAntes={imgAntes}
+              imgDespues={imgDespues}
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 w-full lg:absolute lg:bottom-8 lg:right-10 lg:w-auto lg:grid-cols-2 lg:gap-3 lg:top-auto lg:z-30">
+            {stats.map((stat: any, idx: number) => (
+              <div
+                key={idx}
+                className="bg-white/10 dark:bg-[#090D10]/60 backdrop-blur-md border border-white/10 p-4 md:p-5 text-center rounded-2xl shadow-xl transition-all hover:bg-[#5BC0BE]/10 flex flex-col justify-center items-center lg:p-3 lg:min-w-[120px]"
+              >
+                <span className="block text-xl md:text-3xl font-serif text-[#5BC0BE] mb-1 lg:text-2xl">
+                  {stat.value}
+                </span>
+                <span className="block text-[7px] md:text-[8px] tracking-[0.2em] uppercase text-[#06414B]/60 dark:text-white/40 font-bold leading-tight lg:text-[6px]">
+                  {stat.label}
+                </span>
               </div>
             ))}
           </div>
-        </div>
 
-        {/* Watermark - hidden on mobile */}
-        <div className="hidden md:block absolute top-10 right-10 z-20 pointer-events-none text-right opacity-10">
-          <span className="font-serif text-6xl md:text-8xl text-white tracking-tighter block leading-none">ELITE</span>
-          <span className="font-sans text-[8px] tracking-[0.6em] uppercase text-white block mt-3 font-bold">Protocolo N-V3.0</span>
         </div>
       </div>
     </header>

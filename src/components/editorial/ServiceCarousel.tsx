@@ -1,29 +1,41 @@
 "use client";
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Category, Treatment } from '@/lib/clinic-data';
+// Nota: Si esta ruta te da error, recuerda cambiarla a '../BeforeAfterSlider' o la ruta correcta
 import { BeforeAfterSlider } from './BeforeAfterSlider';
 
 interface ServiceCarouselProps {
   category: Category;
   onSelectTreatment: (treatment: Treatment) => void;
+  dbServices?: any[];
 }
 
-export const ServiceCarousel = ({ category, onSelectTreatment }: ServiceCarouselProps) => {
+export const ServiceCarousel = ({ category, onSelectTreatment, dbServices = [] }: ServiceCarouselProps) => {
+  // Lógica Híbrida
+  const categoryItemsFromDB = dbServices?.filter((s: any) => s.categoryId === category.id) || [];
+  const itemsToDisplay = categoryItemsFromDB.length > 0 ? categoryItemsFromDB : category.items;
+
+  // Loop seguro: Evitamos loop si hay muy pocos elementos
+  const isLoopSafe = itemsToDisplay.length > 3;
+
   const [autoplayDelay] = useState(4000);
   const autoplayPlugin = useRef(Autoplay({ delay: autoplayDelay, stopOnInteraction: false }));
-  const [selectedIndex, setSelectedIndex] = useState(0);
 
-  // 1. Configuración del Carrusel (watchDrag: false para que NO se mueva con el dedo)
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+  const resumeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
-      loop: true,
-      align: 'center',
+      loop: isLoopSafe,
+      align: 'center', // Cambiado a 'start' para evitar el hueco en el centro
       skipSnaps: false,
-      duration: 60, // Movimiento suave entre slides
-      watchDrag: false // Petición: Solo se mueve con flechas/puntos
+      duration: 60,
+      watchDrag: true // Deslizamiento en móvil activado
     },
     [autoplayPlugin.current]
   );
@@ -33,104 +45,124 @@ export const ServiceCarousel = ({ category, onSelectTreatment }: ServiceCarousel
     setSelectedIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
 
+  const onInit = useCallback(() => {
+    if (!emblaApi) return;
+    setScrollSnaps(emblaApi.scrollSnapList());
+  }, [emblaApi]);
+
   useEffect(() => {
     if (!emblaApi) return;
+    onInit();
     onSelect();
-    emblaApi.on('select', onSelect);
+    emblaApi.on('reInit', onInit);
     emblaApi.on('reInit', onSelect);
-  }, [emblaApi, onSelect]);
+    emblaApi.on('select', onSelect);
+  }, [emblaApi, onSelect, onInit]);
 
-  // 2. Nueva Función: Detener el Autoplay cuando el usuario manipula el slider
+  // Manejo del Autoplay (se pausa y vuelve a arrancar en 2 segundos)
   const handleSliderInteraction = useCallback(() => {
     if (!emblaApi) return;
-    // Petición: Detener el carrusel si el usuario toca el antes/despues
     const autoplay = emblaApi.plugins().autoplay;
-    if (autoplay && typeof autoplay.stop === 'function') {
-      autoplay.stop(); // Congela el carrusel definitivamente
-      console.log("Carrusel detenido por interacción con el Slider");
+    if (!autoplay) return;
+
+    autoplay.stop();
+
+    if (resumeTimeoutRef.current) {
+      clearTimeout(resumeTimeoutRef.current);
     }
+
+    resumeTimeoutRef.current = setTimeout(() => {
+      autoplay.play();
+    }, 2000);
   }, [emblaApi]);
 
-  const handlePrev = useCallback(() => {
-    if (emblaApi) emblaApi.scrollPrev();
-  }, [emblaApi]);
+  useEffect(() => {
+    return () => {
+      if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    };
+  }, []);
 
-  const handleNext = useCallback(() => {
-    if (emblaApi) emblaApi.scrollNext();
-  }, [emblaApi]);
+  const handlePrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
+  const handleNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
 
   return (
-    <div className="w-full py-6 md:py-8 lg:py-12">
-      <div className="relative max-w-[1400px] mx-auto px-4 md:px-12">
-        <div
-          className="embla overflow-hidden rounded-xl md:rounded-3xl shadow-inner"
-          ref={emblaRef}
-        >
-          <div className="embla__container flex -ml-3 sm:-ml-4 md:-ml-5">
-            {category.items.map((item, index) => {
-              const isSelected = selectedIndex === index;
+    <div key={category.id} className="w-full flex flex-col items-center relative">
+      <div className="w-full overflow-hidden" ref={emblaRef}>
+        <div className="embla__container flex">
+          {itemsToDisplay.map((item: any, index: number) => {
+            const isSelected = selectedIndex === index;
 
-              return (
+            return (
+              // 1. EL CONTENEDOR DE EMBLA: Intocable, solo anchos y min-w-0 para evitar el bug del "fantasma"
+              <div
+                key={item.id || `fallback-${index}`}
+                className="embla__slide flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0 h-full"
+              >
+                {/* 2. EL CONTENEDOR VISUAL: Aquí van las escalas y opacidades */}
                 <div
-                  key={item.id}
-                  className="embla__slide flex-[0_0_calc(100%-12px)] sm:flex-[0_0_calc(50%-16px)] lg:flex-[0_0_calc(33.333%-20px)] pl-3 sm:pl-4 md:pl-5 transition-all duration-1000 ease-out"
+                  className="px-1 md:px-4 h-full transition-all duration-700 ease-out"
                   style={{
-                    transform: isSelected ? 'scale(1.03)' : 'scale(0.95)',
-                    opacity: isSelected ? 1 : 0.4,
-                    zIndex: isSelected ? 10 : 1
+                    transform: isSelected ? 'scale(1)' : 'scale(0.95)',
+                    opacity: isSelected ? 1 : 0.5,
                   }}
                 >
-                  <div className="flex flex-col h-full w-full bg-white dark:bg-[#121A21] border border-[#C4E8E9] dark:border-[#1F2E3A] shadow-xl overflow-hidden group rounded-2xl lg:rounded-[2.5rem] relative">
+                  <div className="flex flex-col h-full w-full bg-white dark:bg-[#121A21] border border-[#C4E8E9] dark:border-[#1F2E3A] shadow-lg overflow-hidden group rounded-2xl md:rounded-3xl">
 
-                    {/* Contenedor del Slider (Fluido y sincronizado) */}
-                    <div className="relative overflow-hidden flex-shrink-0 aspect-[4/5] bg-gray-100 dark:bg-gray-900 z-10">
+                    {/* Evita que mover la imagen mueva todo el carrusel */}
+                    <div
+                      className="relative w-full aspect-square bg-gray-100 dark:bg-gray-900 z-10 overflow-hidden"
+                      onPointerDown={(e) => e.stopPropagation()}
+                      onTouchStart={(e) => e.stopPropagation()}
+                      onMouseDown={(e) => e.stopPropagation()}
+                    >
                       <BeforeAfterSlider
                         imgAntes={item.imgAntes}
                         imgDespues={item.imgDespues}
                         isCardMode={true}
                         isActive={isSelected}
-                        // Conectamos la interacción
                         onInteraction={handleSliderInteraction}
                       />
                     </div>
 
-                    {/* Sección Inferior de Texto y Botón */}
                     <button
                       onClick={() => onSelectTreatment(item)}
-                      className="p-5 md:p-6 lg:p-8 flex flex-col items-center text-center justify-between gap-4 md:gap-5 flex-1 bg-white dark:bg-[#121A21] hover:bg-gray-50 dark:hover:bg-[#1A2630] transition-colors w-full z-20 focus:outline-none focus:ring-2 focus:ring-[#5BC0BE]/50 cursor-pointer"
-                      aria-label={`Ver detalles de ${item.name}`}
+                      className="p-4 md:p-6 flex-1 flex flex-col items-center text-center justify-between gap-3 bg-white dark:bg-[#121A21] hover:bg-gray-50 dark:hover:bg-[#1A2630] transition-colors w-full cursor-pointer outline-none min-h-[5rem]"
                     >
-                      <h4 className="font-serif text-base sm:text-lg md:text-xl lg:text-2xl tracking-widest text-[#06414B] dark:text-white transition-colors group-hover:text-[#3A8B99] dark:group-hover:text-[#5BC0BE] leading-tight uppercase">
+                      <h4 className="font-serif text-lg md:text-xl tracking-widest text-[#06414B] dark:text-white uppercase line-clamp-2 min-h-[3rem]">
                         {item.name}
                       </h4>
-                      <div className="w-full pt-3 md:pt-4 border-t border-[#C4E8E9] dark:border-white/10">
-                        <div className="text-[#5BC0BE] border-2 border-[#5BC0BE] group-hover:bg-[#5BC0BE] group-hover:text-[#090D10] text-[8px] md:text-[9px] uppercase tracking-[0.4em] font-bold py-3 md:py-4 rounded-xl transition-all w-full text-center">
-                          Ver Protocolo Completo
+                      <div className="w-full pt-3 border-t border-[#C4E8E9] dark:border-white/10">
+                        <div className="text-[#5BC0BE] border border-[#5BC0BE] group-hover:bg-[#5BC0BE] group-hover:text-[#090D10] text-[10px] md:text-xs uppercase tracking-widest font-bold py-2.5 md:py-3 rounded-lg transition-all w-full text-center">
+                          Ver Protocolo
                         </div>
                       </div>
                     </button>
                   </div>
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })}
         </div>
+      </div>
 
-        {/* Botones de Navegación (Flechas) */}
-        <button onClick={handlePrev} className="absolute left-0 md:left-2 lg:left-4 top-[42%] -translate-y-1/2 -translate-x-1/2 md:translate-x-0 z-30 w-11 h-11 md:w-14 md:h-14 bg-[#06414B]/90 dark:bg-[#5BC0BE]/90 text-white dark:text-[#090D10] rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-white/50"><ChevronLeft size={24} /></button>
-        <button onClick={handleNext} className="absolute right-0 md:right-2 lg:right-4 top-[42%] -translate-y-1/2 translate-x-1/2 md:translate-x-0 z-30 w-11 h-11 md:w-14 md:h-14 bg-[#06414B]/90 dark:bg-[#5BC0BE]/90 text-white dark:text-[#090D10] rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-white/50"><ChevronRight size={24} /></button>
+      <div className="flex items-center justify-center gap-6 mt-6 md:mt-8 w-full">
+        <button onClick={handlePrev} className="w-10 h-10 md:w-12 md:h-12 bg-[#06414B]/10 dark:bg-white/10 hover:bg-[#5BC0BE] text-[#06414B] dark:text-white hover:text-[#090D10] rounded-full flex items-center justify-center transition-all shadow-md">
+          <ChevronLeft size={20} />
+        </button>
 
-        {/* Puntos de Pagina */}
-        <div className="flex justify-center gap-2.5 md:gap-3.5 mt-8 md:mt-10">
-          {category.items.map((_, index) => (
+        <div className="flex gap-2">
+          {scrollSnaps.map((_, index: number) => (
             <button
-              key={index}
+              key={`dot-${index}`}
               onClick={() => emblaApi?.scrollTo(index)}
-              className={`transition-all duration-500 rounded-full focus:outline-none focus:ring-2 focus:ring-[#5BC0BE]/50 ${index === selectedIndex ? 'w-9 md:w-12 h-2.5 md:h-3 bg-[#5BC0BE] shadow-xl' : 'w-2.5 md:w-3.5 h-2.5 md:h-3.5 bg-[#06414B]/30 dark:bg-white/10 hover:bg-[#06414B]/60'}`}
-              aria-label={`Ir a slide ${index + 1}`}
+              className={`transition-all duration-300 rounded-full ${index === selectedIndex ? 'w-8 md:w-10 h-2 md:h-2.5 bg-[#5BC0BE]' : 'w-2 md:w-2.5 h-2 md:h-2.5 bg-[#06414B]/30 dark:bg-white/20'}`}
             />
           ))}
         </div>
+
+        <button onClick={handleNext} className="w-10 h-10 md:w-12 md:h-12 bg-[#06414B]/10 dark:bg-white/10 hover:bg-[#5BC0BE] text-[#06414B] dark:text-white hover:text-[#090D10] rounded-full flex items-center justify-center transition-all shadow-md">
+          <ChevronRight size={20} />
+        </button>
       </div>
     </div>
   );

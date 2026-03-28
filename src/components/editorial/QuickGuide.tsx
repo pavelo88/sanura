@@ -1,12 +1,18 @@
-
 "use client";
 
 import React, { useState } from 'react';
 import { ChevronUp } from 'lucide-react';
-import { guiaData } from '@/lib/clinic-data';
+import { guiaData as defaultGuia } from '@/lib/clinic-data';
 
-export const QuickGuide = () => {
+interface QuickGuideProps {
+  siteConfig?: any;
+}
+
+export const QuickGuide = ({ siteConfig }: QuickGuideProps) => {
   const [activeGuide, setActiveGuide] = useState<number | null>(null);
+
+  // 1. Prioridad a las rutas configuradas en Firebase, respaldo en clinic-data.ts
+  const data = siteConfig?.guide || defaultGuia;
 
   const toggleGuide = (id: number) => {
     setActiveGuide(activeGuide === id ? null : id);
@@ -26,8 +32,8 @@ export const QuickGuide = () => {
       aria-label="Guía de protocolos y tratamientos"
     >
       <div className="max-w-6xl mx-auto px-6 sm:px-8 md:px-12 relative z-10">
-        
-        {/* Header */}
+
+        {/* Encabezado */}
         <div className="text-center mb-6 md:mb-8 lg:mb-10 space-y-3 md:space-y-4">
           <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-[#06414B] dark:text-white tracking-tighter uppercase leading-tight">
             Ruta de <span className="text-[#3A8B99] dark:text-[#5BC0BE] italic">Perfección</span>
@@ -38,25 +44,24 @@ export const QuickGuide = () => {
           <div className="h-[1px] bg-gradient-to-r from-transparent via-[#5BC0BE]/50 to-transparent max-w-xs mx-auto" />
         </div>
 
-        {/* Accordion Container */}
-        <div 
+        {/* Contenedor del Acordeón */}
+        <div
           className="flex flex-col gap-4 md:gap-5 lg:gap-6"
           role="region"
           aria-label="Preguntas frecuentes sobre protocolos"
         >
-          {guiaData.map((item, index) => (
-            <div 
-              key={item.id} 
+          {data.map((item: any, index: number) => (
+            <div
+              key={item.id || index}
               className="group"
             >
               <button
                 onClick={() => toggleGuide(item.id)}
                 onKeyDown={(e) => handleKeyDown(e, item.id)}
-                className={`w-full glass-cyan dark:glass-teal transition-all duration-500 cursor-pointer p-5 sm:p-6 md:p-7 lg:p-8 rounded-xl md:rounded-2xl lg:rounded-3xl shadow-lg lg:shadow-xl hover:shadow-2xl group text-left border border-white/30 dark:border-white/10 min-h-[60px] md:min-h-[72px] flex items-center justify-between ${
-                  activeGuide === item.id 
-                    ? 'scale-[1.01] md:scale-[1.02] bg-white/15 dark:bg-white/8 ring-2 ring-[#5BC0BE]/50' 
+                className={`w-full glass-cyan dark:glass-teal transition-all duration-500 cursor-pointer p-5 sm:p-6 md:p-7 lg:p-8 rounded-xl md:rounded-2xl lg:rounded-3xl shadow-lg lg:shadow-xl hover:shadow-2xl group text-left border border-white/30 dark:border-white/10 min-h-[60px] md:min-h-[72px] flex items-center justify-between ${activeGuide === item.id
+                    ? 'scale-[1.01] md:scale-[1.02] bg-white/15 dark:bg-white/8 ring-2 ring-[#5BC0BE]/50'
                     : 'hover:scale-[1.01] hover:bg-white/8 dark:hover:bg-white/5'
-                } focus:outline-none focus:ring-2 focus:ring-[#5BC0BE]/50`}
+                  } focus:outline-none focus:ring-2 focus:ring-[#5BC0BE]/50`}
                 aria-expanded={activeGuide === item.id}
                 aria-controls={`guide-content-${item.id}`}
               >
@@ -67,15 +72,15 @@ export const QuickGuide = () => {
                   <ChevronUp size={20} className="md:w-6 md:h-6 lg:w-7 lg:h-7" />
                 </div>
               </button>
-              
-              {/* Expandable Content */}
-              <div 
+
+              {/* Contenido Desplegable */}
+              <div
                 id={`guide-content-${item.id}`}
                 className={`transition-all duration-700 ease-in-out overflow-hidden ${activeGuide === item.id ? 'max-h-[800px] md:max-h-[900px] opacity-100' : 'max-h-0 opacity-0'}`}
               >
                 <div className={`pt-6 md:pt-7 lg:pt-8 space-y-6 md:space-y-7 lg:space-y-8 border-t border-white/10 mt-4 md:mt-5 ${activeGuide === item.id ? 'animate-in fade-in slide-in-from-top-2 duration-500' : ''}`}>
-                  
-                  {/* Solution Text */}
+
+                  {/* Texto de Solución */}
                   <div className="space-y-3 md:space-y-4">
                     <p className="text-[8px] sm:text-[9px] md:text-[10px] font-bold tracking-[0.5em] text-[#5BC0BE] uppercase">
                       ✦ Protocolos Sugeridos
@@ -85,7 +90,7 @@ export const QuickGuide = () => {
                     </p>
                   </div>
 
-                  {/* Recovery & Duration Grid */}
+                  {/* Cuadrícula de Recuperación y Duración */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5 lg:gap-6">
                     <div className="p-5 md:p-6 lg:p-7 glass-cyan dark:glass-teal rounded-xl md:rounded-2xl lg:rounded-2xl border border-white/10 hover:border-white/20 transition-all">
                       <p className="text-[7px] sm:text-[8px] md:text-[9px] tracking-[0.4em] uppercase text-white/40 mb-2 md:mb-3 font-bold">⏱ Recuperación</p>
@@ -106,7 +111,7 @@ export const QuickGuide = () => {
           ))}
         </div>
 
-        {/* Info Footer */}
+        {/* Footer Informativo */}
         <div className="mt-6 md:mt-8 lg:mt-10 text-center">
           <p className="text-[9px] md:text-[10px] tracking-[0.3em] uppercase text-[#06414B]/60 dark:text-white/40 font-light">
             ✧ Selecciona cada opción para más detalles sobre protocolos y recuperación ✧

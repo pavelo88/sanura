@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-
-// Atelier Editorial Components
 import { Navbar } from '@/components/editorial/Navbar';
 import { Hero } from '@/components/editorial/Hero';
 import { ServiceCarousel } from '@/components/editorial/ServiceCarousel';
@@ -10,175 +8,138 @@ import { DoctorProfile } from '@/components/editorial/DoctorProfile';
 import { QuickGuide } from '@/components/editorial/QuickGuide';
 import { LeadForm } from '@/components/editorial/LeadForm';
 import { TreatmentModal } from '@/components/editorial/TreatmentModal';
-
-// Data Centralizada y Firebase
-import { serviciosData, Category, Treatment } from '@/lib/clinic-data';
+import { AIConsultant } from '@/components/editorial/AIConsultant'; // Recuperamos la IA
+import { serviciosData, Treatment } from '@/lib/clinic-data';
 import { getFirestore } from '@/firebase';
-import { doc, collection, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot, collection } from 'firebase/firestore';
+import { ChevronDown } from 'lucide-react';
 
 export default function App() {
-  const [activeCategory, setActiveCategory] = useState<string>('01_medicina_estetica_facial');
+  const [activeCategory, setActiveCategory] = useState('01_medicina_estetica_facial');
   const [selectedTreatment, setSelectedTreatment] = useState<Treatment | null>(null);
   const [showCertModal, setShowCertModal] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Estado para la configuración del CMS (Hero, Dra, etc)
+  // ESTADOS DE FIREBASE
   const [siteConfig, setSiteConfig] = useState<any>(null);
+  const [dbServices, setDbServices] = useState<any[]>([]);
 
-  // ESTADO SEGURO: Inicia con el 100% de tus datos locales garantizados
-  const [liveServices, setLiveServices] = useState<Category[]>(serviciosData);
-
+  // ESCUCHA EN TIEMPO REAL A FIREBASE (Settings y Servicios)
   useEffect(() => {
     const db = getFirestore();
 
-    // 1. Escuchar CMS (Textos principales)
-    const unsubSettings = onSnapshot(doc(db, 'settings', 'site-content'), (docSnap) => {
-      if (docSnap.exists()) {
-        setSiteConfig(docSnap.data());
-      }
+    // 1. Escucha la configuración global (Hero, Doctora, etc)
+    const unsubConfig = onSnapshot(doc(db, 'settings', 'site-content'), (docSnap) => {
+      if (docSnap.exists()) setSiteConfig(docSnap.data());
     });
 
-    // 2. Escuchar Servicios (Fotos e info) con Fusión Segura
+    // 2. Escucha la colección de servicios para el carrusel
     const unsubServices = onSnapshot(collection(db, 'services'), (snapshot) => {
-      if (!snapshot.empty) {
-        // Creamos un diccionario rápido con lo que venga de Firebase
-        const firebaseTreatments = new Map();
-        snapshot.docs.forEach(doc => {
-          firebaseTreatments.set(doc.id, doc.data());
-        });
-
-        // FUSIÓN: Tomamos los datos locales como molde inquebrantable
-        const mergedServices = serviciosData.map(category => ({
-          ...category,
-          items: category.items.map(localItem => {
-            const firebaseItem = firebaseTreatments.get(localItem.id);
-
-            // Si Firebase tiene datos de este tratamiento, los sobreescribe (ej: nuevas fotos)
-            // Si Firebase NO lo tiene, se queda el localItem intacto.
-            if (firebaseItem) {
-              return {
-                ...localItem,
-                ...firebaseItem // Lo de Firebase gana en caso de conflicto
-              };
-            }
-            return localItem;
-          })
-        }));
-
-        setLiveServices(mergedServices);
-      }
+      setDbServices(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
     });
 
-    return () => {
-      unsubSettings();
-      unsubServices();
-    };
+    return () => { unsubConfig(); unsubServices(); };
   }, []);
 
   useEffect(() => {
-    if (selectedTreatment || showCertModal) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
+    document.body.style.overflow = (selectedTreatment || showCertModal) ? 'hidden' : 'auto';
   }, [selectedTreatment, showCertModal]);
 
-  // Usamos los datos fusionados
-  const activeCatData = liveServices.find(c => c.id === activeCategory) || liveServices[0];
+  const activeCatData = serviciosData.find(c => c.id === activeCategory) || serviciosData[0];
 
   return (
-    <div className={`${isDarkMode ? 'dark' : ''} w-full min-h-screen transition-colors duration-1000 bg-background`}>
-      <div className="text-[#06414B] dark:text-[#E2E8F0] font-sans antialiased min-h-screen selection:bg-[#3A8B99] dark:selection:bg-[#5BC0BE] selection:text-white">
+    <div className={`${isDarkMode ? 'dark' : ''} w-full min-h-screen relative transition-colors duration-1000 bg-background`}>
 
+      {/* Vidrio Global */}
+      <div
+        className="fixed inset-0 z-0 backdrop-blur-[110px] pointer-events-none transition-colors duration-1000"
+        style={{ backgroundColor: isDarkMode ? 'rgba(0,0,0,0.85)' : 'rgba(224,247,246,0.4)' }}
+      />
+
+      <div className="relative z-10 text-[#06414B] dark:text-[#E2E8F0] font-sans antialiased">
         <Navbar isDarkMode={isDarkMode} toggleTheme={() => setIsDarkMode(!isDarkMode)} />
 
-        <Hero onOpenCert={() => setShowCertModal(true)} siteConfig={siteConfig} />
+        <main>
+          {/* 1. HERO CONECTADO */}
+          <Hero onOpenCert={() => setShowCertModal(true)} siteConfig={siteConfig} />
 
-        <section id="servicios" className="py-8 md:py-12 relative overflow-hidden transition-all duration-700">
-          <div className="max-w-7xl mx-auto px-6 relative z-10">
-            <div className="glass-cyan dark:glass-teal p-10 md:p-16 rounded-[4rem] border border-white/40 dark:border-white/10 shadow-2xl">
-              <div className="text-center mb-10 space-y-4">
-                <h2 className="font-serif text-3xl md:text-5xl tracking-tighter uppercase text-[#06414B] dark:text-white leading-none">
-                  Curaduría <span className="text-[#3A8B99] dark:text-[#5BC0BE] italic">de Elite</span>
-                </h2>
-                <p className="font-serif italic text-lg text-[#3A8B99] dark:text-[#5BC0BE]">
-                  Protocolos donde la ciencia médica se encuentra con la visión editorial.
-                </p>
-              </div>
+          {/* 2. SECCIÓN DE SERVICIOS CON LOS 5 BOTONES RECUPERADOS */}
+          <section id="servicios" className="py-12 md:py-20 relative scroll-mt-28">
+            <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
+              <div className="bg-white/10 dark:bg-white/5 backdrop-blur-2xl p-8 md:p-16 rounded-[3rem] md:rounded-[4rem] border border-white/20 shadow-2xl">
 
-              <div className="relative">
-                <div className="flex overflow-x-auto hide-scrollbar gap-4 md:gap-6 lg:gap-10 mb-6 md:mb-8 border-b border-white/10 pb-px justify-start lg:justify-center">
-                  {liveServices.map(cat => (
+                <div className="text-center mb-12 space-y-4">
+                  <h2 className="font-serif text-4xl md:text-6xl uppercase text-[#06414B] dark:text-white tracking-tighter">
+                    Curaduría <span className="text-[#3A8B99] dark:text-[#5BC0BE] italic">de Elite</span>
+                  </h2>
+                  <p className="text-[10px] tracking-[0.4em] text-[#3A8B99] dark:text-[#5BC0BE] uppercase font-bold">✦ Selecciona una categoría de protocolos</p>
+                </div>
+
+                {/* BOTONES DESKTOP (LOS 5 GRUPOS) */}
+                <div className="hidden md:flex flex-wrap justify-center gap-4 mb-16">
+                  {serviciosData.map((cat) => (
                     <button
                       key={cat.id}
                       onClick={() => setActiveCategory(cat.id)}
-                      className={`whitespace-nowrap pb-4 text-[8px] md:text-[9px] font-bold tracking-[0.4em] md:tracking-[0.5em] uppercase transition-all border-b-2 flex-shrink-0
-                      ${activeCategory === cat.id
-                          ? 'border-[#5BC0BE] text-[#06414B] dark:text-[#5BC0BE]'
-                          : 'border-transparent text-[#3A8B99]/70 dark:text-white/40 hover:text-[#06414B] dark:hover:text-white'}`}
+                      className={`px-8 py-5 rounded-2xl transition-all text-[10px] font-bold tracking-[0.2em] uppercase border min-w-[220px] ${activeCategory === cat.id
+                        ? 'bg-[#06414B] text-white border-[#06414B] shadow-xl'
+                        : 'bg-white/40 dark:bg-white/5 text-[#3A8B99] border-white/60 hover:bg-white'
+                        }`}
                     >
                       {cat.title}
                     </button>
                   ))}
                 </div>
-                <div className="md:hidden absolute right-0 top-0 bottom-2 w-10 bg-gradient-to-l from-white/80 dark:from-[#0D1A22]/80 to-transparent pointer-events-none" />
-              </div>
 
-              <ServiceCarousel
-                category={activeCatData}
-                onSelectTreatment={setSelectedTreatment}
-              />
-            </div>
-          </div>
-        </section>
-
-        <DoctorProfile />
-
-        <QuickGuide />
-
-        <LeadForm />
-
-        <footer className="bg-[#06414B] text-white py-12 transition-colors duration-1000 relative z-10 border-t border-white/10">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="flex flex-col md:flex-row justify-between items-center text-[8px] tracking-[0.5em] text-white/40 uppercase gap-8">
-              <div className="flex items-center gap-6">
-                <span className="font-serif text-xl tracking-widest text-[#5BC0BE] font-bold">NVITALITY</span>
-                <p>© 2026 Clínica Estética. Archive v.3.0</p>
-              </div>
-              <div className="flex gap-10 font-bold">
-                <a href="#" className="hover:text-[#5BC0BE] transition-colors">Aviso Legal</a>
-                <a href="#" className="hover:text-[#5BC0BE] transition-colors">Privacidad</a>
-              </div>
-              <p className="bg-white/5 px-4 py-1.5 rounded-full border border-white/10">Permiso ACESS N° 0000</p>
-            </div>
-          </div>
-        </footer>
-
-        {selectedTreatment && (
-          <TreatmentModal treatment={selectedTreatment} onClose={() => setSelectedTreatment(null)} />
-        )}
-
-        {showCertModal && (
-          <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/80 backdrop-blur-3xl animate-in fade-in duration-500" onClick={() => setShowCertModal(false)}>
-            <div className="glass-cyan dark:glass-teal w-full max-w-2xl p-12 relative border border-white/20 shadow-[0_0_100px_rgba(91,192,190,0.2)] rounded-[3rem]" onClick={e => e.stopPropagation()}>
-              <h3 className="font-serif text-2xl uppercase tracking-tighter mb-10 border-b border-white/10 pb-6 text-center text-[#06414B] dark:text-white">Rigor <span className="italic text-[#5BC0BE]">Normativo</span></h3>
-              <div className="space-y-8">
-                {[
-                  { n: '01', t: 'Normativa ACESS', d: 'Infraestructura y permisos validados por el MSP del Ecuador.' },
-                  { n: '02', t: 'Insumos ARCSA', d: 'Toxinas y tecnología con Registro Sanitario Ecuatoriano vigente.' },
-                  { n: '03', t: 'Aval SENESCYT', d: 'Equipo conformado estrictamente por médicos especialistas.' }
-                ].map((item, idx) => (
-                  <div key={idx} className="flex items-start gap-6 group">
-                    <span className="text-xl font-serif text-[#5BC0BE] opacity-40 group-hover:opacity-100 transition-opacity">{item.n}</span>
-                    <div className="space-y-1">
-                      <h4 className="font-bold tracking-[0.2em] uppercase text-[9px] text-[#06414B] dark:text-white">{item.t}</h4>
-                      <p className="text-[#3A8B99] dark:text-white/40 text-[11px] leading-relaxed font-light">{item.d}</p>
+                {/* SELECTOR MÓVIL */}
+                <div className="md:hidden relative z-40 mb-10">
+                  <button
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    className="w-full flex items-center justify-between bg-white/80 dark:bg-black/40 px-6 py-5 rounded-2xl border border-white/40 shadow-xl"
+                  >
+                    <span className="text-[10px] font-bold uppercase tracking-widest">{activeCatData?.title}</span>
+                    <ChevronDown className={isMobileMenuOpen ? 'rotate-180 transition-transform' : 'transition-transform'} />
+                  </button>
+                  {isMobileMenuOpen && (
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white/95 dark:bg-[#0D151C] backdrop-blur-2xl border border-white/20 rounded-2xl shadow-2xl p-4 space-y-2 z-50">
+                      {serviciosData.map((cat) => (
+                        <button
+                          key={cat.id}
+                          onClick={() => { setActiveCategory(cat.id); setIsMobileMenuOpen(false); }}
+                          className={`w-full text-left px-5 py-4 rounded-xl text-[9px] font-bold uppercase ${activeCategory === cat.id ? 'bg-[#5BC0BE] text-black' : 'text-[#06414B] dark:text-white/70'
+                            }`}
+                        >
+                          {cat.title}
+                        </button>
+                      ))}
                     </div>
-                  </div>
-                ))}
+                  )}
+                </div>
+
+                {/* CARRUSEL CONECTADO A LOS SERVICIOS DE FIREBASE */}
+                <ServiceCarousel
+                  category={activeCatData}
+                  onSelectTreatment={setSelectedTreatment}
+                  dbServices={dbServices}
+                />
               </div>
             </div>
-          </div>
+          </section>
+
+          {/* 3. RESTO DE COMPONENTES CONECTADOS A SITE-CONFIG */}
+          <DoctorProfile siteConfig={siteConfig} />
+          <QuickGuide siteConfig={siteConfig} />
+          <LeadForm siteConfig={siteConfig} />
+        </main>
+
+        {/* 4. MODAL CONECTADO PARA WHATSAPP DINÁMICO */}
+        {selectedTreatment && (
+          <TreatmentModal
+            treatment={selectedTreatment}
+            onClose={() => setSelectedTreatment(null)}
+            siteConfig={siteConfig}
+          />
         )}
       </div>
     </div>

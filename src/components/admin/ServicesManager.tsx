@@ -1,202 +1,160 @@
 "use client";
-
 import React, { useState, useEffect } from 'react';
 import { getFirestore, useStorage } from '@/firebase';
-import { collection, onSnapshot, doc, updateDoc, setDoc, deleteDoc } from 'firebase/firestore';
+import { collection, onSnapshot, doc, updateDoc, deleteDoc, addDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { serviciosData } from '@/lib/clinic-data';
-import { ImageIcon, Loader2, UploadCloud, Database, Save, Trash2 } from 'lucide-react';
+import { Loader2, Save, Check, Image as ImageIcon, Plus, Trash2, AlertCircle } from 'lucide-react';
 
-export default function ServicesManager() {
+export default function ServicesManager({ activeCategoryId, hideHeader }: { activeCategoryId: string, hideHeader?: boolean }) {
   const db = getFirestore();
   const storage = useStorage();
-
   const [services, setServices] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isSeeding, setIsSeeding] = useState(false);
   const [savingId, setSavingId] = useState<string | null>(null);
-  const [uploadingInfo, setUploadingInfo] = useState<{ id: string, type: 'imgAntes' | 'imgDespues' } | null>(null);
+  const [uploading, setUploading] = useState<string | null>(null);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   useEffect(() => {
     setIsLoading(true);
-    const unsubscribe = onSnapshot(collection(db, 'services'), (snapshot) => {
-      const fetchedServices = snapshot.docs.map(doc => ({ dbId: doc.id, ...doc.data() }));
-      // Ordenar por ID para mantener el orden lógico (01_botox, etc)
-      fetchedServices.sort((a, b) => a.dbId.localeCompare(b.dbId));
-      setServices(fetchedServices);
+    const unsub = onSnapshot(collection(db, 'services'), (snap) => {
+      setServices(snap.docs.map(d => ({ dbId: d.id, ...d.data() })));
       setIsLoading(false);
     });
-    return () => unsubscribe();
+    return () => unsub();
   }, [db]);
 
-  const handleSeedDatabase = async () => {
-    if (!confirm("Esto subirá los 26 tratamientos de tu archivo local a Firebase. ¿Continuar?")) return;
-    setIsSeeding(true);
+  const handleUpdate = async (id: string) => {
+    const name = (document.getElementById(`name-${id}`) as HTMLInputElement).value;
+    const desc = (document.getElementById(`desc-${id}`) as HTMLTextAreaElement).value;
+    const quote = (document.getElementById(`quote-${id}`) as HTMLTextAreaElement).value; // <--- LEEMOS LA FRASE
+    setSavingId(id);
     try {
-      const allTreatments = serviciosData.flatMap(cat =>
-        cat.items.map(item => ({ ...item, categoryId: cat.id, categoryTitle: cat.title }))
-      );
-      for (const treatment of allTreatments) {
-        await setDoc(doc(db, 'services', treatment.id), treatment);
-      }
-      alert("Catálogo sincronizado con éxito.");
+      await updateDoc(doc(db, 'services', id), { name, desc, quote }); // <--- GUARDAMOS LA FRASE
+      setTimeout(() => setSavingId(null), 1500);
+    } catch (e) { setSavingId(null); }
+  };
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>, id: string, type: string) => {
+    if (!e.target.files?.[0] || !storage) return;
+    setUploading(`${id}-${type}`);
+    const file = e.target.files[0];
+    const path = ref(storage, `treatments/${id}_${type}_${Date.now()}`);
+    try {
+      const snap = await uploadBytes(path, file);
+      const url = await getDownloadURL(snap.ref);
+      await updateDoc(doc(db, 'services', id), { [type]: url });
+    } catch (e) { console.error(e); }
+    setUploading(null);
+  };
+
+  const handleCreateNew = async () => {
+    try {
+      await addDoc(collection(db, 'services'), {
+        categoryId: activeCategoryId,
+        name: "NUEVO PROTOCOLO",
+        desc: "Descripción clínica del nuevo protocolo...",
+        quote: "La excelencia es un hábito de rigor científico aplicado con precisión a la arquitectura facial.", // <--- FRASE POR DEFECTO AL CREAR
+        imgAntes: "https://images.unsplash.com/photo-1615397323114-648c08126d40?q=80&w=800",
+        imgDespues: "https://images.unsplash.com/photo-1548624313-0396c75e4b1a?q=80&w=800",
+      });
     } catch (error) {
-      console.error("Error sincronizando catálogo:", error);
-      alert("Error al sincronizar. Revisa las reglas de Firestore.");
-    } finally {
-      setIsSeeding(false);
+      console.error("Error al crear:", error);
     }
   };
 
-  const handleDelete = async (dbId: string) => {
-    if (!confirm("¿Estás seguro de eliminar este tratamiento para siempre?")) return;
+  const handleDelete = async (id: string) => {
+    if (deleteConfirmId !== id) {
+      setDeleteConfirmId(id);
+      setTimeout(() => setDeleteConfirmId(null), 3000);
+      return;
+    }
     try {
-      await deleteDoc(doc(db, 'services', dbId));
+      await deleteDoc(doc(db, 'services', id));
+      setDeleteConfirmId(null);
     } catch (error) {
       console.error("Error al eliminar:", error);
     }
   };
 
-  const handleSaveText = async (dbId: string) => {
-    const nameInput = document.getElementById(`name-${dbId}`) as HTMLInputElement;
-    const descInput = document.getElementById(`desc-${dbId}`) as HTMLTextAreaElement;
+  const filteredItems = services.filter(s => s.categoryId === activeCategoryId);
 
-    if (!nameInput || !descInput) return;
-
-    setSavingId(dbId);
-    try {
-      await updateDoc(doc(db, 'services', dbId), {
-        name: nameInput.value,
-        desc: descInput.value
-      });
-    } catch (error) {
-      console.error("Error al guardar texto:", error);
-      alert("No se pudo guardar. Revisa que las reglas de Firebase tengan 'allow write: if true;'");
-    } finally {
-      setSavingId(null);
-    }
-  };
-
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, docId: string, imageType: 'imgAntes' | 'imgDespues') => {
-    const file = e.target.files?.[0];
-    if (!file || !storage) return;
-
-    setUploadingInfo({ id: docId, type: imageType });
-    try {
-      const storageRef = ref(storage, `treatments/${docId}_${imageType}_${Date.now()}`);
-      const snapshot = await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(snapshot.ref);
-      await updateDoc(doc(db, 'services', docId), { [imageType]: downloadURL });
-    } catch (error) {
-      console.error("Error al subir imagen:", error);
-      alert("Error al subir imagen. Revisa las reglas de Storage en Firebase.");
-    } finally {
-      setUploadingInfo(null);
-      e.target.value = '';
-    }
-  };
+  if (isLoading) return <div className="flex justify-center py-20"><Loader2 className="animate-spin text-[#5BC0BE]" size={40} /></div>;
 
   return (
-    <div className="space-y-8 relative min-h-[500px]">
-      <div className="flex flex-col md:flex-row justify-between md:items-end gap-4">
-        <div>
-          <h2 className="font-serif text-3xl md:text-4xl uppercase tracking-tight text-white mb-1">Gestor de Servicios</h2>
-          <p className="text-white/40 text-sm">{services.length} tratamientos en la nube</p>
-        </div>
+    <div className="space-y-8 animate-in fade-in duration-500">
 
-        {/* BOTÓN PARA FORZAR LA SINCRONIZACIÓN SI FALTAN DATOS */}
+      {!hideHeader && (
+        <h2 className="font-serif text-4xl uppercase text-white tracking-tighter mb-8 border-b border-white/5 pb-4">
+          Edición de Protocolos
+        </h2>
+      )}
+
+      <div className="flex justify-end mb-6">
         <button
-          onClick={handleSeedDatabase}
-          disabled={isSeeding}
-          className="bg-white/5 hover:bg-white/10 text-white border border-white/20 px-4 py-2 rounded-lg text-[10px] uppercase tracking-widest flex items-center gap-2 transition-all"
+          onClick={handleCreateNew}
+          className="bg-white text-[#090D10] px-6 py-3 rounded-xl font-black uppercase text-[10px] tracking-widest flex items-center gap-2 hover:bg-[#5BC0BE] transition-all shadow-lg"
         >
-          {isSeeding ? <Loader2 className="animate-spin" size={14} /> : <Database size={14} />}
-          Forzar Sincronización
+          <Plus size={16} /> Añadir Protocolo
         </button>
       </div>
 
-      {isLoading && (
-        <div className="absolute inset-0 z-10 bg-[#090D10]/80 backdrop-blur-sm flex flex-col items-center justify-center pt-20">
-          <Loader2 className="animate-spin text-[#5BC0BE] mb-3" size={40} />
-          <p className="text-[#5BC0BE] text-xs font-bold tracking-widest uppercase">Cargando...</p>
-        </div>
-      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {filteredItems.map((item) => (
+          <div key={item.dbId} className="bg-[#121A21] p-8 rounded-[3rem] border border-white/5 shadow-2xl flex flex-col gap-6 relative group">
 
-      {!isLoading && services.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {services.map((item: any) => (
-            <div key={item.dbId} className="bg-[#121A21] p-5 rounded-xl border border-[#1F2E3A] hover:border-[#5BC0BE]/30 transition-all duration-300 shadow-lg flex flex-col group">
+            {/* BOTÓN ELIMINAR */}
+            <button
+              onClick={() => handleDelete(item.dbId)}
+              className={`absolute top-6 right-6 p-2 rounded-full transition-all flex items-center gap-2 z-20 ${deleteConfirmId === item.dbId
+                ? 'bg-red-500 text-white w-auto px-4 opacity-100'
+                : 'bg-black/50 text-white/40 hover:bg-red-500/20 hover:text-red-400 opacity-0 group-hover:opacity-100'
+                }`}
+            >
+              {deleteConfirmId === item.dbId ? (
+                <><AlertCircle size={14} /> <span className="text-[9px] font-bold uppercase tracking-widest">¿Confirmar?</span></>
+              ) : (
+                <Trash2 size={16} />
+              )}
+            </button>
 
-              {/* INPUT PARA NOMBRE EDITABLE */}
-              <input
-                id={`name-${item.dbId}`}
-                defaultValue={item.name}
-                className="w-full bg-[#090D10] border border-transparent hover:border-[#1F2E3A] focus:border-[#5BC0BE] text-[11px] tracking-widest uppercase text-[#5BC0BE] font-bold mb-3 px-2 py-1 rounded outline-none transition-all"
-                title="Editar Nombre"
-              />
-
-              <div className="grid grid-cols-2 gap-2 mb-4">
-                {/* IMAGEN ANTES */}
-                <div className="aspect-square bg-[#090D10] rounded-lg overflow-hidden border border-[#1F2E3A] relative">
-                  {uploadingInfo?.id === item.dbId && uploadingInfo?.type === 'imgAntes' ? (
-                    <div className="absolute inset-0 flex items-center justify-center bg-[#090D10]/80 z-20"><Loader2 className="animate-spin text-[#5BC0BE]" size={24} /></div>
-                  ) : (
-                    <img src={item.imgAntes} alt="Antes" className="w-full h-full object-cover" loading="lazy" />
-                  )}
-                  <div className="absolute top-1 left-1 bg-black/60 px-2 py-0.5 rounded text-[8px] uppercase text-white font-medium z-10">Antes</div>
-                  <label className="absolute inset-0 bg-black/60 flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer z-10 flex">
-                    <ImageIcon size={20} className="text-white mb-1" />
-                    <span className="text-[8px] uppercase text-white tracking-widest">Cambiar</span>
-                    <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, item.dbId, 'imgAntes')} />
-                  </label>
-                </div>
-
-                {/* IMAGEN DESPUÉS */}
-                <div className="aspect-square bg-[#090D10] rounded-lg overflow-hidden border border-[#1F2E3A] relative">
-                  {uploadingInfo?.id === item.dbId && uploadingInfo?.type === 'imgDespues' ? (
-                    <div className="absolute inset-0 flex items-center justify-center bg-[#090D10]/80 z-20"><Loader2 className="animate-spin text-[#5BC0BE]" size={24} /></div>
-                  ) : (
-                    <img src={item.imgDespues} alt="Después" className="w-full h-full object-cover" loading="lazy" />
-                  )}
-                  <div className="absolute top-1 left-1 bg-[#5BC0BE]/90 px-2 py-0.5 rounded text-[8px] uppercase text-[#090D10] font-bold z-10">Después</div>
-                  <label className="absolute inset-0 bg-black/60 flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer z-10 flex">
-                    <ImageIcon size={20} className="text-white mb-1" />
-                    <span className="text-[8px] uppercase text-white tracking-widest">Cambiar</span>
-                    <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, item.dbId, 'imgDespues')} />
-                  </label>
-                </div>
-              </div>
-
-              {/* TEXTAREA PARA DESCRIPCIÓN EDITABLE */}
-              <textarea
-                id={`desc-${item.dbId}`}
-                className="w-full flex-1 bg-[#090D10] border border-transparent hover:border-[#1F2E3A] focus:border-[#5BC0BE] p-2 text-[11px] text-white/70 rounded-lg h-24 resize-none outline-none custom-scrollbar mb-3 transition-all"
-                defaultValue={item.desc}
-                title="Editar Descripción"
-              />
-
-              <div className="flex gap-2">
-                <button
-                  onClick={() => handleSaveText(item.dbId)}
-                  disabled={savingId === item.dbId}
-                  className="flex-1 bg-[#5BC0BE]/10 hover:bg-[#5BC0BE] text-[#5BC0BE] hover:text-[#090D10] py-2 rounded-lg flex items-center justify-center gap-2 transition-all text-[9px] uppercase font-bold tracking-widest border border-[#5BC0BE]/30"
-                >
-                  {savingId === item.dbId ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
-                  Guardar
-                </button>
-                <button
-                  onClick={() => handleDelete(item.dbId)}
-                  className="px-3 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white rounded-lg flex items-center justify-center transition-all border border-red-500/20"
-                  title="Eliminar Tratamiento"
-                >
-                  <Trash2 size={14} />
-                </button>
-              </div>
-
+            <div className="space-y-2">
+              <label className="text-[8px] uppercase font-black text-white/30 tracking-widest">Nombre Protocolo</label>
+              <input id={`name-${item.dbId}`} defaultValue={item.name} className="w-full bg-black/40 border border-white/10 p-4 rounded-2xl text-[#5BC0BE] font-serif text-xl outline-none focus:border-[#5BC0BE]" />
             </div>
-          ))}
-        </div>
-      )}
+
+            <div className="grid grid-cols-2 gap-4">
+              {['imgAntes', 'imgDespues'].map(type => (
+                <div key={type} className="space-y-2">
+                  <span className="text-[7px] uppercase font-black text-white/20 block text-center">{type === 'imgAntes' ? 'Antes' : 'Después'}</span>
+                  <div className="aspect-square bg-black rounded-3xl overflow-hidden relative border border-white/5 group/img">
+                    {uploading === `${item.dbId}-${type}` ? <div className="absolute inset-0 flex items-center justify-center bg-black/60"><Loader2 className="animate-spin text-[#5BC0BE]" /></div> : <img src={item[type]} className="w-full h-full object-cover opacity-60 group-hover/img:opacity-100 transition-all" />}
+                    <label className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 bg-[#5BC0BE]/20 backdrop-blur-sm cursor-pointer transition-all">
+                      <ImageIcon className="text-white" size={24} />
+                      <input type="file" accept="image/*" className="hidden" onChange={e => handleUpload(e, item.dbId, type)} />
+                    </label>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[8px] uppercase font-black text-white/30 tracking-widest">Análisis / Descripción</label>
+              <textarea id={`desc-${item.dbId}`} defaultValue={item.desc} className="w-full bg-black/40 border border-white/10 p-5 rounded-2xl text-white/60 text-xs h-28 resize-none outline-none focus:border-[#5BC0BE]" />
+            </div>
+
+            {/* NUEVO CAMPO: LA FRASE DEL MODAL */}
+            <div className="space-y-2">
+              <label className="text-[8px] uppercase font-black text-[#5BC0BE] tracking-widest">Frase del Modal</label>
+              <textarea id={`quote-${item.dbId}`} defaultValue={item.quote || "La excelencia es un hábito de rigor científico aplicado con precisión a la arquitectura facial."} className="w-full bg-black/40 border border-[#5BC0BE]/30 p-4 rounded-xl text-[#5BC0BE] text-xs italic font-serif h-20 resize-none outline-none focus:border-[#5BC0BE]" />
+            </div>
+
+            <button onClick={() => handleUpdate(item.dbId)} className={`w-full py-5 rounded-2xl flex items-center justify-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] transition-all shadow-xl mt-2 ${savingId === item.dbId ? 'bg-green-500 text-white' : 'bg-white/5 text-[#5BC0BE] border border-[#5BC0BE]/20 hover:bg-[#5BC0BE] hover:text-[#090D10]'}`}>
+              {savingId === item.dbId ? <Check size={18} /> : <Save size={18} />}
+              {savingId === item.dbId ? 'Sincronizado' : 'Actualizar Protocolo'}
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
