@@ -5,7 +5,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Category, Treatment } from '@/lib/clinic-data';
-// Nota: Si esta ruta te da error, recuerda cambiarla a '../BeforeAfterSlider' o la ruta correcta
+// IMPORTANTE: Asegúrate de que esta ruta a BeforeAfterSlider sea la correcta en tu proyecto
 import { BeforeAfterSlider } from './BeforeAfterSlider';
 
 interface ServiceCarouselProps {
@@ -32,10 +32,10 @@ export const ServiceCarousel = ({ category, onSelectTreatment, dbServices = [] }
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
       loop: isLoopSafe,
-      align: 'center', // Cambiado a 'start' para evitar el hueco en el centro
+      align: 'center', // <-- CENTRADO, COMO DEBE SER
       skipSnaps: false,
       duration: 60,
-      watchDrag: true // Deslizamiento en móvil activado
+      watchDrag: false // <-- DESACTIVADO EL ARRASTRE PARA NO CHOCAR CON EL ANTES/DESPUÉS
     },
     [autoplayPlugin.current]
   );
@@ -59,7 +59,7 @@ export const ServiceCarousel = ({ category, onSelectTreatment, dbServices = [] }
     emblaApi.on('select', onSelect);
   }, [emblaApi, onSelect, onInit]);
 
-  // Manejo del Autoplay (se pausa y vuelve a arrancar en 2 segundos)
+  // Manejo del Autoplay (se pausa y vuelve a arrancar en 2 segundos si el usuario suelta el mouse)
   const handleSliderInteraction = useCallback(() => {
     if (!emblaApi) return;
     const autoplay = emblaApi.plugins().autoplay;
@@ -93,7 +93,7 @@ export const ServiceCarousel = ({ category, onSelectTreatment, dbServices = [] }
             const isSelected = selectedIndex === index;
 
             return (
-              // 1. EL CONTENEDOR DE EMBLA: Intocable, solo anchos y min-w-0 para evitar el bug del "fantasma"
+              // 1. EL CONTENEDOR DE EMBLA: Intocable, solo anchos y min-w-0 para evitar bugs visuales
               <div
                 key={item.id || `fallback-${index}`}
                 className="embla__slide flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0 h-full"
@@ -108,7 +108,7 @@ export const ServiceCarousel = ({ category, onSelectTreatment, dbServices = [] }
                 >
                   <div className="flex flex-col h-full w-full bg-white dark:bg-[#121A21] border border-[#C4E8E9] dark:border-[#1F2E3A] shadow-lg overflow-hidden group rounded-2xl md:rounded-3xl">
 
-                    {/* Evita que mover la imagen mueva todo el carrusel */}
+                    {/* Evita que mover la imagen haga cosas raras con clics fantasma */}
                     <div
                       className="relative w-full aspect-square bg-gray-100 dark:bg-gray-900 z-10 overflow-hidden"
                       onPointerDown={(e) => e.stopPropagation()}
