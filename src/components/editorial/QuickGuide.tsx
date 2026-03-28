@@ -26,11 +26,7 @@ export const QuickGuide = ({ siteConfig }: QuickGuideProps) => {
   };
 
   return (
-    <section
-      id="guia"
-      className="py-8 md:py-12 lg:py-16 relative overflow-hidden transition-all duration-700 bg-background"
-      aria-label="Guía de protocolos y tratamientos"
-    >
+    <section id="guia" className="py-8 md:py-12 lg:py-16 relative overflow-hidden transition-all duration-700 bg-background scroll-mt-10" aria-label="Guía de protocolos y tratamientos">
       <div className="max-w-6xl mx-auto px-6 sm:px-8 md:px-12 relative z-10">
 
         {/* Encabezado */}
@@ -59,8 +55,8 @@ export const QuickGuide = ({ siteConfig }: QuickGuideProps) => {
                 onClick={() => toggleGuide(item.id)}
                 onKeyDown={(e) => handleKeyDown(e, item.id)}
                 className={`w-full glass-cyan dark:glass-teal transition-all duration-500 cursor-pointer p-5 sm:p-6 md:p-7 lg:p-8 rounded-xl md:rounded-2xl lg:rounded-3xl shadow-lg lg:shadow-xl hover:shadow-2xl group text-left border border-white/30 dark:border-white/10 min-h-[60px] md:min-h-[72px] flex items-center justify-between ${activeGuide === item.id
-                    ? 'scale-[1.01] md:scale-[1.02] bg-white/15 dark:bg-white/8 ring-2 ring-[#5BC0BE]/50'
-                    : 'hover:scale-[1.01] hover:bg-white/8 dark:hover:bg-white/5'
+                  ? 'scale-[1.01] md:scale-[1.02] bg-white/15 dark:bg-white/8 ring-2 ring-[#5BC0BE]/50'
+                  : 'hover:scale-[1.01] hover:bg-white/8 dark:hover:bg-white/5'
                   } focus:outline-none focus:ring-2 focus:ring-[#5BC0BE]/50`}
                 aria-expanded={activeGuide === item.id}
                 aria-controls={`guide-content-${item.id}`}

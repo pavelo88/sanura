@@ -44,7 +44,7 @@ export const LeadForm = ({ siteConfig }: LeadFormProps) => {
   };
 
   return (
-    <section id="valoracion" className="w-full relative py-12 md:py-20 overflow-hidden bg-background transition-colors duration-500">
+    <section id="valoracion" className="w-full relative py-12 md:py-20 overflow-hidden bg-background transition-colors duration-500 scroll-mt-10">
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
 
         {/* Cabecera */}

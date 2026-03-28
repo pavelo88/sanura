@@ -138,7 +138,6 @@ export default function AdminPage() {
         <main className="flex-1 overflow-y-auto p-6 md:p-14 custom-scrollbar bg-[#090D10]">
           <div className="max-w-7xl mx-auto">
 
-            {/* AQUÍ ESTÁ LA MAGIA: Usamos CSS (hidden vs block) en lugar de && */}
             <div className={activeTab === 'leads' ? 'block' : 'hidden'}>
               <LeadsTable hideHeader={true} externalFilter={leadsFilter} />
             </div>

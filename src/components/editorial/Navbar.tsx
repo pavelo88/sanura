@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Sun, Moon, Menu, X } from 'lucide-react';
+import { Sun, Moon, Menu, X } from 'lucide-react'; // CORREGIDO AQUÍ
 
 interface NavbarProps {
   isDarkMode: boolean;
@@ -32,13 +32,11 @@ export const Navbar = ({ isDarkMode, toggleTheme }: NavbarProps) => {
         : 'w-full max-w-7xl h-16 md:h-20 px-8 bg-[#06414B] rounded-2xl border'
         }`}>
 
-        {/* LOGO */}
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-[#5BC0BE] rounded-full flex items-center justify-center font-serif italic font-bold text-[#06414B]">N</div>
           <span className="font-serif text-lg md:text-xl tracking-[0.2em] text-white uppercase font-bold">NVITALITY</span>
         </div>
 
-        {/* MENÚ DESKTOP */}
         <div className="hidden md:flex items-center gap-10">
           {navItems.map((item) => (
             <a key={item.id} href={`#${item.id}`} className="text-[10px] font-bold tracking-[0.4em] uppercase text-white/70 hover:text-[#5BC0BE]">
@@ -50,7 +48,6 @@ export const Navbar = ({ isDarkMode, toggleTheme }: NavbarProps) => {
           </button>
         </div>
 
-        {/* BOTONES MÓVIL (TEMA Y HAMBURGUESA) */}
         <div className="md:hidden flex items-center gap-4">
           <button onClick={toggleTheme} className="text-white/70">
             {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
@@ -60,22 +57,20 @@ export const Navbar = ({ isDarkMode, toggleTheme }: NavbarProps) => {
           </button>
         </div>
 
-        {/* MENÚ DESPLEGABLE MÓVIL (AQUÍ ESTABA EL ERROR GARRAFAL) */}
-        <div className={`absolute top-[calc(100%+0.5rem)] left-0 right-0 md:hidden overflow-hidden transition-all duration-300 origin-top ${isOpen ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0 pointer-events-none'}`}>
-          <div className="bg-[#06414B]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl mx-4 flex flex-col p-4 gap-2">
+        {isOpen && (
+          <div className="absolute top-[calc(100%+0.5rem)] left-0 right-0 md:hidden bg-[#06414B]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl mx-4 flex flex-col p-4 gap-2">
             {navItems.map((item) => (
               <a
                 key={item.id}
                 href={`#${item.id}`}
-                onClick={() => setIsOpen(false)} // Cierra el menú al hacer clic
+                onClick={() => setIsOpen(false)}
                 className="text-[11px] font-bold tracking-[0.4em] uppercase text-white hover:text-[#5BC0BE] p-4 rounded-xl hover:bg-white/5 transition-colors text-center"
               >
                 {item.label}
               </a>
             ))}
           </div>
-        </div>
-
+        )}
       </div>
     </nav>
   );
