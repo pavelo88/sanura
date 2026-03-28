@@ -6,7 +6,13 @@ import { collection, query, orderBy, limit, onSnapshot, doc, updateDoc } from 'f
 import { Loader2, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 
 // Aceptamos el filtro desde el AdminPage
-export default function LeadsTable({ externalFilter = 'TODOS' }: { externalFilter?: string }) {
+export default function LeadsTable({ 
+  externalFilter = 'TODOS',
+  hideHeader = false 
+}: { 
+  externalFilter?: string,
+  hideHeader?: boolean 
+}) {
   const db = getFirestore();
   const [page, setPage] = useState(0);
   const itemsPerPage = 10;
