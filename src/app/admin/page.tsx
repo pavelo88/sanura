@@ -134,18 +134,22 @@ export default function AdminPage() {
           </div>
         </header>
 
-        {/* 3. CUERPO CON SCROLL [cite: 598-599] */}
+        {/* 3. CUERPO CON SCROLL */}
         <main className="flex-1 overflow-y-auto p-6 md:p-14 custom-scrollbar bg-[#090D10]">
           <div className="max-w-7xl mx-auto">
-            {activeTab === 'leads' && (
+
+            {/* AQUÍ ESTÁ LA MAGIA: Usamos CSS (hidden vs block) en lugar de && */}
+            <div className={activeTab === 'leads' ? 'block' : 'hidden'}>
               <LeadsTable hideHeader={true} externalFilter={leadsFilter} />
-            )}
-            {activeTab === 'cms' && (
+            </div>
+
+            <div className={activeTab === 'cms' ? 'block' : 'hidden'}>
               <CMSPanel hideHeader={true} />
-            )}
-            {activeTab === 'services' && (
+            </div>
+
+            <div className={activeTab === 'services' ? 'block' : 'hidden'}>
               <ServicesManager activeCategoryId={activeServiceCat} hideHeader={true} />
-            )}
+            </div>
 
             <footer className="mt-20 pt-10 border-t border-white/5 flex justify-between items-center text-[9px] uppercase tracking-[0.4em] font-medium text-white/20">
               <p>© 2026 NVitality Clinic Operations</p>
