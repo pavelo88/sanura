@@ -8,7 +8,8 @@ import { DoctorProfile } from '@/components/editorial/DoctorProfile';
 import { QuickGuide } from '@/components/editorial/QuickGuide';
 import { LeadForm } from '@/components/editorial/LeadForm';
 import { TreatmentModal } from '@/components/editorial/TreatmentModal';
-import { AIConsultant } from '@/components/editorial/AIConsultant'; // Recuperamos la IA
+import { AIConsultant } from '@/components/editorial/AIConsultant';
+import { WhatsAppFloating } from '@/components/editorial/WhatsAppFloating'; // <--- IMPORTACIÓN NUEVA
 import { serviciosData, Treatment } from '@/lib/clinic-data';
 import { getFirestore } from '@/firebase';
 import { doc, onSnapshot, collection } from 'firebase/firestore';
@@ -64,8 +65,8 @@ export default function App() {
           {/* 1. HERO CONECTADO */}
           <Hero onOpenCert={() => setShowCertModal(true)} siteConfig={siteConfig} />
 
-          {/* 2. SECCIÓN DE SERVICIOS CON LOS 5 BOTONES RECUPERADOS */}
-          <section id="servicios" className="py-12 md:py-20 relative scroll-mt-28">
+          {/* 2. SECCIÓN DE SERVICIOS - Ajustado scroll-mt a 20 */}
+          <section id="servicios" className="py-12 md:py-20 relative scroll-mt-20">
             <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
               <div className="bg-white/10 dark:bg-white/5 backdrop-blur-2xl p-8 md:p-16 rounded-[3rem] md:rounded-[4rem] border border-white/20 shadow-2xl">
 
@@ -76,7 +77,7 @@ export default function App() {
                   <p className="text-[10px] tracking-[0.4em] text-[#3A8B99] dark:text-[#5BC0BE] uppercase font-bold">✦ Selecciona una categoría de protocolos</p>
                 </div>
 
-                {/* BOTONES DESKTOP (LOS 5 GRUPOS) */}
+                {/* BOTONES DESKTOP */}
                 <div className="hidden md:flex flex-wrap justify-center gap-4 mb-16">
                   {serviciosData.map((cat) => (
                     <button
@@ -117,7 +118,6 @@ export default function App() {
                   )}
                 </div>
 
-                {/* CARRUSEL CONECTADO A LOS SERVICIOS DE FIREBASE */}
                 <ServiceCarousel
                   category={activeCatData}
                   onSelectTreatment={setSelectedTreatment}
@@ -127,13 +127,14 @@ export default function App() {
             </div>
           </section>
 
-          {/* 3. RESTO DE COMPONENTES CONECTADOS A SITE-CONFIG */}
+          {/* 3. RESTO DE COMPONENTES */}
           <DoctorProfile siteConfig={siteConfig} />
           <QuickGuide siteConfig={siteConfig} />
           <LeadForm siteConfig={siteConfig} />
+          <AIConsultant siteConfig={siteConfig} />
         </main>
 
-        {/* 4. MODAL CONECTADO PARA WHATSAPP DINÁMICO */}
+        {/* 4. MODAL CONECTADO */}
         {selectedTreatment && (
           <TreatmentModal
             treatment={selectedTreatment}
@@ -141,6 +142,9 @@ export default function App() {
             siteConfig={siteConfig}
           />
         )}
+
+        {/* 5. BOTÓN FLOTANTE DE WHATSAPP */}
+        <WhatsAppFloating phone={siteConfig?.phoneContact} />
       </div>
     </div>
   );
