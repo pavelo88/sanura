@@ -8,8 +8,7 @@ import { DoctorProfile } from '@/components/editorial/DoctorProfile';
 import { QuickGuide } from '@/components/editorial/QuickGuide';
 import { LeadForm } from '@/components/editorial/LeadForm';
 import { TreatmentModal } from '@/components/editorial/TreatmentModal';
-import { AIConsultant } from '@/components/editorial/AIConsultant';
-import { WhatsAppFloating } from '@/components/editorial/WhatsAppFloating'; // <--- IMPORTACIÓN NUEVA
+import { WhatsAppFloating } from '@/components/editorial/WhatsAppFloating';
 import { serviciosData, Treatment } from '@/lib/clinic-data';
 import { getFirestore } from '@/firebase';
 import { doc, onSnapshot, collection } from 'firebase/firestore';
@@ -26,16 +25,14 @@ export default function App() {
   const [siteConfig, setSiteConfig] = useState<any>(null);
   const [dbServices, setDbServices] = useState<any[]>([]);
 
-  // ESCUCHA EN TIEMPO REAL A FIREBASE (Settings y Servicios)
+  // ESCUCHA EN TIEMPO REAL A FIREBASE
   useEffect(() => {
     const db = getFirestore();
 
-    // 1. Escucha la configuración global (Hero, Doctora, etc)
     const unsubConfig = onSnapshot(doc(db, 'settings', 'site-content'), (docSnap) => {
       if (docSnap.exists()) setSiteConfig(docSnap.data());
     });
 
-    // 2. Escucha la colección de servicios para el carrusel
     const unsubServices = onSnapshot(collection(db, 'services'), (snapshot) => {
       setDbServices(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
     });
@@ -62,10 +59,10 @@ export default function App() {
         <Navbar isDarkMode={isDarkMode} toggleTheme={() => setIsDarkMode(!isDarkMode)} />
 
         <main>
-          {/* 1. HERO CONECTADO */}
+          {/* 1. HERO */}
           <Hero onOpenCert={() => setShowCertModal(true)} siteConfig={siteConfig} />
 
-          {/* 2. SECCIÓN DE SERVICIOS - Ajustado scroll-mt a 20 */}
+          {/* 2. SECCIÓN DE SERVICIOS - scroll-mt ajustado */}
           <section id="servicios" className="py-12 md:py-20 relative scroll-mt-20">
             <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
               <div className="bg-white/10 dark:bg-white/5 backdrop-blur-2xl p-8 md:p-16 rounded-[3rem] md:rounded-[4rem] border border-white/20 shadow-2xl">
@@ -131,10 +128,18 @@ export default function App() {
           <DoctorProfile siteConfig={siteConfig} />
           <QuickGuide siteConfig={siteConfig} />
           <LeadForm siteConfig={siteConfig} />
-          <AIConsultant siteConfig={siteConfig} />
+
+          {/* 4. FOOTER RECUPERADO */}
+          <footer className="mt-20 pt-10 border-t border-white/5 flex justify-between items-center text-[9px] uppercase tracking-[0.4em] font-medium text-[#06414B]/40 dark:text-white/20">
+            <p>© 2026 NVitality Clinic Operations</p>
+            <div className="flex gap-6">
+              <span className="text-[#3A8B99] dark:text-[#5BC0BE]/40">Status: Live</span>
+              <span>Uptime: 99.9%</span>
+            </div>
+          </footer>
         </main>
 
-        {/* 4. MODAL CONECTADO */}
+        {/* MODAL */}
         {selectedTreatment && (
           <TreatmentModal
             treatment={selectedTreatment}
@@ -143,7 +148,7 @@ export default function App() {
           />
         )}
 
-        {/* 5. BOTÓN FLOTANTE DE WHATSAPP */}
+        {/* BOTÓN WHATSAPP */}
         <WhatsAppFloating phone={siteConfig?.phoneContact} />
       </div>
     </div>
