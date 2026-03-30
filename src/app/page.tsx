@@ -21,22 +21,17 @@ export default function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // ESTADOS DE FIREBASE
   const [siteConfig, setSiteConfig] = useState<any>(null);
   const [dbServices, setDbServices] = useState<any[]>([]);
 
-  // ESCUCHA EN TIEMPO REAL A FIREBASE
   useEffect(() => {
     const db = getFirestore();
-
     const unsubConfig = onSnapshot(doc(db, 'settings', 'site-content'), (docSnap) => {
       if (docSnap.exists()) setSiteConfig(docSnap.data());
     });
-
     const unsubServices = onSnapshot(collection(db, 'services'), (snapshot) => {
       setDbServices(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
     });
-
     return () => { unsubConfig(); unsubServices(); };
   }, []);
 
@@ -59,14 +54,11 @@ export default function App() {
         <Navbar isDarkMode={isDarkMode} toggleTheme={() => setIsDarkMode(!isDarkMode)} />
 
         <main>
-          {/* 1. HERO */}
           <Hero onOpenCert={() => setShowCertModal(true)} siteConfig={siteConfig} />
 
-          {/* 2. SECCIÓN DE SERVICIOS - scroll-mt ajustado */}
           <section id="servicios" className="py-12 md:py-20 relative scroll-mt-20">
             <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
               <div className="bg-white/10 dark:bg-white/5 backdrop-blur-2xl p-8 md:p-16 rounded-[3rem] md:rounded-[4rem] border border-white/20 shadow-2xl">
-
                 <div className="text-center mb-12 space-y-4">
                   <h2 className="font-serif text-4xl md:text-6xl uppercase text-[#06414B] dark:text-white tracking-tighter">
                     Curaduría <span className="text-[#3A8B99] dark:text-[#5BC0BE] italic">de Elite</span>
@@ -74,7 +66,6 @@ export default function App() {
                   <p className="text-[10px] tracking-[0.4em] text-[#3A8B99] dark:text-[#5BC0BE] uppercase font-bold">✦ Selecciona una categoría de protocolos</p>
                 </div>
 
-                {/* BOTONES DESKTOP */}
                 <div className="hidden md:flex flex-wrap justify-center gap-4 mb-16">
                   {serviciosData.map((cat) => (
                     <button
@@ -90,31 +81,6 @@ export default function App() {
                   ))}
                 </div>
 
-                {/* SELECTOR MÓVIL */}
-                <div className="md:hidden relative z-40 mb-10">
-                  <button
-                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                    className="w-full flex items-center justify-between bg-white/80 dark:bg-black/40 px-6 py-5 rounded-2xl border border-white/40 shadow-xl"
-                  >
-                    <span className="text-[10px] font-bold uppercase tracking-widest">{activeCatData?.title}</span>
-                    <ChevronDown className={isMobileMenuOpen ? 'rotate-180 transition-transform' : 'transition-transform'} />
-                  </button>
-                  {isMobileMenuOpen && (
-                    <div className="absolute top-full left-0 right-0 mt-2 bg-white/95 dark:bg-[#0D151C] backdrop-blur-2xl border border-white/20 rounded-2xl shadow-2xl p-4 space-y-2 z-50">
-                      {serviciosData.map((cat) => (
-                        <button
-                          key={cat.id}
-                          onClick={() => { setActiveCategory(cat.id); setIsMobileMenuOpen(false); }}
-                          className={`w-full text-left px-5 py-4 rounded-xl text-[9px] font-bold uppercase ${activeCategory === cat.id ? 'bg-[#5BC0BE] text-black' : 'text-[#06414B] dark:text-white/70'
-                            }`}
-                        >
-                          {cat.title}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
                 <ServiceCarousel
                   category={activeCatData}
                   onSelectTreatment={setSelectedTreatment}
@@ -124,22 +90,43 @@ export default function App() {
             </div>
           </section>
 
-          {/* 3. RESTO DE COMPONENTES */}
           <DoctorProfile siteConfig={siteConfig} />
           <QuickGuide siteConfig={siteConfig} />
           <LeadForm siteConfig={siteConfig} />
 
-          {/* 4. FOOTER RECUPERADO */}
-          <footer className="mt-20 pt-10 border-t border-white/5 flex justify-between items-center text-[9px] uppercase tracking-[0.4em] font-medium text-[#06414B]/40 dark:text-white/20">
-            <p>© 2026 NVitality Clinic Operations</p>
-            <div className="flex gap-6">
-              <span className="text-[#3A8B99] dark:text-[#5BC0BE]/40">Status: Live</span>
-              <span>Uptime: 99.9%</span>
+          {/* FOOTER PREMIUM - COINCIDE CON EL NAV */}
+          <footer className="w-full bg-[#06414B] py-16 md:py-10 mt-20 relative overflow-hidden">
+            <div className="max-w-7xl mx-auto px-8 md:px-20">
+              <div className="flex flex-col md:flex-row justify-between items-center gap-12">
+
+                {/* Branding Final */}
+                <div className="flex flex-col items-center md:items-start gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 bg-[#5BC0BE] rounded-full flex items-center justify-center font-serif italic font-bold text-[#06414B] text-xl shadow-lg">N</div>
+                    <span className="font-serif text-2xl tracking-[0.2em] text-white uppercase font-bold">NVITALITY</span>
+                  </div>
+                  <p className="text-[9px] tracking-[0.5em] text-[#5BC0BE] uppercase font-black opacity-80">Alta Estética & Rigor Médico</p>
+                </div>
+
+                {/* Status y Uptime */}
+                <div className="flex flex-col items-center md:items-end gap-3 text-[10px] font-bold tracking-[0.4em] uppercase text-white/50">
+                  <div className="flex items-center gap-4">
+                    <span className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-[#5BC0BE] rounded-full animate-pulse shadow-[0_0_8px_#5BC0BE]"></span>
+                      Status: <span className="text-white">Live</span>
+                    </span>
+                    <span className="w-[1px] h-3 bg-white/10"></span>
+                    <span>Uptime: <span className="text-white">99.9%</span></span>
+                  </div>
+                  <p className="text-white/30 font-medium">© 2026 NVitality Clinic Operations</p>
+                </div>
+              </div>
             </div>
+            {/* Decoración sutil de fondo */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-[#5BC0BE]/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
           </footer>
         </main>
 
-        {/* MODAL */}
         {selectedTreatment && (
           <TreatmentModal
             treatment={selectedTreatment}
@@ -148,7 +135,6 @@ export default function App() {
           />
         )}
 
-        {/* BOTÓN WHATSAPP */}
         <WhatsAppFloating phone={siteConfig?.phoneContact} />
       </div>
     </div>
