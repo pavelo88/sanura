@@ -4,41 +4,72 @@
 
 @layer base {
   :root {
-    --background: 191 100% 98%;
-    --foreground: 191 100% 14%;
+    --background: 210 20% 98%; /* Pearl White */
+    --foreground: 189 58% 10%; /* Sanura Teal */
+    --primary: 189 58% 10%;    /* Sanura Teal */
+    --primary-foreground: 0 0% 100%;
+    --accent: 40 50% 55%;      /* Sanura Gold */
+    --accent-foreground: 189 58% 10%;
+    --border: 189 20% 90%;
+    --radius: 3rem;
   }
-
+  
   .dark {
-    --background: 0 0% 0%;
-    /* Negro puro */
-    --foreground: 210 40% 98%;
-  }
-}
-
-@layer utilities {
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* El vidrio que NO bloquea clics */
-  .frosted-glass-overlay {
-    @apply fixed inset-0 z-0 backdrop-blur-[110px] pointer-events-none transition-colors duration-1000;
-  }
-
-  .glass-deep-dark {
-    @apply bg-black/85 backdrop-blur-2xl border border-white/10 shadow-2xl;
+    --background: 189 58% 10%; /* Sanura Teal as Background */
+    --foreground: 0 0% 100%;   /* White as Text */
+    --primary: 0 0% 100%;      /* White as Primary */
+    --primary-foreground: 189 58% 10%;
+    --accent: 40 50% 55%;      /* Sanura Gold */
+    --accent-foreground: 0 0% 100%;
+    --border: 189 30% 20%;
   }
 }
 
 body {
-  @apply bg-background text-foreground transition-colors duration-700;
-  background-image:
-    radial-gradient(circle at 10% 20%, rgba(91, 192, 190, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(91, 192, 190, 0.08) 0%, transparent 40%);
-  background-attachment: fixed;
+  @apply transition-colors duration-700 font-sans antialiased overflow-x-hidden;
+  background-color: hsl(var(--background));
+}
+
+h1, h2, h3, h4 {
+  @apply font-serif tracking-tighter;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.glass-pearl {
+  @apply bg-white/40 dark:bg-white/5 backdrop-blur-3xl border border-white/20 dark:border-white/10 shadow-2xl;
+}
+
+.glass-brand {
+  @apply bg-[#0B252A]/5 dark:bg-white/5 backdrop-blur-3xl border border-[#0B252A]/10 dark:border-white/10;
+}
+
+.double-glass {
+  @apply bg-white/20 dark:bg-white/10 backdrop-blur-3xl border border-white/30 dark:border-white/20 shadow-2xl;
+}
+
+.text-brand {
+  @apply text-[#0B252A] dark:text-white;
+}
+
+.text-accent {
+  @apply text-[#C5A059];
+}
+
+.bg-brand {
+  @apply bg-[#0B252A] dark:bg-white;
+}
+
+.bg-accent {
+  @apply bg-[#C5A059];
+}
+
+.section-divider {
+  @apply w-full h-px bg-[#0B252A]/5 dark:bg-white/10 my-24;
 }

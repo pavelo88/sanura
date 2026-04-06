@@ -1,6 +1,5 @@
 /**
- * @fileOverview Data maestra de la clínica N-VITALITY.
- * SOLO DATOS. NADA DE HTML NI COMPONENTES AQUÍ.
+ * @fileOverview Master Data para Clínica Sanura - Edición Editorial 2026.
  */
 
 export interface Treatment {
@@ -19,73 +18,133 @@ export interface Category {
 
 export const serviciosData: Category[] = [
   {
-    id: '01_medicina_estetica_facial',
-    title: 'Estética Facial & Inyectables',
+    id: 'facial',
+    title: 'Estética Facial',
     items: [
-      { id: '01_botox', name: 'Neuromoduladores', desc: 'Prevención y tratamiento de rítides dinámicas (frente, entrecejo, patas de gallo). Efecto lifting sin pérdida de expresión facial.', imgAntes: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1607748862156-7c548e7e98f4?w=800&q=80' },
-      { id: '02_hialuronico', name: 'Ácido Hialurónico', desc: 'Reposición de volumen profundo (pómulos, mentón, perfilamiento mandibular). Efecto "Tense & Lift" para una arquitectura facial estructurada.', imgAntes: 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1548624313-0396c75e4b1a?w=800&q=80' },
-      { id: '03_rinomodelacion', name: 'Rinomodelación', desc: 'Perfilamiento y elevación de la punta nasal con ácido hialurónico de alta densidad. Corrección del caballete en tan solo 20 minutos sin cirugía.', imgAntes: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=800&q=80' },
-      { id: '04_hilos', name: 'Hilos Tensores', desc: 'Efecto lifting no quirúrgico mediante hilos de polidioxanona que reposicionan los tejidos caídos e inducen la formación de colágeno.', imgAntes: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=800&q=80' },
-      { id: '05_meso_facial', name: 'Mesoterapia Facial', desc: 'Infusión subdérmica de un cóctel de vitaminas, antioxidantes y péptidos para una revitalización profunda y luminosidad extrema.', imgAntes: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&q=80' },
-      { id: '06_bioestimuladores', name: 'Bioestimuladores', desc: 'Inducción de una red biológica de colágeno propio (Radiesse/Sculptra) que tensa la piel de rostro y cuello progresivamente.', imgAntes: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=80' },
-      { id: '07_prp', name: 'Plasma Rico en Plaquetas', desc: 'Regeneración celular utilizando factores de crecimiento autólogos extraídos de su propia sangre para mejorar calidad y textura de piel.', imgAntes: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1504813184591-01572f98c85f?w=800&q=80' }
+      { id: 'hialuronico', name: 'Ácido Hialurónico', desc: 'Rellenos de alta reticulación para armonización facial, voluminización de labios y proyección de mentón.', imgAntes: 'https://picsum.photos/seed/facial1/800/800', imgDespues: 'https://picsum.photos/seed/facial2/800/800' },
+      { id: 'hilos', name: 'Hilos Tensores', desc: 'Efecto lifting inmediato mediante estimulación de colágeno subdérmico y tracción física.', imgAntes: 'https://picsum.photos/seed/facial3/800/800', imgDespues: 'https://picsum.photos/seed/facial4/800/800' },
+      { id: 'rejuvenecimiento', name: 'Rejuvenecimiento Celular', desc: 'Protocolo exclusivo para reactivar fibroblastos y colágeno natural desde el interior celular.', imgAntes: 'https://picsum.photos/seed/celular1/800/800', imgDespues: 'https://picsum.photos/seed/celular2/800/800' },
+      { id: 'botox', name: 'Toxina Botulínica', desc: 'Relajación muscular selectiva para suavizar líneas de expresión y mirada cansada.', imgAntes: 'https://picsum.photos/seed/facial5/800/800', imgDespues: 'https://picsum.photos/seed/facial6/800/800' }
     ]
   },
   {
-    id: '02_estetica_facial_aparatologia',
-    title: 'Aparatología Facial',
+    id: 'laser',
+    title: 'Aparatología Láser',
     items: [
-      { id: '08_limpieza', name: 'Limpieza Facial Médica', desc: 'Protocolo dermatológico profundo para extracción de impurezas, control de sebo y optimización de la barrera cutánea.', imgAntes: 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1531299244174-d247dd4e5a66?w=800&q=80' },
-      { id: '09_microdermoabrasion', name: 'Microdermoabrasión', desc: 'Exfoliación mecánica de grado médico con puntas de diamante para barrer células muertas y atenuar poros dilatados.', imgAntes: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=800&q=80' },
-      { id: '10_peeling', name: 'Peeling Químico', desc: 'Renovación celular controlada con ácidos médicos específicos para unificar el tono y tratar cicatrices superficiales.', imgAntes: 'https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1541844053589-346841d0b34c?w=800&q=80' },
-      { id: '11_radiofrecuencia', name: 'Radiofrecuencia', desc: 'Tensado cutáneo térmico no invasivo. Estimula las fibras de colágeno y elastina reduciendo la flacidez del óvalo facial.', imgAntes: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&q=80' },
-      { id: '12_hifu', name: 'HIFU', desc: 'Ultrasonido focalizado de alta intensidad. Alcanza el plano muscular (SMAS) logrando un efecto lifting sin pasar por quirófano.', imgAntes: 'https://images.unsplash.com/photo-1615397349754-cfa2066a298e?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1552693673-1bf958298935?w=800&q=80' }
+      { id: 'depilacion', name: 'Depilación Definitiva', desc: 'Láser de alta precisión para eliminación de vello en todo tipo de piel con seguridad biológica.', imgAntes: 'https://picsum.photos/seed/laser1/800/800', imgDespues: 'https://picsum.photos/seed/laser2/800/800' },
+      { id: 'tatuajes', name: 'Remoción de Tatuajes', desc: 'Tecnología Q-Switched para fragmentación pigmentaria avanzada sin daño tisular.', imgAntes: 'https://picsum.photos/seed/laser3/800/800', imgDespues: 'https://picsum.photos/seed/laser4/800/800' }
     ]
   },
   {
-    id: '03_tratamientos_corporales',
-    title: 'Tratamientos Corporales',
+    id: 'odontologia',
+    title: 'Odontología Estética',
     items: [
-      { id: '13_hidro', name: 'Hidrolipoclasia', desc: 'Destrucción de grasa localizada mediante infiltración de suero y ondas de ultrasonido para modelar flancos y abdomen.', imgAntes: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80' },
-      { id: '14_carboxi', name: 'Carboxiterapia', desc: 'Infiltración subcutánea de CO2 médico para mejorar la oxigenación tisular, combatiendo celulitis, estrías y flacidez.', imgAntes: 'https://images.unsplash.com/photo-1519824145371-296894a0daa9?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&q=80' },
-      { id: '15_preso', name: 'Presoterapia', desc: 'Drenaje linfático mecanizado que elimina la retención de líquidos, toxinas y pesadez en piernas, mejorando la circulación.', imgAntes: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800&q=80' },
-      { id: '16_cavitacion', name: 'Cavitación', desc: 'Implosión de células grasas mediante ondas de ultrasonido de baja frecuencia. Alternativa indolora a la liposucción pequeña.', imgAntes: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&q=80' },
-      { id: '17_crio', name: 'Criolipólisis', desc: 'Destrucción definitiva del adipocito mediante congelamiento controlado (apoptosis), ideal para reducir tallas en zonas rebeldes.', imgAntes: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80' },
-      { id: '18_masajes', name: 'Masajes Reductores', desc: 'Remodelación manual profunda y aparatología para romper nódulos de grasa y afinar la silueta progresivamente.', imgAntes: 'https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=800&q=80' }
+      { id: 'sonrisa', name: 'Diseño de Sonrisa Digital', desc: 'Transformación estética asistida por computadora con carillas de porcelana de alta estética.', imgAntes: 'https://picsum.photos/seed/dent1/800/800', imgDespues: 'https://picsum.photos/seed/dent2/800/800' },
+      { id: 'implantes', name: 'Implantes Osteointegrados', desc: 'Rehabilitación oral funcional con tecnología de carga inmediata y biocompatibilidad.', imgAntes: 'https://picsum.photos/seed/dent3/800/800', imgDespues: 'https://picsum.photos/seed/dent4/800/800' }
     ]
   },
   {
-    id: '04_dermatologia_laser',
-    title: 'Dermatología Láser',
+    id: 'cirugia',
+    title: 'Cirugía Plástica',
     items: [
-      { id: '19_depilacion', name: 'Depilación Láser', desc: 'Eliminación definitiva del folículo piloso mediante tecnología láser de diodo. Piel suave, sin irritaciones ni foliculitis.', imgAntes: 'https://images.unsplash.com/photo-1607008829749-c0f284a49fc7?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&q=80' },
-      { id: '20_manchas', name: 'Láser Manchas (IPL)', desc: 'Destrucción del pigmento melánico por fototermólisis para borrar pecas, lentigos solares y melasma crónico.', imgAntes: 'https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=800&q=80' },
-      { id: '21_tatuajes', name: 'Eliminación Tatuajes', desc: 'Fragmentación de tinta subdérmica con láser Nd:YAG. El sistema inmunológico reabsorbe las partículas borrando el diseño.', imgAntes: 'https://images.unsplash.com/photo-1568515387631-8b650bbcdb90?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1611601322175-ef8ec8c85f01?w=800&q=80' },
-      { id: '22_esclero', name: 'Escleroterapia', desc: 'Eliminación estética de telangiectasias (arañas vasculares) y várices pequeñas mediante infiltración de microespuma.', imgAntes: 'https://images.unsplash.com/photo-1609207925106-84e4b67b05e5?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1526413232644-8a40f03cc03b?w=800&q=80' }
+      { id: 'rinoplastia', name: 'Rinoplastia Ultrasónica', desc: 'Remodelación nasal con precisión milimétrica, mínima inflamación y resultados naturales.', imgAntes: 'https://picsum.photos/seed/surg1/800/800', imgDespues: 'https://picsum.photos/seed/surg2/800/800' },
+      { id: 'abdominoplastia', name: 'Abdominoplastia', desc: 'Resección de tejido excedente y tensado muscular para una silueta firme y definida.', imgAntes: 'https://picsum.photos/seed/surg5/800/800', imgDespues: 'https://picsum.photos/seed/surg6/800/800' },
+      { id: 'otoplastia', name: 'Otoplastia', desc: 'Corrección auricular estética para armonizar las proporciones del rostro.', imgAntes: 'https://picsum.photos/seed/surg7/800/800', imgDespues: 'https://picsum.photos/seed/surg8/800/800' }
     ]
   },
   {
-    id: '05_otros_especializados',
-    title: 'Especialidades Quirúrgicas',
+    id: 'dermatologia',
+    title: 'Dermatología Clínica',
     items: [
-      { id: '23_meso_capilar', name: 'Mesoterapia Capilar', desc: 'Infiltración directa en el cuero cabelludo de dutasteride y vitaminas para frenar la alopecia y engrosar el folículo.', imgAntes: 'https://images.unsplash.com/photo-1522338242992-e1a54906a8da?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1560869713-7d0a29430803?w=800&q=80' },
-      { id: '24_nutricion', name: 'Nutrición Estética', desc: 'Abordaje clínico del metabolismo para pérdida de peso saludable y mantenimiento de los resultados estéticos corporales.', imgAntes: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80' },
-      { id: '25_blefaro', name: 'Blefaroplastia', desc: 'Resección quirúrgica precisa de piel excedente y bolsas palpebrales. Mirada rejuvenecida con cicatrices ocultas.', imgAntes: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=800&q=80' },
-      { id: '26_dermapen', name: 'Microneedling', desc: 'Microperforaciones automatizadas para inducir colágeno masivo y permitir la penetración de principios activos médicos.', imgAntes: 'https://images.unsplash.com/photo-1550159930-40066082a4fc?w=800&q=80', imgDespues: 'https://images.unsplash.com/photo-1531299244174-d247dd4e5a66?w=800&q=80' }
+      { id: 'acne', name: 'Manejo de Acné & Rosácea', desc: 'Protocolos dermatológicos para el control de brotes, inflamación y reparación de discromías.', imgAntes: 'https://picsum.photos/seed/derm1/800/800', imgDespues: 'https://picsum.photos/seed/derm2/800/800' },
+      { id: 'lunares', name: 'Remoción de Lunares', desc: 'Procedimientos seguros para la eliminación de lesiones pigmentarias con fines oncológicos y estéticos.', imgAntes: 'https://picsum.photos/seed/derm3/800/800', imgDespues: 'https://picsum.photos/seed/derm4/800/800' }
+    ]
+  },
+  {
+    id: 'corporal',
+    title: 'Estética Corporal',
+    items: [
+      { id: 'hidrolipoclasia', name: 'Hidrolipoclasia Ultrasónica', desc: 'Reducción de grasa localizada sin cirugía mediante cavitación y solución fisiológica.', imgAntes: 'https://picsum.photos/seed/body1/800/800', imgDespues: 'https://picsum.photos/seed/body2/800/800' },
+      { id: 'hiperhidrosis', name: 'Tratamiento Hiperhidrosis', desc: 'Control efectivo de la sudoración excesiva mediante bloqueadores neuromusculares.', imgAntes: 'https://picsum.photos/seed/body3/800/800', imgDespues: 'https://picsum.photos/seed/body4/800/800' }
+    ]
+  },
+  {
+    id: 'capilar',
+    title: 'Medicina Capilar',
+    items: [
+      { id: 'implante', name: 'Técnica FUE (M/F)', desc: 'Restauración microfolicular definitiva de alta densidad para hombres y mujeres.', imgAntes: 'https://picsum.photos/seed/hair1/800/800', imgDespues: 'https://picsum.photos/seed/hair2/800/800' }
     ]
   }
 ];
 
-export const guiaData = [
-  { id: 1, necesidad: 'Prevención de Arrugas / Cara Cansada', solucion: 'Neuromoduladores, Hialurónico', recuperacion: 'Inmediata', duracion: '4 a 6 meses' },
-  { id: 2, necesidad: 'Flacidez Facial sin Quirófano', solucion: 'Bioestimuladores, Láser CO2, HIFU', recuperacion: '12 a 24 horas', duracion: '18 a 24 meses' },
-  { id: 3, necesidad: 'Manchas Severas y Poros Dilatados', solucion: 'Láser IPL/Q-Switch, Peeling Médico', recuperacion: '3 a 7 días', duracion: 'Largo plazo' },
-  { id: 4, necesidad: 'Grasa Localizada Rebelde', solucion: 'Enzimas PBSerums, Criolipólisis', recuperacion: 'Variable', duracion: 'Permanente' }
+export const teamData = [
+  { 
+    category: 'Cirugía Plástica & Reconstructiva', 
+    doctors: [
+      { name: 'Dra. Sofía Gualpa', bio: 'Médica Especialista en Cirugía Plástica (UCE), 10+ años de experiencia clínica.' },
+      { name: 'Dr. Gery Sánchez', bio: 'Médico Cirujano, Especialista en Cirugía General y Medicina Estética Avanzada (17 años exp).' }
+    ] 
+  },
+  { 
+    category: 'Medicina Estética & Regenerativa', 
+    doctors: [
+      { name: 'Dra. Yoselin Mota', bio: '14+ años de práctica integrando Medicina Estética y Salud Ocupacional.' },
+      { name: 'Dra. Eddymar Lucena', bio: 'Especialista en intervenciones estéticas mínimamente invasivas (8 años como cirujano).' }
+    ] 
+  },
+  { 
+    category: 'Dermatología Clínica & Oncológica', 
+    doctors: [
+      { name: 'Dra. Gabriela Torres', bio: 'Dermatóloga con subespecialidad en Oncología (U. de Barcelona) y maestría en preparados magistrales.' }
+    ] 
+  },
+  { 
+    category: 'Odontología Estética & Rehabilitación', 
+    doctors: [
+      { name: 'Dra. Alicia Yepez', bio: 'Periodoncia e Implantes (Formación avanzada en NYU Training).' },
+      { name: 'Dr. Arturo Marquez', bio: 'Experto en Ortodoncia y sistemas modernos de ortodoncia invisible autoligada.' },
+      { name: 'Dra. Heidy González', bio: 'Especialista en Endodoncia y Microcirugía Apical (10 años exp).' },
+      { name: 'Dra. Yumali Murillo', bio: 'Rehabilitación Oral, Orofacial y Prótesis Implantosoportada.' }
+    ] 
+  }
 ];
 
-export const experienceStats = [
+export const clinicStats = [
   { label: 'Casos de Éxito', value: '15.000+' },
-  { label: 'Especialistas', value: '12' },
-  { label: 'Sedes en Quito', value: '3' },
-  { label: 'Nivel Bioseguridad', value: '5' }
+  { label: 'Especialistas', value: '10' },
+  { label: 'Recomendación', value: '100%' },
+  { label: 'Años de Excelencia', value: '15+' }
+];
+
+export const clinicContact = {
+  phone: '02 600 1785',
+  whatsapp: '096 220 4998',
+  address: 'Italia N32-25 y Mariana de Jesús, Quito',
+  email: 'info@clinicasanura.com',
+  hours: 'L-V: 09:00 - 19:00 | Sáb: 09:00 - 14:00',
+  appointmentHours: 'Citas Médicas: 10:00 - 18:00'
+};
+
+export const guiaData = [
+  {
+    id: 1,
+    necesidad: "Armonización Facial",
+    solucion: "Protocolos de Rejuvenecimiento Celular y ácido hialurónico para una arquitectura de proporciones naturales.",
+    recuperacion: "Inmediata (24-48h)",
+    duracion: "12 - 18 meses"
+  },
+  {
+    id: 2,
+    necesidad: "Remodelación Estructural",
+    solucion: "Cirugía Plástica avanzada (Rinoplastia Ultrasónica / Lipoescultura HD) bajo rigor hospitalario.",
+    recuperacion: "5-10 días (Quirúrgico)",
+    duracion: "Permanente"
+  },
+  {
+    id: 3,
+    necesidad: "Salud Dermatológica",
+    solucion: "Tratamientos específicos para Acné, Rosácea y remoción oncológica de lesiones cutáneas.",
+    recuperacion: "3 - 5 días",
+    duracion: "Progresiva / Terapéutica"
+  }
 ];
