@@ -85,6 +85,41 @@ export const ServiceCarousel = ({ category, onSelectTreatment, dbServices = [] }
   const handlePrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const handleNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
 
+  // Si hay pocos componentes (1-2), no usamos carrusel para que se vean centrados y estéticos (Diseño Inteligente)
+  if (itemsToDisplay.length <= 2) {
+    return (
+      <div className="w-full py-10 flex flex-wrap justify-center gap-10 md:gap-16 animate-in fade-in zoom-in duration-1000">
+        {itemsToDisplay.map((item: any, index: number) => (
+          <div key={item.id || index} className="w-full max-w-[400px] group transition-all duration-700 hover:scale-[1.05]">
+            <div className="flex flex-col h-full w-full bg-[#FDF8F0] dark:bg-[#121A21] border border-[#0B252A]/10 dark:border-white/10 shadow-2xl overflow-hidden rounded-[2.5rem]">
+              <div className="relative w-full aspect-square overflow-hidden border-b border-[#0B252A]/5">
+                <BeforeAfterSlider
+                  imgAntes={item.imgAntes}
+                  imgDespues={item.imgDespues}
+                  isCardMode={true}
+                  isActive={true}
+                />
+              </div>
+              <button
+                onClick={() => onSelectTreatment(item)}
+                className="p-8 flex-1 flex flex-col items-center text-center justify-between gap-5 bg-[#FDF8F0] dark:bg-[#121A21] hover:bg-white dark:hover:bg-[#1A2630] transition-all"
+              >
+                <h4 className="font-serif text-2xl tracking-widest text-[#0B252A] dark:text-white uppercase">
+                  {item.name}
+                </h4>
+                <div className="w-full pt-4 border-t border-[#0B252A]/10 dark:border-white/10">
+                  <div className="text-[#0B252A] dark:text-[#5BC0BE] border border-[#0B252A] dark:border-[#5BC0BE] group-hover:bg-[#0B252A] group-hover:text-white dark:group-hover:bg-[#5BC0BE] dark:group-hover:text-[#0B252A] text-[10px] uppercase tracking-[0.4em] font-black py-4 rounded-xl transition-all w-full text-center">
+                    Ver Protocolo
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div key={category.id} className="w-full flex flex-col items-center relative">
       <div className="w-full overflow-hidden" ref={emblaRef}>
@@ -93,28 +128,19 @@ export const ServiceCarousel = ({ category, onSelectTreatment, dbServices = [] }
             const isSelected = selectedIndex === index;
 
             return (
-              // 1. EL CONTENEDOR DE EMBLA: Intocable, solo anchos y min-w-0 para evitar bugs visuales
               <div
                 key={item.id || `fallback-${index}`}
                 className="embla__slide flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0 h-full"
               >
-                {/* 2. EL CONTENEDOR VISUAL: Aquí van las escalas y opacidades */}
                 <div
-                  className="px-1 md:px-4 h-full transition-all duration-700 ease-out"
+                  className="px-2 md:px-6 h-full transition-all duration-700 ease-out"
                   style={{
-                    transform: isSelected ? 'scale(1)' : 'scale(0.95)',
-                    opacity: isSelected ? 1 : 0.5,
+                    transform: isSelected ? 'scale(1)' : 'scale(0.92)',
+                    opacity: isSelected ? 1 : 0.4,
                   }}
                 >
-                  <div className="flex flex-col h-full w-full bg-white dark:bg-[#121A21] border border-[#C4E8E9] dark:border-[#1F2E3A] shadow-lg overflow-hidden group rounded-2xl md:rounded-3xl">
-
-                    {/* Evita que mover la imagen haga cosas raras con clics fantasma */}
-                    <div
-                      className="relative w-full aspect-square bg-gray-100 dark:bg-gray-900 z-10 overflow-hidden"
-                      onPointerDown={(e) => e.stopPropagation()}
-                      onTouchStart={(e) => e.stopPropagation()}
-                      onMouseDown={(e) => e.stopPropagation()}
-                    >
+                  <div className="flex flex-col h-full w-full bg-[#FDF8F0] dark:bg-[#121A21] border border-[#0B252A]/10 dark:border-white/10 shadow-xl overflow-hidden group rounded-[2.5rem]">
+                    <div className="relative w-full aspect-square z-10 overflow-hidden border-b border-[#0B252A]/5">
                       <BeforeAfterSlider
                         imgAntes={item.imgAntes}
                         imgDespues={item.imgDespues}
@@ -126,13 +152,13 @@ export const ServiceCarousel = ({ category, onSelectTreatment, dbServices = [] }
 
                     <button
                       onClick={() => onSelectTreatment(item)}
-                      className="p-4 md:p-6 flex-1 flex flex-col items-center text-center justify-between gap-3 bg-white dark:bg-[#121A21] hover:bg-gray-50 dark:hover:bg-[#1A2630] transition-colors w-full cursor-pointer outline-none min-h-[5rem]"
+                      className="p-6 md:p-10 flex-1 flex flex-col items-center text-center justify-between gap-4 bg-[#FDF8F0] dark:bg-[#121A21] hover:bg-white dark:hover:bg-[#1A2630] transition-colors w-full outline-none"
                     >
-                      <h4 className="font-serif text-lg md:text-xl tracking-widest text-[#06414B] dark:text-white uppercase line-clamp-2 min-h-[3rem]">
+                      <h4 className="font-serif text-xl md:text-2xl tracking-widest text-[#0B252A] dark:text-white uppercase line-clamp-2 min-h-[3rem]">
                         {item.name}
                       </h4>
-                      <div className="w-full pt-3 border-t border-[#C4E8E9] dark:border-white/10">
-                        <div className="text-[#5BC0BE] border border-[#5BC0BE] group-hover:bg-[#5BC0BE] group-hover:text-[#090D10] text-[10px] md:text-xs uppercase tracking-widest font-bold py-2.5 md:py-3 rounded-lg transition-all w-full text-center">
+                      <div className="w-full pt-4 border-t border-[#0B252A]/10 dark:border-white/10">
+                        <div className="text-[#0B252A] dark:text-[#5BC0BE] border border-[#0B252A] dark:border-[#5BC0BE] group-hover:bg-[#0B252A] group-hover:text-white dark:group-hover:bg-[#5BC0BE] dark:group-hover:text-[#0B252A] text-[9px] md:text-[10px] uppercase tracking-[0.4em] font-black py-4 rounded-xl transition-all w-full text-center">
                           Ver Protocolo
                         </div>
                       </div>

@@ -9,6 +9,7 @@ import { QuickGuide } from '@/components/editorial/QuickGuide';
 import { LeadForm } from '@/components/editorial/LeadForm';
 import { TreatmentModal } from '@/components/editorial/TreatmentModal';
 import { WhatsAppFloating } from '@/components/editorial/WhatsAppFloating';
+import { AgentePersonalizado } from '@/components/editorial/AgentePersonalizado';
 import { serviciosData, Treatment, clinicContact } from '@/lib/clinic-data';
 import { getFirestore } from '@/firebase';
 import { doc, onSnapshot, collection } from 'firebase/firestore';
@@ -18,6 +19,7 @@ export default function App() {
   const [selectedTreatment, setSelectedTreatment] = useState<Treatment | null>(null);
   const [showCertModal, setShowCertModal] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isAgentOpen, setIsAgentOpen] = useState(false);
 
   const [siteConfig, setSiteConfig] = useState<any>(null);
   const [dbServices, setDbServices] = useState<any[]>([]);
@@ -34,8 +36,8 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = (selectedTreatment || showCertModal) ? 'hidden' : 'auto';
-  }, [selectedTreatment, showCertModal]);
+    document.body.style.overflow = (selectedTreatment || showCertModal || isAgentOpen) ? 'hidden' : 'auto';
+  }, [selectedTreatment, showCertModal, isAgentOpen]);
 
   const activeCatData = serviciosData.find(c => c.id === activeCategory) || serviciosData[0];
 
@@ -69,9 +71,9 @@ export default function App() {
                     <button
                       key={cat.id}
                       onClick={() => setActiveCategory(cat.id)}
-                      className={`px-8 py-5 rounded-2xl transition-all text-[10px] font-bold tracking-[0.2em] uppercase border min-w-[220px] ${activeCategory === cat.id
-                        ? 'bg-brand text-white border-brand shadow-xl'
-                        : 'glass-brand text-brand border-white/60 hover:bg-white/80 dark:hover:bg-white/20'
+                      className={`px-8 py-6 rounded-2xl transition-all text-[10px] font-bold tracking-[0.3em] uppercase border min-w-[200px] flex-shrink-0 ${activeCategory === cat.id
+                        ? 'bg-[#0B252A] text-[#F9FBFB] dark:bg-[#FDF8F0] dark:text-[#0B252A] border-[#0B252A] dark:border-[#FDF8F0] shadow-[0_15px_40px_rgba(0,0,0,0.15)] scale-105'
+                        : 'bg-white/5 dark:bg-white/5 text-[#0B252A] dark:text-[#F9FBFB] border-[#0B252A]/10 dark:border-[#F9FBFB]/10 hover:bg-[#0B252A]/5 dark:hover:bg-white/10'
                         }`}
                     >
                       {cat.title}
@@ -131,10 +133,20 @@ export default function App() {
             treatment={selectedTreatment}
             onClose={() => setSelectedTreatment(null)}
             siteConfig={siteConfig}
+            onOpenAgent={() => setIsAgentOpen(true)}
           />
         )}
 
-        <WhatsAppFloating phone={siteConfig?.phoneContact || clinicContact.whatsapp} />
+        <AgentePersonalizado
+          isOpen={isAgentOpen}
+          onClose={() => setIsAgentOpen(false)}
+          initialTreatment={selectedTreatment}
+        />
+
+        <WhatsAppFloating 
+          phone={siteConfig?.phoneContact || clinicContact.whatsapp}
+          onOpenAgent={() => setIsAgentOpen(true)}
+        />
       </div>
     </div>
   );

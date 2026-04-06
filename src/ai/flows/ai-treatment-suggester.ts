@@ -52,7 +52,7 @@ const aiTreatmentSuggesterPrompt = ai.definePrompt({
   name: 'aiTreatmentSuggesterPrompt',
   input: { schema: AITreatmentSuggesterInputSchema },
   output: { schema: AITreatmentSuggesterOutputSchema },
-  prompt: `You are an expert aesthetic consultant for N-VITALITY Aesthetics. Your goal is to help potential patients identify potential treatments tailored to their aesthetic goals and physical characteristics.
+  prompt: `You are an expert aesthetic consultant for SANURA Aesthetics. Your goal is to help potential patients identify potential treatments tailored to their aesthetic goals and physical characteristics.
 
 Based on the user's description below, suggest up to 3 potential aesthetic or plastic surgery treatments. For each suggested treatment, provide its name, a brief description, and a clear reasoning why it is suitable for the user based on their input. Also, provide some general advice or a disclaimer about the importance of professional consultation.
 

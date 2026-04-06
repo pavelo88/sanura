@@ -1,17 +1,18 @@
 "use client";
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { X, Phone } from 'lucide-react';
+import { X, Zap, MessageCircle } from 'lucide-react';
 import { Treatment } from '@/lib/clinic-data';
 import { BeforeAfterSlider } from './BeforeAfterSlider';
 
 interface TreatmentModalProps {
-  treatment: any; // Cambiado a 'any' para aceptar campos dinámicos de Firebase como 'quote'
+  treatment: any;
   onClose: () => void;
   siteConfig?: any;
+  onOpenAgent?: () => void;
 }
 
-export const TreatmentModal = ({ treatment, onClose, siteConfig }: TreatmentModalProps) => {
+export const TreatmentModal = ({ treatment, onClose, siteConfig, onOpenAgent }: TreatmentModalProps) => {
   const phone = siteConfig?.phoneContact || "+593 98 399 2549";
   const WHATSAPP_URL = `https://wa.me/${phone.replace(/[^0-9]/g, '')}`;
 
@@ -70,71 +71,85 @@ export const TreatmentModal = ({ treatment, onClose, siteConfig }: TreatmentModa
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-lg p-2 sm:p-4 md:p-6"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0B252A]/90 backdrop-blur-2xl p-4 sm:p-6"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-labelledby="treatment-modal-title"
     >
       <div
-        className="bg-white dark:bg-[#0C1217] w-full max-w-6xl h-full max-h-[90vh] lg:h-auto lg:max-h-[85vh] flex flex-col lg:grid lg:grid-cols-5 relative shadow-2xl overflow-hidden rounded-3xl border border-white/10 transition-all duration-700"
+        className="bg-[#FDF8F0] dark:bg-[#0C1217] w-full max-w-6xl h-full max-h-[90vh] lg:h-auto lg:max-h-[90vh] flex flex-col lg:grid lg:grid-cols-6 relative shadow-[0_0_100px_rgba(0,0,0,0.5)] overflow-hidden rounded-[3rem] border border-white/10 transition-all duration-1000 animate-in fade-in zoom-in slide-in-from-bottom-10"
         onClick={e => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-[110] w-12 h-12 bg-black/50 backdrop-blur-md rounded-full text-white hover:bg-[#5BC0BE] hover:text-[#090D10] transition-all flex items-center justify-center shadow-lg"
+          className="absolute top-6 right-6 z-[110] w-14 h-14 bg-black/40 backdrop-blur-md rounded-full text-white hover:bg-white hover:text-[#0B252A] transition-all flex items-center justify-center shadow-2xl"
           aria-label="Cerrar modal"
         >
-          <X size={24} />
+          <X size={28} />
         </button>
 
-        <div className="w-full h-1/2 lg:h-full lg:col-span-3 relative bg-black flex-shrink-0">
+        {/* ÁREA DE IMAGEN: 60% en Desktop */}
+        <div className="w-full h-[40vh] sm:h-[50vh] lg:h-full lg:col-span-3 xl:col-span-4 relative bg-black flex-shrink-0">
           <BeforeAfterSlider
             imgAntes={treatment.imgAntes}
             imgDespues={treatment.imgDespues}
             isCardMode={false}
             isActive={true}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0B252A]/40 via-transparent to-transparent pointer-events-none" />
         </div>
 
-        <div className="w-full h-1/2 lg:h-full lg:col-span-2 p-6 md:p-10 lg:p-12 overflow-y-auto custom-scrollbar flex flex-col justify-center bg-white dark:bg-[#0C1217]">
+        {/* ÁREA DE CONTENIDO: 40% en Desktop */}
+        <div className="w-full flex-1 lg:h-full lg:col-span-3 xl:col-span-2 p-8 md:p-14 lg:p-16 overflow-y-auto custom-scrollbar flex flex-col justify-center bg-[#FDF8F0] dark:bg-[#0C1217]">
 
-          <span className="text-[#5BC0BE] text-[9px] sm:text-[10px] md:text-[11px] font-bold uppercase tracking-[0.5em] mb-4 md:mb-6 border-b border-[#C4E8E9] dark:border-[#1F2E3A] inline-block pb-2 md:pb-3 w-fit flex-shrink-0">
-            ✦ Protocolo Médico VIP
+          <span className="text-[#C5A059] text-[10px] md:text-[11px] font-black uppercase tracking-[0.5em] mb-8 border-b border-[#0B252A]/5 dark:border-white/5 inline-block pb-4 w-fit flex-shrink-0">
+            ✦ Protocolo Alta Estética
           </span>
 
-          <div ref={headlineContainerRef} className="w-full mb-4 md:mb-6 lg:mb-8 overflow-hidden flex-shrink-0">
+          <div ref={headlineContainerRef} className="w-full mb-8 flex-shrink-0">
             <h3
               ref={headlineRef}
               id="treatment-modal-title"
-              className="font-serif text-[#06414B] dark:text-white tracking-tight leading-[0.85] uppercase whitespace-nowrap"
+              className="font-serif text-[#0B252A] dark:text-white leading-[0.85] uppercase"
             >
               {treatment.name}
             </h3>
           </div>
 
-          <p className="font-sans text-sm md:text-base text-[#3A8B99] dark:text-[#A0AAB2] leading-relaxed mb-8 md:mb-10 font-light max-w-lg">
+          <p className="font-sans text-base md:text-lg text-[#0B252A]/80 dark:text-white/70 leading-relaxed mb-10 font-light max-w-lg">
             {treatment.desc}
           </p>
 
-          <div className="bg-[#F0F8F9] dark:bg-white/5 p-6 md:p-8 border-l-4 border-[#5BC0BE] mb-8 md:mb-10 rounded-r-2xl">
-            <p className="text-[11px] md:text-xs lg:text-sm text-[#06414B] dark:text-[#E2E8F0] font-serif italic leading-relaxed pl-2">
+          <div className="bg-white/40 dark:bg-white/5 p-8 border-l-4 border-[#C5A059] mb-12 rounded-r-3xl italic shadow-sm">
+            <p className="text-sm md:text-base lg:text-lg text-[#0B252A] dark:text-[#E2E8F0] font-serif leading-relaxed">
               "{quote}"
             </p>
           </div>
 
-          <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="w-full bg-[#06414B] dark:bg-[#5BC0BE] text-white dark:text-[#090D10] py-5 rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-[0.4em] flex items-center justify-center gap-3 shadow-xl hover:scale-[1.02] active:scale-95 transition-all"
-          >
-            <Phone size={18} /> Iniciar Valoración VIP
-          </a>
+          <div className="flex flex-col gap-3 md:gap-4">
+            <button
+              onClick={() => {
+                onOpenAgent?.();
+                onClose();
+              }}
+              className="w-full bg-gradient-to-r from-[#06414B] to-[#5BC0BE] dark:from-[#5BC0BE] dark:to-[#06414B] text-white dark:text-[#090D10] py-6 rounded-2xl text-[11px] font-black uppercase tracking-[0.4em] flex items-center justify-center gap-4 shadow-2xl hover:scale-[1.02] active:scale-95 transition-all"
+            >
+              <Zap size={20} /> Agente Personalizado
+            </button>
 
-          <p className="text-[8px] sm:text-[9px] md:text-[10px] text-[#3A8B99] dark:text-white/40 text-center mt-6 md:mt-8 font-light tracking-widest">
-            Respuesta en máximo 2 horas • Consultoría privada
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="w-full bg-white/20 dark:bg-white/10 text-[#0B252A] dark:text-white py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.4em] flex items-center justify-center gap-3 border border-[#0B252A]/10 dark:border-white/10 hover:bg-white/30 dark:hover:bg-white/20 transition-all"
+            >
+              <MessageCircle size={16} /> WhatsApp Directo
+            </a>
+          </div>
+
+          <p className="text-[10px] text-[#0B252A]/40 dark:text-white/30 text-center mt-10 font-medium tracking-[0.3em] uppercase">
+            Consultoría Privada • Quito
           </p>
         </div>
       </div>

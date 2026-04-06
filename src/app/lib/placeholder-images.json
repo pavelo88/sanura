@@ -1,4 +1,3 @@
-
 {
   "placeholderImages": [
     {
@@ -16,7 +15,7 @@
     {
       "id": "doctor-profile",
       "description": "Retrato editorial de la Directora Médica",
-      "imageUrl": "https://picsum.photos/seed/dr-nvitality/800/1200",
+      "imageUrl": "https://picsum.photos/seed/dr-sanura  /800/1200",
       "imageHint": "female doctor portrait"
     }
   ]

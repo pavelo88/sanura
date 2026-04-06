@@ -1,10 +1,10 @@
 
-import type {Metadata} from 'next';
+import type { Metadata } from 'next';
 import './globals.css';
 import { FirebaseClientProvider } from '@/firebase';
 
 export const metadata: Metadata = {
-  title: 'NVitality | Alta Estética & Rigor Médico',
+  title: 'Sanura | Alta Estética & Rigor Médico',
   description: 'Clínica de especialidades estéticas en Quito. El rigor científico se encuentra con la alta costura.',
 };
 

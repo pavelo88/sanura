@@ -1,4 +1,4 @@
-# **App Name**: N-VITALITY Aesthetics
+# **App Name**: SANURA Aesthetics
 
 ## Core Features:
 

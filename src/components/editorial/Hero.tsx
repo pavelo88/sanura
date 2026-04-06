@@ -28,7 +28,7 @@ export const Hero = ({ onOpenCert, siteConfig }: HeroProps) => {
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-10 lg:px-12 flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
 
         <div className="w-full lg:w-1/2 space-y-6 md:space-y-8 animate-in fade-in slide-in-from-left-10 duration-1000">
-          <h1 className="font-serif text-5xl sm:text-6xl md:text-7xl xl:text-8xl text-brand dark:text-white tracking-tighter leading-[0.85]">
+          <h1 className="text-fluid-h1 text-[#0B252A] dark:text-[#F9FBFB]">
             {firstWord} <br />
             {restOfTitle && (
               <span className="text-accent italic font-light">
@@ -36,12 +36,12 @@ export const Hero = ({ onOpenCert, siteConfig }: HeroProps) => {
               </span>
             )}
           </h1>
-
-          <p className="font-serif italic text-lg md:text-xl text-accent max-w-md leading-relaxed">
+          
+          <p className="font-serif italic text-lg md:text-2xl text-accent max-w-md leading-relaxed">
             {subtitle}
           </p>
-
-          <p className="font-sans text-sm md:text-lg text-brand/70 dark:text-white/70 leading-relaxed max-w-md font-light">
+          
+          <p className="text-fluid-p text-[#0B252A]/70 dark:text-[#F9FBFB]/70 max-w-md">
             {description}
           </p>
 

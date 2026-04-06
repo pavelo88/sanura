@@ -4,22 +4,23 @@
 
 @layer base {
   :root {
-    --background: 210 20% 98%; /* Pearl White */
-    --foreground: 189 58% 10%; /* Sanura Teal */
-    --primary: 189 58% 10%;    /* Sanura Teal */
+    --background: 40 40% 97%;  /* Marfil Crema #FDF8F0 */
+    --foreground: 189 58% 10%; /* Teal Profundo #0B252A */
+    --primary: 189 58% 10%;    /* Teal Profundo */
     --primary-foreground: 0 0% 100%;
-    --accent: 40 50% 55%;      /* Sanura Gold */
+    --accent: 40 50% 55%;      /* Oro Champagne #C5A059 */
     --accent-foreground: 189 58% 10%;
     --border: 189 20% 90%;
     --radius: 3rem;
+    --card: 40 30% 98%;        /* Soft Ivory */
   }
   
   .dark {
-    --background: 189 58% 10%; /* Sanura Teal as Background */
-    --foreground: 0 0% 100%;   /* White as Text */
-    --primary: 0 0% 100%;      /* White as Primary */
+    --background: 189 58% 10%; /* Teal Profundo como fondo */
+    --foreground: 40 20% 98%;   /* Blanco Perla como texto */
+    --primary: 40 20% 98%;      /* Blanco Perla */
     --primary-foreground: 189 58% 10%;
-    --accent: 40 50% 55%;      /* Sanura Gold */
+    --accent: 40 50% 55%;      /* Oro Champagne */
     --accent-foreground: 0 0% 100%;
     --border: 189 30% 20%;
   }
@@ -55,7 +56,36 @@ h1, h2, h3, h4 {
 }
 
 .text-brand {
-  @apply text-[#0B252A] dark:text-white;
+  @apply text-[#0B252A] dark:text-[#F9FBFB];
+}
+
+/* Tipografía Editorial Fluida */
+.text-fluid-h1 {
+  font-size: clamp(2.5rem, 8vw, 8rem);
+  @apply font-serif leading-[0.85] tracking-tighter;
+}
+
+.text-fluid-h2 {
+  font-size: clamp(2rem, 5vw, 4.5rem);
+  @apply font-serif leading-none tracking-tighter;
+}
+
+.text-fluid-h3 {
+  font-size: clamp(1.5rem, 3.5vw, 3rem);
+  @apply font-serif leading-tight tracking-tight;
+}
+
+.text-fluid-p {
+  font-size: clamp(0.875rem, 1.2vw, 1.125rem);
+  @apply leading-relaxed font-light;
+}
+
+.glass-navbar-light {
+  @apply bg-[#0B252A]/95 dark:bg-[#FDF8F0]/95 backdrop-blur-xl border-b border-white/5 dark:border-[#0B252A]/5;
+}
+
+.glass-navbar-white {
+  @apply bg-[#FDF8F0]/95 dark:bg-white/10 backdrop-blur-3xl border-b border-[#0B252A]/5 dark:border-white/5;
 }
 
 .text-accent {
@@ -64,6 +94,14 @@ h1, h2, h3, h4 {
 
 .bg-brand {
   @apply bg-[#0B252A] dark:bg-white;
+}
+
+.bg-brand-navbar {
+  @apply bg-[#0B252A] dark:bg-white;
+}
+
+.text-navbar {
+  @apply text-white/70 dark:text-[#0B252A]/70;
 }
 
 .bg-accent {

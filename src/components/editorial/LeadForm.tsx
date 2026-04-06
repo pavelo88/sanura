@@ -148,7 +148,7 @@ export const LeadForm = ({ siteConfig }: LeadFormProps) => {
                   </div>
                   <button
                     type="submit" disabled={loading}
-                    className="w-full h-14 bg-brand dark:bg-white text-white dark:text-brand text-[10px] md:text-[11px] font-bold tracking-[0.5em] uppercase hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-3 rounded-xl shadow-xl disabled:opacity-50"
+                    className="w-full h-14 bg-brand dark:bg-white text-white dark:text-[#0B252A] text-[10px] md:text-[11px] font-bold tracking-[0.5em] uppercase hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-3 rounded-xl shadow-xl disabled:opacity-50"
                   >
                     {loading ? <Loader2 className="animate-spin" size={18} /> : (
                       <>

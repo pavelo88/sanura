@@ -6,9 +6,9 @@ import { doc, setDoc, onSnapshot } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import {
   Loader2, Save, Check, Image as ImageIcon, Instagram, Facebook,
-  MapPin, Phone, Hash, BookOpen, User, Zap
+  MapPin, Phone, Hash, BookOpen, User, Zap, Database
 } from 'lucide-react';
-import { experienceStats, guiaData } from '@/lib/clinic-data';
+import { guiaData, serviciosData, clinicStats, clinicContact } from '@/lib/clinic-data';
 
 export default function CMSPanel({ hideHeader }: { hideHeader?: boolean }) {
   const db = getFirestore();
@@ -19,38 +19,71 @@ export default function CMSPanel({ hideHeader }: { hideHeader?: boolean }) {
   const [isLoading, setIsLoading] = useState(true);
   const [uploadingField, setUploadingField] = useState<string | null>(null);
 
+  const defaultSanuraConfig = {
+    heroTitle: 'CLÍNICA SANURA',
+    heroSubtitle: 'La convergencia entre la medicina estética de alta complejidad y la arquitectura digital.',
+    heroDescription: 'Redefiniendo la medicina regenerativa en Quito. Nuestra política garantiza protocolos y resultados de elegancia atemporal.',
+    heroPermit: '100% EFICACIA CLÍNICA',
+    heroVipLabel: 'Resultados Visibles y Precisos',
+    heroImgAntes: 'https://images.unsplash.com/photo-1615397323114-648c08126d40',
+    heroImgDespues: 'https://images.unsplash.com/photo-1548624313-0396c75e4b1a',
+    stats: clinicStats,
+    doctorTitle: 'Dra. Sofía Gualpa',
+    doctorQuote: 'La excelencia es un hábito clínico aplicado a la perfección facial.',
+    doctorSpecialty: 'Estética Facial & Medicina Regenerativa',
+    doctorRegistry: '17-2549-VIP • MSP Autorizado',
+    doctorImage: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
+    instagramUrl: '#',
+    facebookUrl: '#',
+    phoneContact: clinicContact.phone,
+    contactAddress: clinicContact.address,
+    googleMapsIframe: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15959.083756855325!2d-78.49071534063984!3d-0.18376483569420653!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91d59a72ab01e8fb%3A0x63eb1eb421e9ecdb!2sMariana%20de%20Jes%C3%BAs%20%26%20Italia%2C%20Quito!5e0!3m2!1ses!2sec!4v1710000000000!5m2!1ses!2sec',
+    guide: guiaData
+  };
+
   useEffect(() => {
     setIsLoading(true);
     const unsubscribe = onSnapshot(doc(db, 'settings', 'site-content'), (docSnap) => {
       if (docSnap.exists()) {
         setConfig(docSnap.data());
       } else {
-        setConfig({
-          heroTitle: 'ALTA ESTÉTICA',
-          heroSubtitle: 'El rigor científico se encuentra con la alta costura en protocolos de bioseguridad nivel 5.',
-          heroDescription: 'Redefiniendo la medicina regenerativa en Quito. Nuestra póliza de salud VIP garantiza protocolos de bioseguridad nivel 5 y resultados de elegancia atemporal.',
-          heroPermit: 'Permiso ACESS N° 0000',
-          heroVipLabel: 'Garantías Institucionales VIP',
-          heroImgAntes: 'https://images.unsplash.com/photo-1615397323114-648c08126d40',
-          heroImgDespues: 'https://images.unsplash.com/photo-1548624313-0396c75e4b1a',
-          stats: experienceStats,
-          doctorTitle: 'Dra. Natalia Vitali',
-          doctorQuote: 'La estética no es vanidad, sino arquitectura de la autoestima basada en el rigor científico.',
-          doctorSpecialty: 'Armonización Facial & Medicina Regenerativa',
-          doctorRegistry: '17-2549-VIP • ARCSA Autorizado',
-          doctorImage: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
-          instagramUrl: '#',
-          facebookUrl: '#',
-          phoneContact: '+593 98 399 2549',
-          contactAddress: 'Edificio Capital Plaza • Piso 12 Suite 1204 • Quito, Ecuador',
-          googleMapsIframe: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.790243615525!2d-78.4820228!3d-0.1741584!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91d59a0f7e4e1a0b%3A0x2a0f7e4e1a0b7e4e!2sEdificio%20Capital%20Plaza!5e0!3m2!1ses!2sec!4v1710000000000!5m2!1ses!2sec',
-          guide: guiaData
-        });
+        setConfig(defaultSanuraConfig);
       }
       setIsLoading(false);
     });
     return () => unsubscribe();
   }, [db]);
+
+  // FUNCIÓN PROVISIONAL DE CARGA DE DATOS (SEEDER) CON SANURA FORZADO
+  const handleSeedDatabase = async () => {
+    if (!confirm('¿Seguro que deseas cargar los datos locales en Firebase? Esto escribirá la colección completa de servicios y ajustes principales de Sanura.')) return;
+    setSaving(true);
+    try {
+      // 1. Guardar settings (se fuerza la data de Sanura por sobre la antigua)
+      await setDoc(doc(db, 'settings', 'site-content'), defaultSanuraConfig);
+
+      // 2. Guardar serviciosData en la colección "services"
+      for (const cat of serviciosData) {
+        for (const item of cat.items) {
+          const docRef = doc(db, 'services', item.id);
+          await setDoc(docRef, {
+            categoryId: cat.id,
+            categoryTitle: cat.title,
+            id: item.id,
+            name: item.name,
+            desc: item.desc,
+            imgAntes: item.imgAntes,
+            imgDespues: item.imgDespues
+          }, { merge: true });
+        }
+      }
+      alert('¡Base de Datos de Firebase sincronizada con la Información de SANURA con éxito!');
+    } catch (error) {
+      console.error('Error sincronizando la base de datos:', error);
+      alert('Ocurrió un error al cargar la base de datos.');
+    }
+    setSaving(false);
+  };
 
   // FUNCIÓN DE GUARDADO CONECTADA AL EVENTO GLOBAL
   const handleSave = async () => {
@@ -97,6 +130,26 @@ export default function CMSPanel({ hideHeader }: { hideHeader?: boolean }) {
   return (
     <div className="space-y-12 pb-32 animate-in fade-in duration-700">
 
+      {/* BOTÓN PROVISIONAL DE SINCRONIZACIÓN */}
+      <div className="bg-[#121A21] p-6 md:p-8 rounded-[3rem] border border-[#5BC0BE]/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-[0_0_20px_rgba(91,192,190,0.1)]">
+        <div>
+          <h3 className="text-[#5BC0BE] font-bold uppercase tracking-widest text-sm flex items-center gap-3">
+            <Database size={18} /> Sincronización de Datos SANURA a Firebase
+          </h3>
+          <p className="text-white/50 text-xs mt-2 max-w-lg">
+            Utiliza este botón para volcar los arrays de servicios y la estructura oficial de Sanura hacia tu nueva base de datos. Se sobreescribirá lo que esté actualmente para reparar la falla.
+          </p>
+        </div>
+        <button
+          onClick={handleSeedDatabase}
+          disabled={saving}
+          className="bg-[#5BC0BE] hover:bg-[#4AA5A4] text-[#0B252A] px-6 py-4 rounded-2xl font-bold tracking-widest text-[10px] uppercase transition-all shadow-xl flex items-center gap-2"
+        >
+          {saving ? <Loader2 className="animate-spin" size={16} /> : <Database size={16} />}
+          Cargar Datos a Firebase
+        </button>  
+      </div>
+
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-10">
 
         {/* 01. PORTADA & HERO */}
@@ -139,15 +192,15 @@ export default function CMSPanel({ hideHeader }: { hideHeader?: boolean }) {
           <div className="space-y-6">
             <div className="space-y-2">
               <label className="text-[9px] uppercase tracking-widest text-white/40 font-bold">Nombre Completo</label>
-              <input value={config.doctorTitle} onChange={e => setConfig({ ...config, doctorTitle: e.target.value })} className="w-full bg-black/40 border border-white/10 p-4 rounded-xl text-white font-serif text-lg" placeholder="Ej: Dra. Natalia Vitali" />
+              <input value={config.doctorTitle} onChange={e => setConfig({ ...config, doctorTitle: e.target.value })} className="w-full bg-black/40 border border-white/10 p-4 rounded-xl text-white font-serif text-lg" placeholder="Ej: Dra. Sofía Gualpa" />
             </div>
             <div className="space-y-2">
               <label className="text-[9px] uppercase tracking-widest text-white/40 font-bold">Frase / Cita</label>
-              <textarea value={config.doctorQuote} onChange={e => setConfig({ ...config, doctorQuote: e.target.value })} className="w-full bg-black/40 border border-white/10 p-4 rounded-xl text-white h-24 resize-none italic font-serif" placeholder="La estética no es vanidad..." />
+              <textarea value={config.doctorQuote} onChange={e => setConfig({ ...config, doctorQuote: e.target.value })} className="w-full bg-black/40 border border-white/10 p-4 rounded-xl text-white h-24 resize-none italic font-serif" placeholder="La excelencia es un hábito clínico..." />
             </div>
             <div className="space-y-2">
               <label className="text-[9px] uppercase tracking-widest text-white/40 font-bold">Especialidad</label>
-              <input value={config.doctorSpecialty} onChange={e => setConfig({ ...config, doctorSpecialty: e.target.value })} className="w-full bg-black/40 border border-white/10 p-4 rounded-xl text-[#5BC0BE] font-bold uppercase text-[11px]" placeholder="Armonización Facial..." />
+              <input value={config.doctorSpecialty} onChange={e => setConfig({ ...config, doctorSpecialty: e.target.value })} className="w-full bg-black/40 border border-white/10 p-4 rounded-xl text-[#5BC0BE] font-bold uppercase text-[11px]" placeholder="Estética Facial & Medicina Regenerativa" />
             </div>
             <div className="space-y-2">
               <label className="text-[9px] uppercase tracking-widest text-white/40 font-bold">Registro MSP / Aval</label>
@@ -166,7 +219,7 @@ export default function CMSPanel({ hideHeader }: { hideHeader?: boolean }) {
 
         {/* 03. RUTA DE PERFECCIÓN */}
         <div className="bg-[#121A21] p-8 md:p-10 rounded-[3rem] border border-white/5 shadow-2xl col-span-1 xl:col-span-2 space-y-8">
-          <h3 className="text-[#5BC0BE] text-[10px] font-black uppercase tracking-[0.5em] flex items-center gap-4 border-b border-white/5 pb-6"><BookOpen size={16} /> 03. Ruta de Perfección</h3>
+          <h3 className="text-[#5BC0BE] text-[10px] font-black uppercase tracking-[0.5em] flex items-center gap-4 border-b border-white/5 pb-6"><BookOpen size={16} /> 03. Filosofía y Guía</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {config.guide?.map((g: any, i: number) => (
               <div key={i} className="p-8 bg-black/30 rounded-[2.5rem] border border-white/5 space-y-4">

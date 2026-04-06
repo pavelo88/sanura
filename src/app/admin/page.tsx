@@ -52,7 +52,7 @@ export default function AdminPage() {
       {/* 1. SIDEBAR FIJO IZQUIERDA [cite: 50, 592-593] */}
       <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-80 bg-[#121A21] border-r border-[#1F2E3A] flex flex-col h-full transform transition-transform duration-500 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full shadow-2xl'}`}>
         <div className="p-10 border-b border-[#1F2E3A]/50 flex-shrink-0">
-          <h2 className="font-serif text-3xl uppercase text-white leading-none">NVitality</h2>
+          <h2 className="font-serif text-3xl uppercase text-white leading-none">SANURA</h2>
           <p className="text-[9px] tracking-[0.5em] text-[#5BC0BE] uppercase font-black opacity-80 mt-2">Consola v4.2</p>
         </div>
 
@@ -99,7 +99,7 @@ export default function AdminPage() {
               {activeTab === 'cms' && "Control Editorial Global"}
               {activeTab === 'services' && "Edición de Protocolos"}
             </h1>
-            <p className="text-[9px] uppercase font-black text-[#5BC0BE] tracking-[0.4em] opacity-60">Admin Panel / NVitality</p>
+            <p className="text-[9px] uppercase font-black text-[#5BC0BE] tracking-[0.4em] opacity-60">Admin Panel / SANURA</p>
           </div>
 
           <div className="flex items-center gap-4">
@@ -151,7 +151,7 @@ export default function AdminPage() {
             </div>
 
             <footer className="mt-20 pt-10 border-t border-white/5 flex justify-between items-center text-[9px] uppercase tracking-[0.4em] font-medium text-white/20">
-              <p>© 2026 NVitality Clinic Operations</p>
+              <p>© 2026 SANURA Clinic Operations</p>
               <div className="flex gap-6">
                 <span className="text-[#5BC0BE]/40">Status: Live</span>
                 <span>Uptime: 99.9%</span>
