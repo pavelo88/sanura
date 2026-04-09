@@ -40,31 +40,14 @@ export const DoctorModal = ({ doctor, onClose, siteConfig }: DoctorModalProps) =
       >
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 z-[110] w-12 h-12 bg-black/40 backdrop-blur-md rounded-full text-white hover:bg-white hover:text-[#0B252A] transition-all flex items-center justify-center shadow-2xl"
+          className="absolute top-6 right-6 lg:right-auto lg:left-6 z-[110] w-12 h-12 bg-black/40 backdrop-blur-md rounded-full text-white hover:bg-white hover:text-[#0B252A] transition-all flex items-center justify-center shadow-2xl"
           aria-label="Cerrar modal"
         >
           <X size={24} />
         </button>
 
-        {/* Imagen del Doctor: 40% en Desktop */}
-        <div className="w-full h-[40vh] lg:h-full lg:w-[40%] relative bg-[#F9FBFB] flex-shrink-0 overflow-hidden">
-          <img 
-            src={doctor.image} 
-            alt={doctor.name} 
-            className="w-full h-full object-cover grayscale-[0.2] hover:grayscale-0 transition-all duration-1000"
-          />
-          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#0B252A]/60 to-transparent pointer-events-none" />
-          
-          <div className="absolute bottom-10 left-10 right-10 z-10 hidden lg:block">
-            <div className="glass-pearl p-6 rounded-2xl border border-white/10">
-              <span className="text-white text-[10px] uppercase tracking-[0.4em] font-bold block mb-2 opacity-80">Especialidad</span>
-              <p className="text-white font-serif text-xl leading-tight italic">{doctor.specialty}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Contenido Detallado: 60% en Desktop */}
-        <div className="w-full flex-1 lg:w-[60%] p-8 md:p-12 lg:p-16 overflow-y-auto custom-scrollbar flex flex-col bg-[#FDF8F0] dark:bg-[#0C1217]">
+        {/* Contenido Detallado: 60% en Desktop, a la izquierda */}
+        <div className="w-full order-2 lg:order-1 flex-1 lg:w-[60%] p-8 md:p-12 lg:p-16 overflow-y-auto custom-scrollbar flex flex-col bg-[#FDF8F0] dark:bg-[#0C1217]">
           
           <div className="mb-10 lg:hidden">
             <span className="text-[#C5A059] text-[10px] font-black uppercase tracking-[0.5em] mb-2 block">
@@ -103,26 +86,47 @@ export const DoctorModal = ({ doctor, onClose, siteConfig }: DoctorModalProps) =
                </p>
             </div>
           </div>
+        </div>
 
-          <div className="mt-12 flex flex-col sm:flex-row gap-4">
+        {/* Columna Derecha: Imagen y Botones: 40% en Desktop */}
+        <div className="w-full order-1 lg:order-2 lg:h-full lg:w-[40%] flex flex-col bg-[#F9FBFB] dark:bg-[#0B1217] flex-shrink-0 border-l border-white/10">
+          {/* Imagen del Doctor */}
+          <div className="relative flex-1 overflow-hidden min-h-[40vh] lg:min-h-0">
+            <img 
+              src={doctor.image} 
+              alt={doctor.name} 
+              className="w-full h-full object-cover grayscale-[0.2] hover:grayscale-0 transition-all duration-1000"
+            />
+            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#0B252A]/80 to-transparent pointer-events-none" />
+            
+            <div className="absolute bottom-10 left-10 right-10 z-10 hidden lg:block">
+              <div className="glass-pearl p-6 rounded-2xl border border-white/10">
+                <span className="text-white text-[10px] uppercase tracking-[0.4em] font-bold block mb-2 opacity-80">Especialidad</span>
+                <p className="text-white font-serif text-xl leading-tight italic">{doctor.specialty}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Botones debajo de la foto */}
+          <div className="p-8 lg:p-10 space-y-4 bg-[#F9FBFB] dark:bg-[#0B1217]">
             <a
               href={WHATSAPP_URL}
               target="_blank"
               rel="noreferrer"
-              className="flex-1 bg-[#0B252A] dark:bg-accent text-white dark:text-[#090D10] py-6 rounded-2xl text-[11px] font-black uppercase tracking-[0.4em] flex items-center justify-center gap-4 shadow-2xl hover:scale-[1.02] active:scale-95 transition-all"
+              className="w-full bg-[#0B252A] dark:bg-accent text-white dark:text-[#090D10] py-6 rounded-2xl text-[11px] font-black uppercase tracking-[0.4em] flex items-center justify-center gap-4 shadow-2xl hover:scale-[1.02] active:scale-95 transition-all"
             >
-              <MessageCircle size={20} /> Agendar con Especialista
+              <MessageCircle size={20} /> Agendar Cita
             </a>
             <button
                onClick={onClose}
-               className="px-10 py-6 bg-white/20 dark:bg-white/5 text-[#0B252A] dark:text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.4em] border border-[#0B252A]/10 dark:border-white/10 hover:bg-white transition-all"
+               className="w-full py-5 bg-white/20 dark:bg-white/5 text-[#0B252A] dark:text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.4em] border border-[#0B252A]/10 dark:border-white/10 hover:bg-white transition-all"
             >
-              Cerrar
+              Regresar
             </button>
           </div>
-
         </div>
       </div>
+
     </div>
   );
 };
