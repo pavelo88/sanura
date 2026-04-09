@@ -103,23 +103,23 @@ export default function App() {
                 <div className="flex flex-col items-center md:items-start gap-4">
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 bg-accent rounded-full flex items-center justify-center font-serif italic text-white text-xl shadow-lg">S</div>
-                    <span className="font-serif text-2xl tracking-[0.2em] text-white uppercase mt-0.5">SANURA</span>
+                    <span className="font-serif text-2xl tracking-[0.2em] text-white dark:text-gray-600 uppercase mt-0.5">SANURA</span>
                   </div>
-                  <p className="text-[9px] tracking-[0.5em] text-accent uppercase font-black opacity-80 pl-1">Alta Estética & Medicina</p>
+                  <p className="text-[9px] tracking-[0.5em] text-accent dark:text-gray-700 uppercase font-black opacity-80 pl-1">Alta Estética & Medicina</p>
                 </div>
 
                 {/* Status y Uptime */}
-                <div className="flex flex-col items-center md:items-end gap-3 text-[10px] font-bold tracking-[0.4em] uppercase text-white/50">
+                <div className="flex flex-col items-center md:items-end gap-3 text-[10px] font-bold tracking-[0.4em] uppercase text-white/50 dark:text-gray-600">
                   <div className="flex items-center gap-4">
-                    <span className="flex items-center gap-2 text-white/80">
+                    <span className="flex items-center gap-2 text-white/80 dark:text-gray-600">
                       Contacto: <span className="text-accent">{clinicContact.phone}</span>
                     </span>
-                    <span className="w-[1px] h-3 bg-white/10"></span>
-                    <span className="flex items-center gap-2 text-white/80">
-                      Ubicación: <span className="text-white">Quito</span>
+                    <span className="w-[1px] h-3 bg-white/10 dark:bg-white/5"></span>
+                    <span className="flex items-center gap-2 text-white/80 dark:text-gray-600">
+                      Ubicación: <span className="text-white dark:text-gray-600">Quito</span>
                     </span>
                   </div>
-                  <p className="text-white/30 font-medium">© 2026 Clínica Sanura Operations</p>
+                  <p className="text-white/30 dark:text-gray-700 font-medium">© 2026 Clínica Sanura Operations</p>
                 </div>
               </div>
             </div>

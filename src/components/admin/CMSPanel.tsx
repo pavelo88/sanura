@@ -8,7 +8,7 @@ import {
   Loader2, Save, Check, Image as ImageIcon, Instagram, Facebook,
   MapPin, Phone, Hash, BookOpen, User, Zap, Database
 } from 'lucide-react';
-import { guiaData, serviciosData, clinicStats, clinicContact } from '@/lib/clinic-data';
+import { guiaData, serviciosData, clinicStats, clinicContact, teamData } from '@/lib/clinic-data';
 
 export default function CMSPanel({ hideHeader }: { hideHeader?: boolean }) {
   const db = getFirestore();
@@ -18,6 +18,9 @@ export default function CMSPanel({ hideHeader }: { hideHeader?: boolean }) {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [uploadingField, setUploadingField] = useState<string | null>(null);
+
+  // Nuevo estado para gestión de equipo médico editable
+  const [editableTeam, setEditableTeam] = useState<any[]>([]);
 
   const defaultSanuraConfig = {
     heroTitle: 'CLÍNICA SANURA',
@@ -45,9 +48,13 @@ export default function CMSPanel({ hideHeader }: { hideHeader?: boolean }) {
     setIsLoading(true);
     const unsubscribe = onSnapshot(doc(db, 'settings', 'site-content'), (docSnap) => {
       if (docSnap.exists()) {
-        setConfig(docSnap.data());
+        const data = docSnap.data();
+        setConfig(data);
+        if (data.team) setEditableTeam(data.team);
       } else {
         setConfig(defaultSanuraConfig);
+        // Transformamos teamData local para el estado editable (flat array)
+        setEditableTeam(teamData.flatMap(c => c.doctors.map(d => ({ ...d, category: c.category }))));
       }
       setIsLoading(false);
     });
@@ -56,11 +63,16 @@ export default function CMSPanel({ hideHeader }: { hideHeader?: boolean }) {
 
   // FUNCIÓN PROVISIONAL DE CARGA DE DATOS (SEEDER) CON SANURA FORZADO
   const handleSeedDatabase = async () => {
-    if (!confirm('¿Seguro que deseas cargar los datos locales en Firebase? Esto escribirá la colección completa de servicios y ajustes principales de Sanura.')) return;
+    if (!confirm('¿Seguro que deseas cargar los datos locales en Firebase? Esto escribirá servicios, equipo médico y ajustes principales.')) return;
     setSaving(true);
     try {
-      // 1. Guardar settings (se fuerza la data de Sanura por sobre la antigua)
-      await setDoc(doc(db, 'settings', 'site-content'), defaultSanuraConfig);
+      const flatTeam = teamData.flatMap(c => c.doctors.map(d => ({ ...d, category: c.category })));
+      
+      // 1. Guardar settings con el equipo incluido
+      await setDoc(doc(db, 'settings', 'site-content'), { 
+        ...defaultSanuraConfig,
+        team: flatTeam
+      });
 
       // 2. Guardar serviciosData en la colección "services"
       for (const cat of serviciosData) {
@@ -77,10 +89,10 @@ export default function CMSPanel({ hideHeader }: { hideHeader?: boolean }) {
           }, { merge: true });
         }
       }
-      alert('¡Base de Datos de Firebase sincronizada con la Información de SANURA con éxito!');
+      alert('¡Sincronización completa con éxito!');
     } catch (error) {
       console.error('Error sincronizando la base de datos:', error);
-      alert('Ocurrió un error al cargar la base de datos.');
+      alert('Error en la carga masiva.');
     }
     setSaving(false);
   };
@@ -90,7 +102,7 @@ export default function CMSPanel({ hideHeader }: { hideHeader?: boolean }) {
     if (!config) return;
     setSaving(true);
     try {
-      await setDoc(doc(db, 'settings', 'site-content'), config, { merge: true });
+      await setDoc(doc(db, 'settings', 'site-content'), { ...config, team: editableTeam }, { merge: true });
       alert("¡Estructura Global Guardada!");
     } catch (error) {
       console.error('Error al guardar cambios:', error);
@@ -103,17 +115,23 @@ export default function CMSPanel({ hideHeader }: { hideHeader?: boolean }) {
     const handleGlobalSave = () => handleSave();
     window.addEventListener('cms-save-trigger', handleGlobalSave);
     return () => window.removeEventListener('cms-save-trigger', handleGlobalSave);
-  }, [config]);
+  }, [config, editableTeam]);
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: string, doctorId?: string) => {
     if (!e.target.files?.[0] || !storage) return;
-    setUploadingField(field);
+    setUploadingField(doctorId ? `${field}_${doctorId}` : field);
     const file = e.target.files[0];
-    const refPath = ref(storage, `site/${field}_${Date.now()}`);
+    const path = doctorId ? `team/${doctorId}_${Date.now()}` : `site/${field}_${Date.now()}`;
+    const refPath = ref(storage, path);
     try {
       const snap = await uploadBytes(refPath, file);
       const url = await getDownloadURL(snap.ref);
-      setConfig({ ...config, [field]: url });
+      
+      if (doctorId) {
+        setEditableTeam(prev => prev.map(d => d.id === doctorId ? { ...d, [field]: url } : d));
+      } else {
+        setConfig({ ...config, [field]: url });
+      }
     } catch (error) {
       console.error('Error de subida de imagen:', error);
     }
@@ -134,10 +152,10 @@ export default function CMSPanel({ hideHeader }: { hideHeader?: boolean }) {
       <div className="bg-[#121A21] p-6 md:p-8 rounded-[3rem] border border-[#5BC0BE]/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-[0_0_20px_rgba(91,192,190,0.1)]">
         <div>
           <h3 className="text-[#5BC0BE] font-bold uppercase tracking-widest text-sm flex items-center gap-3">
-            <Database size={18} /> Sincronización de Datos SANURA a Firebase
+            <Database size={18} /> Sincronización Global SANURA
           </h3>
           <p className="text-white/50 text-xs mt-2 max-w-lg">
-            Utiliza este botón para volcar los arrays de servicios y la estructura oficial de Sanura hacia tu nueva base de datos. Se sobreescribirá lo que esté actualmente para reparar la falla.
+            Sincroniza servicios, imágenes reales y el equipo médico desde el código local hacia Firebase.
           </p>
         </div>
         <button
@@ -146,7 +164,7 @@ export default function CMSPanel({ hideHeader }: { hideHeader?: boolean }) {
           className="bg-[#5BC0BE] hover:bg-[#4AA5A4] text-[#0B252A] px-6 py-4 rounded-2xl font-bold tracking-widest text-[10px] uppercase transition-all shadow-xl flex items-center gap-2"
         >
           {saving ? <Loader2 className="animate-spin" size={16} /> : <Database size={16} />}
-          Cargar Datos a Firebase
+          Cargar Todo a Firebase
         </button>  
       </div>
 
@@ -215,6 +233,62 @@ export default function CMSPanel({ hideHeader }: { hideHeader?: boolean }) {
               </label>
             </div>
           </div>
+        </div>
+
+        {/* 06. EQUIPO MÉDICO (NUEVO) */}
+        <div className="bg-[#121A21] p-8 md:p-10 rounded-[3rem] border border-white/5 shadow-2xl col-span-1 xl:col-span-2 space-y-8">
+           <h3 className="text-[#5BC0BE] text-[10px] font-black uppercase tracking-[0.5em] flex items-center gap-4 border-b border-white/5 pb-6">
+              <User size={16} /> 06. Elenco Médico (Carrusel)
+           </h3>
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {editableTeam.map((doc: any, i: number) => (
+                <div key={doc.id} className="p-6 bg-black/30 rounded-[2.5rem] border border-white/5 space-y-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-20 h-20 bg-black rounded-2xl overflow-hidden relative border border-white/10 group">
+                      {uploadingField === `image_${doc.id}` ? <Loader2 className="animate-spin text-accent m-auto" /> : <img src={doc.image} className="w-full h-full object-cover" />}
+                      <label className="absolute inset-0 bg-accent/20 opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer transition-all">
+                        <ImageIcon size={20} />
+                        <input type="file" className="hidden" onChange={e => handleUpload(e, 'image', doc.id)} />
+                      </label>
+                    </div>
+                    <div className="flex-1">
+                      <input 
+                        value={doc.name} 
+                        onChange={e => {
+                          const n = [...editableTeam]; n[i].name = e.target.value; setEditableTeam(n);
+                        }} 
+                        className="w-full bg-transparent text-white font-serif text-lg outline-none border-b border-white/5 pb-1" 
+                      />
+                      <input 
+                        value={doc.specialty} 
+                        onChange={e => {
+                          const n = [...editableTeam]; n[i].specialty = e.target.value; setEditableTeam(n);
+                        }} 
+                        className="w-full bg-transparent text-[#5BC0BE] text-[9px] uppercase font-bold tracking-widest outline-none mt-2" 
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <label className="text-[8px] uppercase tracking-widest text-white/30 font-bold">Bio Corta (Carrusel)</label>
+                    <textarea 
+                      value={doc.bio} 
+                      onChange={e => {
+                        const n = [...editableTeam]; n[i].bio = e.target.value; setEditableTeam(n);
+                      }} 
+                      className="w-full bg-black/20 p-3 rounded-xl text-white/70 text-[10px] h-16 resize-none outline-none focus:border-[#5BC0BE]/30" 
+                    />
+                    <label className="text-[8px] uppercase tracking-widest text-white/30 font-bold">Perfil Extendido (Modal)</label>
+                    <textarea 
+                      value={doc.fullBio} 
+                      onChange={e => {
+                        const n = [...editableTeam]; n[i].fullBio = e.target.value; setEditableTeam(n);
+                      }} 
+                      className="w-full bg-black/20 p-3 rounded-xl text-white/70 text-[10px] h-24 resize-none outline-none focus:border-[#5BC0BE]/30" 
+                    />
+                  </div>
+                </div>
+              ))}
+           </div>
         </div>
 
         {/* 03. RUTA DE PERFECCIÓN */}

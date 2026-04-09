@@ -19,6 +19,20 @@ export interface Category {
   items: Treatment[];
 }
 
+export interface Doctor {
+  id: string;
+  name: string;
+  specialty: string;
+  bio: string;
+  fullBio: string;
+  image: string;
+}
+
+export interface TeamCategory {
+  category: string;
+  doctors: Doctor[];
+}
+
 export const serviciosData: Category[] = [
   {
     id: 'facial',
@@ -38,8 +52,8 @@ export const serviciosData: Category[] = [
         id: 'hilos', 
         name: 'Hilos Tensores PDO', 
         desc: 'Lifting sin cirugía mediante suturas reabsorbibles de polidioxanona que generan tracción mecánica e inducen neocolagénesis.', 
-        imgAntes: 'https://picsum.photos/seed/facial3/800/800', 
-        imgDespues: 'https://picsum.photos/seed/facial4/800/800',
+        imgAntes: '/imagenes/hilos tensores antes.png', 
+        imgDespues: '/imagenes/hilos tensores despueses.png',
         nivelDolor: 'Bajo / Controlado',
         anestesia: 'Local focalizada mediante cánulas de alta precisión.',
         resultados: 'Elevación inmediata de tejidos ptósicos (caídos) y regeneración de colágeno a largo plazo.'
@@ -48,7 +62,7 @@ export const serviciosData: Category[] = [
         id: 'botox', 
         name: 'Toxina Botulínica', 
         desc: 'Denervación química selectiva de músculos mímicos para suavizar arrugas dinámicas (frente, entrecejo, patas de gallo).', 
-        imgAntes: 'https://picsum.photos/seed/facial5/800/800', 
+        imgAntes: '/imagenes/lineas expresion antes.png', 
         imgDespues: 'https://picsum.photos/seed/facial6/800/800',
         nivelDolor: 'Mínimo (Pinchazo casi imperceptible)',
         anestesia: 'Tópica refrescante previa a la aplicación.',
@@ -58,8 +72,8 @@ export const serviciosData: Category[] = [
         id: 'aurexis', 
         name: 'Rejuvenecimiento AUREXIS', 
         desc: 'Protocolo exclusivo no invasivo con activos de grado médico que penetran hasta la dermis reticular, reactivando fibroblastos.', 
-        imgAntes: 'https://picsum.photos/seed/celular1/800/800', 
-        imgDespues: 'https://picsum.photos/seed/celular2/800/800',
+        imgAntes: '/imagenes/rejuvenecimiento celular antes.png', 
+        imgDespues: '/imagenes/rejuvenecimiento celular despues.png',
         nivelDolor: 'Nulo (Experiencia relajante)',
         anestesia: 'No requiere (Procedimiento no invasivo).',
         resultados: 'Piel luminosa, reparada del sol y con textura refinada desde la primera sesión.'
@@ -128,8 +142,8 @@ export const serviciosData: Category[] = [
         id: 'limpieza', 
         name: 'Limpieza Facial Profunda', 
         desc: 'Eliminación exhaustiva de impurezas para revitalizar la epidermis y optimizar la permeabilidad cutánea.', 
-        imgAntes: 'https://picsum.photos/seed/clean1/800/800', 
-        imgDespues: 'https://picsum.photos/seed/clean2/800/800',
+        imgAntes: '/imagenes/limpieza facial antes.bmp', 
+        imgDespues: '/imagenes/limpieza facial despues.png',
         nivelDolor: 'Mínimo (Solo extracción)',
         anestesia: 'Vapor de ozono y productos calmantes.',
         resultados: 'Piel limpia, oxigenada y lista para absorber tratamientos avanzados.'
@@ -138,8 +152,8 @@ export const serviciosData: Category[] = [
         id: 'peeling', 
         name: 'Peeling Médico', 
         desc: 'Exfoliación química controlada que genera renovación celular acelerada y mejora la textura cutánea.', 
-        imgAntes: 'https://picsum.photos/seed/peel1/800/800', 
-        imgDespues: 'https://picsum.photos/seed/peel2/800/800',
+        imgAntes: '/imagenes/peeling antes.jpg', 
+        imgDespues: '/imagenes/peeling despues.png',
         nivelDolor: 'Mínimo (Sensación de picor leve)',
         anestesia: 'No requiere (Aplicación tópica de ácidos).',
         resultados: 'Adiós a las manchas superficiales y piel de porcelana.'
@@ -266,34 +280,81 @@ export const serviciosData: Category[] = [
   }
 ];
 
-export const teamData = [
+export const teamData: TeamCategory[] = [
   { 
     category: 'Cirugía Plástica & Reconstructiva', 
     doctors: [
-      { name: 'Dra. Sofía Gualpa', bio: 'Médica Especialista en Cirugía Plástica (UCE), 10+ años de experiencia clínica.' },
-      { name: 'Dr. Gery Sánchez', bio: 'Médico Cirujano, Especialista en Cirugía General y Medicina Estética Avanzada (17 años exp).' }
+      { 
+        id: 'sofia-gualpa',
+        name: 'Dra. Sofía Gualpa', 
+        specialty: 'Cirugía Plástica & Reconstructiva',
+        bio: 'Médica Especialista en Cirugía Plástica (UCE), 10+ años de experiencia clínica.',
+        fullBio: 'La Dra. Sofía Gualpa es una referente en cirugía plástica de alta complejidad. Con más de una década de experiencia, se especializa en armonización facial avanzada y cirugía reconstructiva, integrando las últimas tecnologías ultrasónicas para resultados naturales y recuperaciones aceleradas.',
+        image: 'https://images.unsplash.com/photo-1559839734-2b71f1536780?auto=format&fit=crop&q=80&w=800'
+      },
+      { 
+        id: 'gery-sanchez',
+        name: 'Dr. Gery Sánchez', 
+        specialty: 'Cirugía General & Medicina Estética',
+        bio: 'Médico Cirujano, Especialista en Cirugía General y Medicina Estética Avanzada (17 años exp).',
+        fullBio: 'El Dr. Gery Sánchez combina la precisión de la cirugía general con el arte de la medicina estética. Su enfoque se centra en procedimientos mínimamente invasivos que ofrecen transformaciones significativas sin largos tiempos de recuperación.',
+        image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=800'
+      }
     ] 
   },
   { 
     category: 'Medicina Estética & Regenerativa', 
     doctors: [
-      { name: 'Dra. Yoselin Mota', bio: '14+ años de practice integrando Medicina Estética y Salud Ocupacional.' },
-      { name: 'Dra. Eddymar Lucena', bio: 'Especialista en intervenciones estéticas mínimamente invasivas (8 años como cirujano).' }
+      { 
+        id: 'yoselin-mota',
+        name: 'Dra. Yoselin Mota', 
+        specialty: 'Medicina Estética & Salud Ocupacional',
+        bio: '14+ años de práctica integrando Medicina Estética y Salud Ocupacional.',
+        fullBio: 'La Dra. Yoselin Mota es experta en medicina preventiva y regenerativa. Su visión integral garantiza tratamientos que no solo mejoran la estética, sino que promueven la salud a largo plazo de la piel y los tejidos.',
+        image: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=800'
+      },
+      { 
+        id: 'eddymar-lucena',
+        name: 'Dra. Eddymar Lucena', 
+        specialty: 'Medicina Estética Mínimamente Invasiva',
+        bio: 'Especialista en intervenciones estéticas mínimamente invasivas (8 años como cirujano).',
+        fullBio: 'La Dra. Eddymar Lucena se especializa en técnicas de inyectables y hilos tensores, logrando un rejuvenecimiento facial armonioso mediante el dominio anatómico y la sensibilidad estética.',
+        image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=800'
+      }
     ] 
   },
   { 
     category: 'Dermatología Clínica & Oncológica', 
     doctors: [
-      { name: 'Dra. Gabriela Torres', bio: 'Dermatóloga con subespecialidad en Oncología (U. de Barcelona) y maestría en preparados magistrales.' }
+      { 
+        id: 'gabriela-torres',
+        name: 'Dra. Gabriela Torres', 
+        specialty: 'Dermatología & Oncología Cutánea',
+        bio: 'Dermatóloga con subespecialidad en Oncología (U. de Barcelona) y maestría en preparados magistrales.',
+        fullBio: 'La Dra. Gabriela Torres aporta un rigor oncológico a la dermatología estética. Su especialización en la Universidad de Barcelona le permite diagnosticar y tratar lesiones cutáneas con la máxima seguridad clínica.',
+        image: 'https://images.unsplash.com/photo-1527613426441-4da17471b66d?auto=format&fit=crop&q=80&w=800'
+      }
     ] 
   },
   { 
     category: 'Odontología Estética & Rehabilitación', 
     doctors: [
-      { name: 'Dra. Alicia Yepez', bio: 'Periodoncia e Implantes (Formación avanzada en NYU Training).' },
-      { name: 'Dr. Arturo Marquez', bio: 'Experto en Ortodoncia y sistemas modernos de ortodoncia invisible autoligada.' },
-      { name: 'Dra. Heidy González', bio: 'Especialista en Endodoncia y Microcirugía Apical (10 años exp).' },
-      { name: 'Dra. Yumali Murillo', bio: 'Rehabilitación Oral, Orofacial y Prótesis Implantosoportada.' }
+      { 
+        id: 'alicia-yepez',
+        name: 'Dra. Alicia Yepez', 
+        specialty: 'Periodoncia e Implantes',
+        bio: 'Periodoncia e Implantes (Formación avanzada en NYU Training).',
+        fullBio: 'Con formación en la New York University, la Dra. Alicia Yepez es experta en la restauración de la salud gingival y la colocación de implantes de última generación.',
+        image: 'https://images.unsplash.com/photo-1651008376811-b90baee60c1f?auto=format&fit=crop&q=80&w=800'
+      },
+      { 
+        id: 'arturo-marquez',
+        name: 'Dr. Arturo Marquez', 
+        specialty: 'Ortodoncia Invisible & Autoligado',
+        bio: 'Experto en Ortodoncia y sistemas modernos de ortodoncia invisible autoligada.',
+        fullBio: 'El Dr. Arturo Marquez se dedica a alinear sonrisas de forma discreta y eficiente mediante sistemas de ortodoncia invisible, priorizando la comodidad y la estética del paciente.',
+        image: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=800'
+      }
     ] 
   }
 ];
