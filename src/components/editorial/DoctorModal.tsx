@@ -35,7 +35,7 @@ export const DoctorModal = ({ doctor, onClose, siteConfig }: DoctorModalProps) =
       aria-modal="true"
     >
       <div
-        className="bg-[#FDF8F0] dark:bg-[#0C1217] w-full max-w-5xl h-full max-h-[90vh] lg:h-auto lg:max-h-[85vh] flex flex-col lg:flex-row relative shadow-[0_0_100px_rgba(0,0,0,0.5)] overflow-hidden rounded-[3rem] border border-white/10 transition-all duration-1000 animate-in fade-in zoom-in slide-in-from-bottom-10"
+        className="bg-[#FDF8F0] dark:bg-[#0C1217] w-full max-w-6xl h-full max-h-[90vh] lg:h-auto lg:max-h-[85vh] flex flex-col lg:flex-row relative shadow-[0_0_100px_rgba(0,0,0,0.5)] overflow-hidden rounded-[3rem] border border-white/10 transition-all duration-1000 animate-in fade-in zoom-in slide-in-from-bottom-10"
         onClick={e => e.stopPropagation()}
       >
         <button
@@ -90,15 +90,14 @@ export const DoctorModal = ({ doctor, onClose, siteConfig }: DoctorModalProps) =
 
         {/* Columna Derecha: Imagen y Botones: 40% en Desktop */}
         <div className="w-full order-1 lg:order-2 lg:w-[40%] flex flex-col bg-[#F9FBFB] dark:bg-[#0B1217] flex-shrink-0 border-l border-white/10">
-          {/* Imagen del Doctor - Altura Fija para Consistencia */}
-          <div className="relative h-[45vh] lg:h-[550px] overflow-hidden flex-shrink-0">
+          {/* Imagen del Doctor - Altura Aumentada */}
+          <div className="relative h-[45vh] lg:h-[520px] overflow-hidden flex-shrink-0">
             <img 
               src={doctor.image} 
               alt={doctor.name} 
               className="w-full h-full object-cover grayscale-[0.2] hover:grayscale-0 transition-all duration-1000"
             />
             <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#0B252A]/80 to-transparent pointer-events-none" />
-
             
             <div className="absolute bottom-10 left-10 right-10 z-10 hidden lg:block">
               <div className="glass-pearl p-6 rounded-2xl border border-white/10">
@@ -127,7 +126,8 @@ export const DoctorModal = ({ doctor, onClose, siteConfig }: DoctorModalProps) =
           </div>
         </div>
       </div>
-
     </div>
   );
 };
+
+
