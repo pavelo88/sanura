@@ -122,8 +122,8 @@ export const serviciosData: Category[] = [
         id: 'bichectomia', 
         name: 'Bichectomía', 
         desc: 'Extracción quirúrgica de bolsas adiposas de Bichat para reducir la plenitud geniana y acentuar arcos cigomáticos.', 
-        imgAntes: '/imagenes/menton-antes.png', 
-        imgDespues: '/imagenes/menton-despues.png',
+        imgAntes: '/imagenes/armonizacion-facial-antes.png', 
+        imgDespues: '/imagenes/armonizacion-facial-despues.png',
         nivelDolor: 'Controlable post-quirúrgico',
         anestesia: 'Local profunda (Similar a un tratamiento dental).',
         resultados: 'Rostro perfilado, pómulos marcados y apariencia de mayor delgadez facial.'
@@ -217,7 +217,7 @@ export const serviciosData: Category[] = [
         anestesia: 'Local con sedación leve.',
         resultados: 'Orejas en posición natural y fin a los complejos estéticos.'
       },
-      { id: 'cicatrices', name: 'Resección de Cicatrices', desc: 'Zetaplastia para reorientar líneas de tensión en cicatrices hipertróficas.', imgAntes: '/imagenes/acne-antes.png', imgDespues: '/imagenes/acne-despues.png', nivelDolor: 'Bajo', anestesia: 'Local.', resultados: 'Cicatriz casi imperceptible y mejora de textura.' },
+      { id: 'cicatrices', name: 'Resección de Cicatrices', desc: 'Zetaplastia para reorientar líneas de tensión en cicatrices hipertróficas.', imgAntes: '/imagenes/blefaroplastia-antes.png', imgDespues: '/imagenes/blefaroplastia-despues.png', nivelDolor: 'Bajo', anestesia: 'Local.', resultados: 'Cicatriz casi imperceptible y mejora de textura.' },
       { id: 'blefaroplastia-qx', name: 'Blefaroplastia Quirúrgica', desc: 'Resección de exceso de piel y bolsas adiposas de parpados.', imgAntes: '/imagenes/blefaroplastia-antes.png', imgDespues: '/imagenes/blefaroplastia-despues.png', nivelDolor: 'Mínimo', anestesia: 'Local con sedación.', resultados: 'Mirada joven y eliminación de bolsas pesadas permanentemente.' }
     ]
   },
@@ -227,7 +227,7 @@ export const serviciosData: Category[] = [
     items: [
       { id: 'acne', name: 'Acné & Rosácea', desc: 'Control de sebogénesis y reparación cromática con fórmulas magistrales.', imgAntes: '/imagenes/acne-antes.png', imgDespues: '/imagenes/acne-despues.png', nivelDolor: 'Nulo', anestesia: 'Fórmulas tópicas.', resultados: 'Piel sana, libre de granitos y rojeces.' },
       { id: 'lunares', name: 'Remoción de Lunares', desc: 'Extirpación de nevos con imperativo oncológico y análisis de biopsia.', imgAntes: '/imagenes/acne-antes.png', imgDespues: '/imagenes/acne-despues.png', nivelDolor: 'Mínimo', anestesia: 'Local.', resultados: 'Seguridad oncológica y estética dérmica impecable.' },
-      { id: 'acrocordones', name: 'Lunares de Carne', desc: 'Cauterización rápida de fibromas en zonas de fricción.', imgAntes: '/imagenes/peeling-antes.jpg', imgDespues: '/imagenes/peeling-despues.png', nivelDolor: 'Mínimo', anestesia: 'Tópica previa.', resultados: 'Adiós a las protuberancias molestas en cuello y axilas.' },
+      { id: 'acrocordones', name: 'Lunares de Carne', desc: 'Cauterización rápida de fibromas en zonas de fricción.', imgAntes: '/imagenes/menton-antes.png', imgDespues: '/imagenes/menton-despues.png', nivelDolor: 'Mínimo', anestesia: 'Tópica previa.', resultados: 'Adiós a las protuberancias molestas en cuello y axilas.' },
       { id: 'pigmentacion-labios', name: 'Micropigmentación de Labios', desc: 'Tatuaje paramédico para restaurar tono uniforme y definir arco de Cupido.', imgAntes: '/imagenes/micropigmentacion-labial-antes.png', imgDespues: '/imagenes/micropigmentacion-labial-despues.png', nivelDolor: 'Moderado (Molestia leve)', anestesia: 'Tópica de alta potencia.', resultados: 'Labios con color natural radiante todo el día.' },
       { id: 'dermatitis', name: 'Dermatitis & Manchas', desc: 'Manejo de procesos eccematosos y discromías asistido por IPL.', imgAntes: '/imagenes/limpieza-facial-antes.bmp', imgDespues: '/imagenes/limpieza-facial-despues.png', nivelDolor: 'Nulo', anestesia: 'Cuidado tópico.', resultados: 'Alivio de picazón y piel de tono parejo.' }
     ]

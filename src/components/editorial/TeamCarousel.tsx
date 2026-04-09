@@ -5,15 +5,8 @@ import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { ChevronLeft, ChevronRight, Lock } from 'lucide-react';
 
-// Se agregan las interfaces y los datos localmente para solucionar el error de compilación
-export interface Doctor {
-  id: string;
-  name: string;
-  specialty: string;
-  image: string;
-  bio: string;
-  fullBio?: string;
-}
+// Importamos la interfaz Doctor oficial para evitar conflictos de TypeScript
+import { Doctor } from "../../lib/clinic-data";
 
 export const teamData = [
   {
