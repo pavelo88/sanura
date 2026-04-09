@@ -235,11 +235,19 @@ export default function CMSPanel({ hideHeader }: { hideHeader?: boolean }) {
           </div>
         </div>
 
-        {/* 06. EQUIPO MÉDICO (NUEVO) */}
         <div className="bg-[#121A21] p-8 md:p-10 rounded-[3rem] border border-white/5 shadow-2xl col-span-1 xl:col-span-2 space-y-8">
-           <h3 className="text-[#5BC0BE] text-[10px] font-black uppercase tracking-[0.5em] flex items-center gap-4 border-b border-white/5 pb-6">
-              <User size={16} /> 06. Elenco Médico (Carrusel)
-           </h3>
+           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/5 pb-6">
+              <h3 className="text-[#5BC0BE] text-[10px] font-black uppercase tracking-[0.5em] flex items-center gap-4">
+                 <User size={16} /> 06. Elenco Médico (Carrusel)
+              </h3>
+              <button 
+                onClick={handleSeedDatabase}
+                className="text-[9px] font-bold text-[#5BC0BE] border border-[#5BC0BE]/30 px-4 py-2 rounded-xl hover:bg-[#5BC0BE]/10 transition-all flex items-center gap-2"
+              >
+                <Database size={12} /> Sincronizar Todo Local a Firebase
+              </button>
+           </div>
+
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {editableTeam.map((doc: any, i: number) => (
                 <div key={doc.id} className="p-6 bg-black/30 rounded-[2.5rem] border border-white/5 space-y-4">

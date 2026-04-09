@@ -53,7 +53,7 @@ export default function App() {
       <div className="relative z-10 text-brand font-sans antialiased">
         <Navbar isDarkMode={isDarkMode} toggleTheme={() => setIsDarkMode(!isDarkMode)} />
 
-        <main>
+        <main className="pt-2 md:pt-8">
           <Hero onOpenCert={() => setShowCertModal(true)} siteConfig={siteConfig} />
 
           <section id="servicios" className="py-12 md:py-20 relative scroll-mt-20">
@@ -94,7 +94,7 @@ export default function App() {
           <QuickGuide siteConfig={siteConfig} />
           <LeadForm siteConfig={siteConfig} />
 
-          {/* FOOTER PREMIUM - COINCIDE CON EL NAV */}
+          {/* FOOTER PREMIUM */}
           <footer className="w-full bg-brand py-16 md:py-10 mt-20 relative overflow-hidden">
             <div className="max-w-7xl mx-auto px-8 md:px-20 relative z-10">
               <div className="flex flex-col md:flex-row justify-between items-center gap-12">
@@ -123,7 +123,6 @@ export default function App() {
                 </div>
               </div>
             </div>
-            {/* Decoración sutil de fondo */}
             <div className="absolute top-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
           </footer>
         </main>
