@@ -89,15 +89,16 @@ export const DoctorModal = ({ doctor, onClose, siteConfig }: DoctorModalProps) =
         </div>
 
         {/* Columna Derecha: Imagen y Botones: 40% en Desktop */}
-        <div className="w-full order-1 lg:order-2 lg:h-full lg:w-[40%] flex flex-col bg-[#F9FBFB] dark:bg-[#0B1217] flex-shrink-0 border-l border-white/10">
-          {/* Imagen del Doctor */}
-          <div className="relative flex-1 overflow-hidden min-h-[40vh] lg:min-h-0">
+        <div className="w-full order-1 lg:order-2 lg:w-[40%] flex flex-col bg-[#F9FBFB] dark:bg-[#0B1217] flex-shrink-0 border-l border-white/10">
+          {/* Imagen del Doctor - Altura Fija para Consistencia */}
+          <div className="relative h-[45vh] lg:h-[550px] overflow-hidden flex-shrink-0">
             <img 
               src={doctor.image} 
               alt={doctor.name} 
               className="w-full h-full object-cover grayscale-[0.2] hover:grayscale-0 transition-all duration-1000"
             />
             <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#0B252A]/80 to-transparent pointer-events-none" />
+
             
             <div className="absolute bottom-10 left-10 right-10 z-10 hidden lg:block">
               <div className="glass-pearl p-6 rounded-2xl border border-white/10">
